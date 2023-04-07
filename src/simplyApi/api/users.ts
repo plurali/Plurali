@@ -44,7 +44,7 @@ export const getUser = createEndpointCall<GetUserResponse, GetUserData>(
 
 export const getMe = createEndpointCall<GetUserResponse>(
     async (client, data) => await client.request({
-        url: '/v1/me',
+        url: (data.user.overridePluralId ? `/v1/user/${data.user.overridePluralId}` :'/v1/me'),
         method: 'GET'
     })
 );
@@ -103,10 +103,7 @@ export const transformUser = async (system: UserEntry, user: User & {
 export const fetchMe = async (data: BaseData, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<System | null> => {
     try {
         return transformUser(
-            (data.user.overridePluralId ? await getUser({
-                ...data,
-                id: data.user.overridePluralId
-            }) : await getMe(data)).data,
+            (await getMe(data)).data,
             data.user,
             fieldWhere
         )
