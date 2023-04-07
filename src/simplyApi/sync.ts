@@ -68,6 +68,21 @@ export const syncWithApi = async (user: User & { data: UserData }) => {
     const system = (await getMe({user})).data;
     const members = (await getMembers({user, systemId: system.id})).data;
 
+    if (!system.content.isAsystem) {
+        user = await $db.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                pluralKey: null
+            },
+            include: {
+                data: true
+            }
+        })
+        return user;
+    }
+
     if (!user.data) {
         user = await $db.user.update({
             where: {

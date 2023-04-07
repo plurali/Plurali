@@ -2,8 +2,10 @@ import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from
 import {createEndpointCall} from "../client";
 import {MemberField} from "../../system/MemberField";
 import {System} from "../../system/System";
-import {Prisma, User, UserData} from "@prisma/client";
+import {Prisma, User, UserData, UserFieldData} from "@prisma/client";
 import {$db} from "../../db";
+import {UserDataDto} from "../../db/UserDataDto";
+import {UserFieldDataDto} from "../../db/UserFieldDataDto";
 
 export type UserEntry = BaseEntry<UserContent>;
 
@@ -47,7 +49,26 @@ export const getMe = createEndpointCall<GetUserResponse>(
     })
 );
 
-export const transformUser = async (system: UserEntry, user: User & {data: UserData}, fieldWhere: Prisma.UserFieldWhereInput = {}): Promise<System> => {
+export const transformMemberField = (id: string, system: UserEntry|System, data: UserFieldData) => {
+    const field = system instanceof System
+        ? system.fields.find((f) => f.fieldId === id)
+        : system.content.fields[id];
+
+    const position = field instanceof MemberField ? field.position : field.order;
+    const visibility = field instanceof MemberField ? field.pluralVisibility : parseVisibility(field);
+
+    return new MemberField(
+        id,
+        field.name,
+        position,
+        visibility,
+        UserFieldDataDto.from(data)
+    )
+}
+
+export const transformUser = async (system: UserEntry, user: User & {
+    data: UserData
+}, fieldWhere: Prisma.UserFieldWhereInput = {}): Promise<System> => {
     let fields: MemberField[] = [];
 
     const userFields = await $db.userField.findMany({
@@ -61,13 +82,10 @@ export const transformUser = async (system: UserEntry, user: User & {data: UserD
     })
 
     for (const fieldId in system.content.fields) {
-        const field = system.content.fields[fieldId]
-        if (!field) continue;
-
         const userField = userFields.find(field => field.pluralId === fieldId);
         if (!userField) continue;
 
-        fields.push(new MemberField(fieldId, field.name, field.order, parseVisibility(field), userField.data))
+        fields.push(transformMemberField(fieldId, system, userField.data))
     }
 
     return new System(
@@ -78,7 +96,7 @@ export const transformUser = async (system: UserEntry, user: User & {data: UserD
         system.content.color.trim().length >= 1 ? system.content.color : null,
         system.content.desc.trim().length >= 1 ? system.content.desc : null,
         parseAvatar(system.content),
-        user.data
+        UserDataDto.from(user.data)
     );
 }
 

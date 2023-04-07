@@ -1,5 +1,5 @@
 import { MemberField } from "./MemberField";
-import {UserData} from "@prisma/client";
+import {UserDataDto} from "../db/UserDataDto";
 
 export class System {
     constructor(
@@ -11,6 +11,6 @@ export class System {
         public description: string|null,
         // TODO
         public avatar: string|null = null,
-        public data: UserData
+        public data: UserDataDto
     ) {}
 }

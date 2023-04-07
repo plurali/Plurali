@@ -1,4 +1,4 @@
-import { Visibility } from "../system/Visibility";
+import { PluralVisibility } from "../system/PluralVisibility";
 import {User, UserData} from "@prisma/client";
 
 export interface BaseData {
@@ -27,6 +27,6 @@ export const parseAvatar = (data: AvatarAttrs & { uid: string }): string|null =>
 
 export const parseVisibility = (data: VisibilityAttrs) => data.private 
     ? data.preventTrusted 
-        ? Visibility.Private 
-        : Visibility.Trusted 
-    : Visibility.Public;
+        ? PluralVisibility.Private
+        : PluralVisibility.Trusted
+    : PluralVisibility.Public;

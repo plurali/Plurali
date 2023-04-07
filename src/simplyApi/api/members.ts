@@ -1,11 +1,13 @@
 import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
 import {createEndpointCall} from "../client";
 import {Member} from "../../system/Member";
-import {MemberFieldWithValue} from "../../system/MemberField";
+import {MemberField, MemberFieldWithValue} from "../../system/MemberField";
 import {System} from "../../system/System";
-import {UserMember, UserMemberData} from "@prisma/client";
+import {UserField, UserFieldData, UserMember, UserMemberData} from "@prisma/client";
 import {$db} from "../../db";
 import {Prisma} from "@prisma/client";
+import {UserMemberDataDto} from "../../db/UserMemberDataDto";
+import {UserFieldDataDto} from "../../db/UserFieldDataDto";
 
 export type MemberEntry<TContentInfo extends Record<string, string> = Record<string, string>> = BaseEntry<MemberContent<TContentInfo>>;
 
@@ -50,6 +52,21 @@ export const getMember = createEndpointCall<GetMemberResponse, GetMemberData>(
     })
 );
 
+export const transformFieldWithValue = (id: string, member: MemberEntry, system: System, userField: UserField & {
+    data: UserFieldData
+}) => {
+    const field = system.fields.find(field => field.fieldId === id);
+
+    return new MemberFieldWithValue(
+        field.fieldId,
+        field.name,
+        field.position,
+        field.pluralVisibility,
+        UserFieldDataDto.from(userField.data),
+        member.content.info[id]
+    )
+}
+
 
 export const transformMember = async (data: MemberEntry, system: System, userMember: UserMember & {
     data: UserMemberData
@@ -67,20 +84,10 @@ export const transformMember = async (data: MemberEntry, system: System, userMem
     })
 
     for (const fieldId in data.content.info) {
-        const sysField = system.fields.find(field => field.fieldId === fieldId);
-        if (!sysField) continue;
-
         const userField = userFields.find((field) => field.pluralId === fieldId);
         if (!userField) continue;
 
-        fields.push(new MemberFieldWithValue(
-            sysField.fieldId,
-            sysField.name,
-            sysField.position,
-            sysField.visibility,
-            userField.data,
-            data.content.info[fieldId]
-        ));
+        fields.push(transformFieldWithValue(fieldId, data, system, userField));
     }
 
     return new Member(
@@ -93,7 +100,7 @@ export const transformMember = async (data: MemberEntry, system: System, userMem
         data.content.desc.trim().length >= 1 ? data.content.desc : null,
         fields,
         parseAvatar(data.content),
-        userMember.data,
+        UserMemberDataDto.from(userMember.data),
     )
 }
 
