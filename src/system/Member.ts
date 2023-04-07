@@ -5,6 +5,7 @@ import {UserMemberDataDto} from "../db/UserMemberDataDto";
 export class Member {
     constructor(
         public id: string,
+        public systemId: string,
         public name: string,
         public pronouns: string|null,
         public pluralVisibility: PluralVisibility,

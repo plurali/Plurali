@@ -92,6 +92,7 @@ export const transformMember = async (data: MemberEntry, system: System, userMem
 
     return new Member(
         data.id,
+        system.id,
         data.content.name,
         data.content.pronouns.trim().length >= 1 ? data.content.pronouns : null,
         parseVisibility(data.content),
