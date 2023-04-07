@@ -33,7 +33,7 @@ export type GetUserResponse = UserEntry
 
 export const getUser = createEndpointCall<GetUserResponse, GetUserData>(
     async (client, data) => await client.request({
-        url: data.user.overridePluralId ? `/v1/user/${data.id}` : `/v1/me`,
+        url: `/v1/user/${data.id}`,
         method: 'GET'
     })
 );
@@ -68,6 +68,14 @@ export const fetchMe = async (data: BaseData): Promise<System | null> => {
             ? await getUser({...data, id: data.user.overridePluralId})
             : await getMe(data)).data
         )
+    } catch (_) {
+        return null;
+    }
+}
+
+export const fetchUser = async (data: GetUserData): Promise<System | null> => {
+    try {
+        return await transformUser((await getUser(data)).data)
     } catch (_) {
         return null;
     }
