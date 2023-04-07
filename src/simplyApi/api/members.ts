@@ -1,8 +1,11 @@
 import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
-import { createEndpointCall } from "../client";
-import { Member } from "../../system/Member";
-import { MemberFieldWithValue } from "../../system/MemberField";
-import { System } from "../../system/System";
+import {createEndpointCall} from "../client";
+import {Member} from "../../system/Member";
+import {MemberFieldWithValue} from "../../system/MemberField";
+import {System} from "../../system/System";
+import {UserMember, UserMemberData} from "@prisma/client";
+import {$db} from "../../db";
+import {Prisma} from "@prisma/client";
 
 export type MemberEntry<TContentInfo extends Record<string, string> = Record<string, string>> = BaseEntry<MemberContent<TContentInfo>>;
 
@@ -48,19 +51,34 @@ export const getMember = createEndpointCall<GetMemberResponse, GetMemberData>(
 );
 
 
-export const transformMember = (data: MemberEntry, system: System): Member => {
+export const transformMember = async (data: MemberEntry, system: System, userMember: UserMember & {
+    data: UserMemberData
+}, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<Member> => {
     let fields: MemberFieldWithValue[] = [];
-    
+
+    const userFields = await $db.userField.findMany({
+        where: {
+            pluralOwnerId: system.id,
+            ...fieldWhere
+        },
+        include: {
+            data: true
+        }
+    })
+
     for (const fieldId in data.content.info) {
         const sysField = system.fields.find(field => field.fieldId === fieldId);
-
         if (!sysField) continue;
 
+        const userField = userFields.find((field) => field.pluralId === fieldId);
+        if (!userField) continue;
+
         fields.push(new MemberFieldWithValue(
-            sysField.fieldId, 
-            sysField.name, 
-            sysField.position, 
-            sysField.visibility, 
+            sysField.fieldId,
+            sysField.name,
+            sysField.position,
+            sysField.visibility,
+            userField.data,
             data.content.info[fieldId]
         ));
     }
@@ -74,28 +92,64 @@ export const transformMember = (data: MemberEntry, system: System): Member => {
         data.content.color.trim().length >= 1 ? data.content.color : null,
         data.content.desc.trim().length >= 1 ? data.content.desc : null,
         fields,
-        parseAvatar(data.content)
+        parseAvatar(data.content),
+        userMember.data,
     )
 }
 
-export const fetchMembers = async (data: BaseData, system: System): Promise<Member[]> => {
+export const fetchMembers = async (data: BaseData, system: System, where: Partial<Prisma.UserMemberWhereInput> = {}, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<Member[]> => {
     try {
-        return (await getMembers({
-            ...data,
-            systemId: system.id
-        })).data.map((m) => transformMember(m, system))
+        let transformed: Member[] = [];
+        const members = (await getMembers({...data, systemId: system.id})).data;
+        for (const member of members) {
+            let userMember = await $db.userMember.findFirst({
+                where: {
+                    pluralId: member.id,
+                    pluralOwnerId: system.id,
+                    userId: data.user.id,
+                    ...where
+                },
+                include: {
+                    data: true
+                }
+            })
+
+            if (!userMember) {
+                continue;
+            }
+
+            transformed.push(await transformMember(member, system, userMember, fieldWhere))
+        }
+
+        return transformed;
     } catch {
         return [];
     }
 }
 
-export const fetchMember = async (data: BaseData & {id: string}, system: System): Promise<Member|null> => {
+export const fetchMember = async (data: BaseData & {
+    id: string
+}, system: System, where: Partial<Prisma.UserMemberWhereInput> = {}, fieldWhere: Partial<Prisma.UserMemberWhereInput> = {}): Promise<Member | null> => {
     try {
-        return transformMember((await getMember({
+        const userMember = await $db.userMember.findFirst({
+            where: {
+                pluralId: data.id,
+                pluralOwnerId: system.id
+            },
+            include: {
+                data: true
+            }
+        })
+
+        if (!userMember) {
+            return null;
+        }
+
+        return await transformMember((await getMember({
             ...data,
             systemId: system.id,
             memberId: data.id
-        })).data, system)
+        })).data, system, userMember, fieldWhere)
     } catch {
         return null;
     }

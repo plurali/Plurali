@@ -1,5 +1,6 @@
 import { MemberFieldWithValue } from "./MemberField";
 import { Visibility } from "./Visibility";
+import {UserMemberData} from "@prisma/client";
 
 export class Member {
     constructor(
@@ -12,5 +13,6 @@ export class Member {
         public description: string|null,
         public fields: MemberFieldWithValue[],
         public avatar: string|null = null,
+        public data: UserMemberData,
     ) {}
 }

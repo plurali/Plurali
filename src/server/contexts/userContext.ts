@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import {User, UserData} from '@prisma/client'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { $db } from '../../db'
 import { Status, ErrorResponse, error } from '../status'
@@ -10,7 +10,7 @@ interface UseUserContext {
 
 interface UserContext {
     success: true,
-    user: User
+    user: User & { data: UserData }
 }
 
 /**
@@ -35,6 +35,9 @@ const createUserContext = async ({
         where: {
             id: userId,
         },
+        include: {
+            data: true
+        }
     })
 
     if (!user) {
