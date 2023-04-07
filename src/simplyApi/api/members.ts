@@ -1,4 +1,4 @@
-import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
+import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar, parseFieldType} from ".."
 import {createEndpointCall} from "../client";
 import {Member} from "../../system/Member";
 import {MemberField, MemberFieldWithValue} from "../../system/MemberField";
@@ -61,6 +61,7 @@ export const transformFieldWithValue = (id: string, member: MemberEntry, system:
         field.fieldId,
         field.name,
         field.position,
+        field.type,
         field.pluralVisibility,
         UserFieldDataDto.from(userField.data),
         member.content.info[id]

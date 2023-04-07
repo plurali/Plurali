@@ -21,7 +21,8 @@
     "pino-pretty": "^9.1.0",
     "prisma": "^4.2.1",
     "slugify": "^1.6.6",
-    "sodium-native": "^4.0.1"
+    "sodium-native": "^4.0.1",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

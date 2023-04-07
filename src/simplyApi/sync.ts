@@ -3,6 +3,8 @@ import {getMe, UserEntry} from "./api/users";
 import {getMembers, MemberEntry} from "./api/members";
 import {$db} from "../db";
 import {createSlug} from "../utils";
+import {parseVisibility} from "./index";
+import {PluralVisibility} from "../system/PluralVisibility";
 
 export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User & {
     data: UserData
@@ -29,7 +31,7 @@ export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, 
                 data: {
                     create: {
                         slug: createSlug(fetchedMember.content.name),
-                        visible: false,
+                        visible: parseVisibility(fetchedMember.content) === PluralVisibility.Public,
                     }
                 }
             },
@@ -66,7 +68,6 @@ export const syncWithApi = async (user: User & { data: UserData }) => {
     }
 
     const system = (await getMe({user})).data;
-    const members = (await getMembers({user, systemId: system.id})).data;
 
     if (!system.content.isAsystem) {
         user = await $db.user.update({
@@ -145,6 +146,8 @@ export const syncWithApi = async (user: User & { data: UserData }) => {
             })
         }
     }
+
+    const members = (await getMembers({user, systemId: system.id})).data;
 
     for (const fetchedMember of members) {
         await syncMember(fetchedMember, system, user)
