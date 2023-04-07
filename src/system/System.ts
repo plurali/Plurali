@@ -9,6 +9,6 @@ export class System {
         public color: string|null,
         public description: string|null,
         // TODO
-        public avatar: null = null
+        public avatar: string|null = null
     ) {}
 }
