@@ -19,6 +19,7 @@ const server = fastify({
 
 server.register(cors, {
     origin: $env.get("CORS_ORIGIN", false) ?? "*",
+    credentials: true
 });
 
 // server.setErrorHandler(errorHandler);
