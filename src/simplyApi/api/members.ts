@@ -81,7 +81,7 @@ export const transformMember = (data: MemberEntry, system: System): Member => {
 export const fetchMembers = async (data: BaseData, system: System): Promise<Member[]> => {
     try {
         return (await getMembers({
-            key: data.key,
+            ...data,
             systemId: system.id
         })).data.map((m) => transformMember(m, system))
     } catch {
@@ -92,7 +92,7 @@ export const fetchMembers = async (data: BaseData, system: System): Promise<Memb
 export const fetchMember = async (data: BaseData & {id: string}, system: System): Promise<Member|null> => {
     try {
         return transformMember((await getMember({
-            key: data.key,
+            ...data,
             systemId: system.id,
             memberId: data.id
         })).data, system)
