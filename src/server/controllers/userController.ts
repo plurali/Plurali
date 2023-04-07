@@ -1,11 +1,11 @@
 import { controller } from "../plugins/controllers";
 import { data, error, Status } from "../status";
-import { withSystemContext } from "../contexts/systemContext";
 import { withUserContext } from "../contexts/userContext";
 import { UserDto } from "../../db/UserDto";
 import S from "fluent-json-schema";
-import { testKey } from "../../simplyApi/api/users";
+import {getUser} from "../../simplyApi/api/users";
 import { $db } from "../../db";
+import {testKey} from "../../simplyApi/client";
 
 export const userUpdateSchema = S.object()
     .prop("body", S.object()
@@ -15,6 +15,7 @@ export const userUpdateSchema = S.object()
 export interface UserUpdateSchema {
     Body: {
         pluralKey?: string
+        overridePluralId?: string
     }
 }
 
@@ -35,6 +36,17 @@ export default controller(async (server) => {
                 }
 
                 user = await $db.user.update({ where: { id: user.id }, data: { pluralKey } })
+            }
+
+            if (typeof req.body.overridePluralId === "string") {
+                const overridePluralId = req.body.overridePluralId;
+                if (!user.admin) {
+                    return res.status(400).send(error(Status.Unauthorized));
+                }
+                if (!(await getUser({user, id: overridePluralId}))) {
+                    return res.status(400).send(error(Status.ResourceNotFound))
+                }
+                user = await $db.user.update({ where: { id: user.id }, data: { overridePluralId } })
             }
 
             res.send(data({

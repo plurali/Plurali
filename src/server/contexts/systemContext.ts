@@ -35,7 +35,7 @@ const createSystemContext = async ({
         return error(Status.PluralKeyNotSpecified);
     }
 
-    const system = await fetchMe({key: userContext.user.pluralKey});
+    const system = await fetchMe(userContext);
 
     if (!system) {
         return error(Status.InvalidPluralKey);
@@ -45,10 +45,10 @@ const createSystemContext = async ({
         ...userContext,
         system,
         get members(): Promise<Member[]> {
-            return fetchMembers({key: userContext.user.pluralKey}, system)
+            return fetchMembers(userContext, system)
         },
         async member(id: string): Promise<Member | null> {
-            return fetchMember({key: userContext.user.pluralKey, id}, system)
+            return fetchMember({user: userContext.user, id}, system)
         }
     }
 }

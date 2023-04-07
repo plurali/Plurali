@@ -13,8 +13,23 @@ export const createEndpointCall = <T = unknown, D extends BaseData = BaseData>(
 ): (data: D) => Promise<AxiosResponse<T>>  => {
     return async (data: D) => {
         const client = $simplyClient;
-        client.defaults.headers.common.Authorization = data.key;
+        client.defaults.headers.common.Authorization = data.user.pluralKey;
 
         return await fn(client, data)
     };
+}
+
+export const testKey = async (key: string): Promise<boolean> => {
+    try {
+        await $simplyClient.request({
+            method: "GET",
+            url: "/v1/me",
+            headers: {
+                Authorization: key
+            }
+        })
+        return true;
+    } catch (_) {
+        return false;
+    }
 }

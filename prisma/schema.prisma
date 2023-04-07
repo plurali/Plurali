@@ -12,6 +12,8 @@ model User {
   username        String       @unique
   passwordHash String
   pluralKey    String?
+  overridePluralId String?
+  admin     Boolean @default(false)
   members      UserMember[]
 }
 

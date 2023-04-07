@@ -1,7 +1,7 @@
 import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
-import { createEndpointCall } from "../client";
-import { MemberField } from "../../system/MemberField";
-import { System } from "../../system/System";
+import {createEndpointCall} from "../client";
+import {MemberField} from "../../system/MemberField";
+import {System} from "../../system/System";
 
 export type UserEntry = BaseEntry<UserContent>;
 
@@ -25,18 +25,25 @@ export interface UserContent {
     supportDescMarkdown: boolean
 }
 
-export interface GetMeData extends BaseData {
+export interface GetUserData extends BaseData {
+    id: string
 }
 
-export type GetMeResponse = UserEntry
+export type GetUserResponse = UserEntry
 
-export const getMe = createEndpointCall<GetMeResponse, GetMeData>(
-    async (client) => await client.request({
-        url: `/v1/me`,
+export const getUser = createEndpointCall<GetUserResponse, GetUserData>(
+    async (client, data) => await client.request({
+        url: data.user.overridePluralId ? `/v1/user/${data.id}` : `/v1/me`,
         method: 'GET'
     })
 );
 
+export const getMe = createEndpointCall<GetUserResponse>(
+    async (client, data) => await client.request({
+        url: '/v1/me',
+        method: 'GET'
+    })
+);
 
 export const transformUser = (data: UserEntry): System => {
     let fields: MemberField[] = Object.keys(data.content.fields).map(fieldId => {
@@ -55,12 +62,13 @@ export const transformUser = (data: UserEntry): System => {
     );
 }
 
-export const fetchMe = async (data: GetMeData): Promise<System|null> => {
+export const fetchMe = async (data: BaseData): Promise<System | null> => {
     try {
-        return transformUser((await getMe(data)).data)
+        return transformUser((data.user.overridePluralId
+            ? await getUser({...data, id: data.user.overridePluralId})
+            : await getMe(data)).data
+        )
     } catch (_) {
         return null;
     }
 }
-
-export const testKey = async (key: string): Promise<boolean> => !!await fetchMe({key})

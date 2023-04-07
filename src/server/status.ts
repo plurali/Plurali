@@ -10,6 +10,8 @@ export const Status = {
         UsernameAlreadyUsed: "Username is already used",
     },
     ResourceNotFound: "Resource not found",
+    Unauthorized: "Unauthorized"
+
 }
 
 export interface SuccessResponse<TData extends object = object> {
