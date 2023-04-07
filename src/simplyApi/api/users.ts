@@ -1,4 +1,4 @@
-import { BaseData, BaseEntry, VisibilityAttrs, parseVisibility } from ".."
+import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
 import { createEndpointCall } from "../client";
 import { MemberField } from "../../system/MemberField";
 import { System } from "../../system/System";
@@ -51,6 +51,7 @@ export const transformUser = (data: UserEntry): System => {
         fields,
         data.content.color.trim().length >= 1 ? data.content.color : null,
         data.content.desc.trim().length >= 1 ? data.content.desc : null,
+        parseAvatar(data.content)
     );
 }
 

@@ -11,5 +11,6 @@ export class Member {
         public color: string|null,
         public description: string|null,
         public fields: MemberFieldWithValue[],
+        public avatar: string|null = null,
     ) {}
 }
