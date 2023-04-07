@@ -44,6 +44,7 @@ export const getUser = createEndpointCall<GetUserResponse, GetUserData>(
 
 export const getMe = createEndpointCall<GetUserResponse>(
     async (client, data) => await client.request({
+        // todo: move away frm this hack
         url: (data.user.overridePluralId ? `/v1/user/${data.user.overridePluralId}` :'/v1/me'),
         method: 'GET'
     })

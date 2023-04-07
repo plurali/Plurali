@@ -22,7 +22,7 @@ export const memberIdSchema = S.object().prop("params", S.object().prop("id", S.
 
 export default controller(async (server) => {
     server.get<IdSchema>("/:id", {schema: idSchema.valueOf()}, async (req, res) =>
-        withPublicUserContext({req, res}, async ({system}) => res.send({system})))
+        withPublicUserContext({req, res}, async ({system}) => res.send(data({system}))))
 
     server.get<IdSchema>("/:id/members", {schema: idSchema.valueOf()}, async (req, res) =>
         withPublicUserContext({req, res}, async ({members}) => {

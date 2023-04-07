@@ -37,7 +37,7 @@ export default controller(async (server) => {
         )
     )
 
-    server.get<IdSchema>("/member/:id", {schema: idSchema.valueOf()}, async (req, res) =>
+    server.get<IdSchema>("/members/:id", {schema: idSchema.valueOf()}, async (req, res) =>
         withSystemContext(
             {req, res}, async ({member: get}) => {
                 const member = await get(req.params.id)
@@ -50,7 +50,13 @@ export default controller(async (server) => {
         )
     )
 
-    server.post<FieldSchema>("/field/:id", {schema: fieldSchema.valueOf()}, async (req, res) =>
+    server.get("/fields", async (req, res) =>
+        withSystemContext(
+            {req, res}, async ({system}) => res.send(data({fields: system.fields}))
+        )
+    )
+
+    server.post<FieldSchema>("/fields/:id", {schema: fieldSchema.valueOf()}, async (req, res) =>
         withSystemContext(
             {req, res}, async ({system, member: get}) => {
                 let field = await $db.userField.findFirst({
