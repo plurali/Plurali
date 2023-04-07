@@ -16,7 +16,7 @@ model User {
   admin            Boolean      @default(false)
   members          UserMember[]
   fields           UserField[]
-  data             UserData?    @relation(fields: [dataId], references: [id])
+  data             UserData?    @relation(fields: [dataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   dataId           String?      @unique
 }
 
@@ -32,8 +32,8 @@ model UserField {
   id     String         @id @default(uuid())
   pluralId String @unique
   pluralOwnerId String
-  user   User?          @relation(fields: [userId], references: [id])
-  data   UserFieldData? @relation(fields: [dataId], references: [id])
+  user   User?          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  data   UserFieldData? @relation(fields: [dataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   dataId String?        @unique
   userId String?
 }
@@ -49,9 +49,9 @@ model UserMember {
   id            String          @id @default(uuid())
   pluralId      String          @unique
   pluralOwnerId String
-  user          User            @relation(fields: [userId], references: [id])
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String
-  data          UserMemberData? @relation(fields: [dataId], references: [id])
+  data          UserMemberData? @relation(fields: [dataId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   dataId        String?         @unique
 }
 

@@ -55,7 +55,9 @@ const createSystemContext = async ({
                         {data: {slug: id}},
                         {id}
                     ],
-                    pluralOwnerId: system.id,
+                    AND: {
+                        pluralOwnerId: system.id,
+                    }
                 },
                 include: {
                     data: true

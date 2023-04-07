@@ -1,6 +1,6 @@
-import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar} from ".."
+import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar, parseFieldType} from ".."
 import {createEndpointCall} from "../client";
-import {MemberField} from "../../system/MemberField";
+import {MemberField, MemberFieldType} from "../../system/MemberField";
 import {System} from "../../system/System";
 import {Prisma, User, UserData, UserFieldData} from "@prisma/client";
 import {$db} from "../../db";
@@ -57,11 +57,13 @@ export const transformMemberField = (id: string, system: UserEntry|System, data:
 
     const position = field instanceof MemberField ? field.position : field.order;
     const visibility = field instanceof MemberField ? field.pluralVisibility : parseVisibility(field);
+    const type = field instanceof MemberField ? field.type : parseFieldType(field);
 
     return new MemberField(
         id,
         field.name,
         position,
+        type,
         visibility,
         UserFieldDataDto.from(data)
     )

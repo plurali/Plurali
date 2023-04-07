@@ -30,7 +30,6 @@ interface PublicUserContext {
  */
 const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>): Promise<PublicUserContext | ErrorResponse> => {
     const userId = (req.params as any).id
-
     if (!userId)
         return error(Status.ResourceNotFound)
 
@@ -43,8 +42,10 @@ const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>)
                 {data: {slug: userId}},
                 {id: userId}
             ],
-            data: {
-                visible: true
+            AND: {
+                data: {
+                    visible: true
+                }
             }
         },
         include: {
@@ -57,6 +58,8 @@ const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>)
     }
 
     const system = await fetchMe({user}, {data: {visible: true}});
+
+    console.log(system)
 
     return {
         success: true,
@@ -73,9 +76,11 @@ const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>)
                             {data: {slug: id}},
                             {id}
                         ],
-                        pluralOwnerId: system.id,
-                        data: {
-                            visible: true,
+                        AND: {
+                            pluralOwnerId: system.id,
+                            data: {
+                                visible: true,
+                            }
                         }
                     },
                     include: {
