@@ -1,8 +1,8 @@
 import { Visibility } from "../system/Visibility";
-import {User} from "@prisma/client";
+import {User, UserData} from "@prisma/client";
 
 export interface BaseData {
-    user: User
+    user: User & {data: UserData}
 }
 
 export interface BaseEntry<TContent extends object = {}> {

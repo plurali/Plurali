@@ -5,6 +5,7 @@ import {Member} from '../../system/Member'
 import {System} from '../../system/System'
 import {Status, ErrorResponse, error} from '../status'
 import {createUserContext, UserContext} from './userContext'
+import {$db} from "../../db";
 
 interface UseSystemContext {
     req: FastifyRequest
@@ -48,11 +49,23 @@ const createSystemContext = async ({
             return fetchMembers(userContext, system)
         },
         async member(id: string): Promise<Member | null> {
-            return fetchMember({user: userContext.user, id}, system)
+            const userMember = await $db.userMember.findFirst({
+                where: {
+                    OR: [
+                        {data: {slug: id}},
+                        {id}
+                    ],
+                    pluralOwnerId: system.id,
+                },
+                include: {
+                    data: true
+                }
+            })
+
+            return fetchMember({user: userContext.user, id}, system, userMember)
         }
     }
 }
-
 /**
  * Creates the System Context and passes it to the callback
  * passed in the first function.
@@ -60,17 +73,19 @@ const createSystemContext = async ({
  * If an error occurs while fetching (eg. missing token, etc..),
  * the callback does not get executed and an error response gets sent.
  *
- * @param {(systemCtx: SystemContext) => Promise<unknown>} fn The callback
  * @param {UseSystemContext} deps The required dependencies for SystemContext
+ * @param {(systemCtx: SystemContext) => Promise<unknown>} fn The callback
+ * @param errFn
  */
+
 const withSystemContext = async (
-    ctx: UseSystemContext,
+    deps: UseSystemContext,
     fn: (systemCtx: SystemContext) => Promise<unknown> | unknown,
     errFn?: () => unknown
 ) => {
-    const context = await createSystemContext(ctx)
+    const context = await createSystemContext(deps)
     if (!context.success) {
-        if (ctx.res) return ctx.res.send(context)
+        if (deps.res) return deps.res.send(context)
         return errFn?.()
     }
 

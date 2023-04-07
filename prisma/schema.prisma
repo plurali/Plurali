@@ -8,19 +8,57 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(uuid())
-  username        String       @unique
-  passwordHash String
-  pluralKey    String?
+  id               String       @id @default(uuid())
+  username         String       @unique
+  passwordHash     String
+  pluralKey        String?
   overridePluralId String?
-  admin     Boolean @default(false)
-  members      UserMember[]
+  admin            Boolean      @default(false)
+  members          UserMember[]
+  fields           UserField[]
+  data             UserData?    @relation(fields: [dataId], references: [id])
+  dataId           String?      @unique
+}
+
+model UserData {
+  id          String  @id @default(uuid())
+  slug        String?
+  description String?
+  visible     Boolean
+  user        User?
+}
+
+model UserField {
+  id     String         @id @default(uuid())
+  pluralId String @unique
+  pluralOwnerId String
+  user   User?          @relation(fields: [userId], references: [id])
+  data   UserFieldData? @relation(fields: [dataId], references: [id])
+  dataId String?        @unique
+  userId String?
+}
+
+model UserFieldData {
+  id          String     @id @default(uuid())
+  description String?
+  visible     Boolean
+  field       UserField?
 }
 
 model UserMember {
-  id                String @id @default(uuid())
-  pluralId          String @unique
-  user              User   @relation(fields: [userId], references: [id])
-  userId            String
-  customDescription String
+  id            String          @id @default(uuid())
+  pluralId      String          @unique
+  pluralOwnerId String
+  user          User            @relation(fields: [userId], references: [id])
+  userId        String
+  data          UserMemberData? @relation(fields: [dataId], references: [id])
+  dataId        String?         @unique
+}
+
+model UserMemberData {
+  id          String      @id @default(uuid())
+  slug        String?
+  description String?
+  visible     Boolean
+  member      UserMember?
 }

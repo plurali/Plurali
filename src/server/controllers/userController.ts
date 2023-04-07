@@ -7,6 +7,7 @@ import {fetchUser} from "../../simplyApi/api/users";
 import {$db} from "../../db";
 import {testKey} from "../../simplyApi/client";
 import {Prisma} from "@prisma/client";
+import {syncWithApi} from "../../simplyApi/sync";
 
 export const userUpdateSchema = S.object()
     .prop("body", S.object()
@@ -52,11 +53,18 @@ export default controller(async (server) => {
                 input.overridePluralId = null;
             }
 
+            user = await $db.user.update({
+                where: {id: user.id},
+                data: input,
+                include: {
+                    data: true
+                }
+            });
+
+            user = await syncWithApi(user);
+
             res.send(data({
-                user: UserDto.from(await $db.user.update({
-                    where: {id: user.id},
-                    data: input
-                }))
+                user: UserDto.from(user)
             }))
         })
     )

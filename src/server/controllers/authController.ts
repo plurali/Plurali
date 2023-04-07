@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { $db } from "../../db";
 import { data, error, Status } from "../status";
 import { UserDto } from "../../db/UserDto";
+import {syncWithApi} from "../../simplyApi/sync";
 
 const authSchema = S.object()
     .prop(
@@ -51,12 +52,17 @@ export default controller(async (server) => {
         const user = await $db.user.findUnique({
             where: {
                 username
+            },
+            include: {
+                data: true
             }
         })
 
         if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
             return res.status(400).send(error(Status.Login.InvalidCredentials))
         }
+
+        await syncWithApi(user);
 
         req.session.set("userId", user.id);
 

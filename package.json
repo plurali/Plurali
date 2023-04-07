@@ -20,6 +20,7 @@
     "liquidjs": "^9.42.0",
     "pino-pretty": "^9.1.0",
     "prisma": "^4.2.1",
+    "slugify": "^1.6.6",
     "sodium-native": "^4.0.1"
   },
   "devDependencies": {
