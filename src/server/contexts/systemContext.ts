@@ -1,10 +1,10 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
-import { fetchMembers } from '../../simplyApi/api/members'
-import { fetchMe } from '../../simplyApi/api/users'
-import { Member } from '../../system/Member'
-import { System } from '../../system/System'
-import { Status, ErrorResponse, error } from '../status'
-import { createUserContext, UserContext } from './userContext'
+import {FastifyRequest, FastifyReply} from 'fastify'
+import {fetchMember, fetchMembers} from '../../simplyApi/api/members'
+import {fetchMe} from '../../simplyApi/api/users'
+import {Member} from '../../system/Member'
+import {System} from '../../system/System'
+import {Status, ErrorResponse, error} from '../status'
+import {createUserContext, UserContext} from './userContext'
 
 interface UseSystemContext {
     req: FastifyRequest
@@ -14,6 +14,7 @@ interface UseSystemContext {
 interface SystemContext extends UserContext {
     system: System
     members: Promise<Member[]>
+    member: (id: string) => Promise<Member | null>
 }
 
 /**
@@ -24,9 +25,9 @@ interface SystemContext extends UserContext {
  * @returns {SystemContext | ErrorResponse}
  */
 const createSystemContext = async ({
-    req,
-}: Omit<UseSystemContext, 'res'>): Promise<SystemContext | ErrorResponse> => {
-    const userContext = await createUserContext({ req });
+                                       req,
+                                   }: Omit<UseSystemContext, 'res'>): Promise<SystemContext | ErrorResponse> => {
+    const userContext = await createUserContext({req});
     // typechecking forced me to write this fuck you
     if (userContext.success === false) return userContext;
 
@@ -34,7 +35,7 @@ const createSystemContext = async ({
         return error(Status.PluralKeyNotSpecified);
     }
 
-    const system = await fetchMe({ key: userContext.user.pluralKey });
+    const system = await fetchMe({key: userContext.user.pluralKey});
 
     if (!system) {
         return error(Status.InvalidPluralKey);
@@ -44,7 +45,10 @@ const createSystemContext = async ({
         ...userContext,
         system,
         get members(): Promise<Member[]> {
-            return fetchMembers({ key: userContext.user.pluralKey }, system)
+            return fetchMembers({key: userContext.user.pluralKey}, system)
+        },
+        async member(id: string): Promise<Member | null> {
+            return fetchMember({key: userContext.user.pluralKey, id}, system)
         }
     }
 }

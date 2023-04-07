@@ -8,7 +8,8 @@ export const Status = {
     },
     Register: {
         UsernameAlreadyUsed: "Username is already used",
-    }
+    },
+    ResourceNotFound: "Resource not found",
 }
 
 export interface SuccessResponse<TData extends object = object> {
