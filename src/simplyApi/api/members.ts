@@ -40,6 +40,14 @@ export const getMembers = createEndpointCall<GetMembersResponse, GetMembersData>
     })
 );
 
+export const getMember = createEndpointCall<GetMemberResponse, GetMemberData>(
+    async (client, data) => await client.request({
+        url: `/v1/member/${data.systemId}/${data.memberId}`,
+        method: 'GET'
+    })
+);
+
+
 export const transformMember = (data: MemberEntry, system: System): Member => {
     let fields: MemberFieldWithValue[] = [];
     
@@ -78,5 +86,17 @@ export const fetchMembers = async (data: BaseData, system: System): Promise<Memb
         })).data.map((m) => transformMember(m, system))
     } catch {
         return [];
+    }
+}
+
+export const fetchMember = async (data: BaseData & {id: string}, system: System): Promise<Member|null> => {
+    try {
+        return transformMember((await getMember({
+            key: data.key,
+            systemId: system.id,
+            memberId: data.id
+        })).data, system)
+    } catch {
+        return null;
     }
 }
