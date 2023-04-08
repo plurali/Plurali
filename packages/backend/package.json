@@ -17,7 +17,7 @@
     "bson": "^5.2.0",
     "contairy": "^1.0.1-1",
     "dotenv": "^16.0.2",
-    "eventemitter3": "^4.0.7",
+    "eventemitter3": "^5.0.0",
     "fastify": "^4.5.2",
     "fastify-plugin": "^4.2.0",
     "fluent-json-schema": "^4.1.0",
