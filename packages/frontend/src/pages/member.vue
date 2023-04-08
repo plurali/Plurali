@@ -1,6 +1,6 @@
 <template>
   <Fetchable :result="member" :retry="fetchMember">
-    <MemberSummarry :member="member" />
+    <MemberSummary :member="member" />
 
     <CustomFields
       :fields="member.fields"
@@ -27,11 +27,11 @@ import Fetchable from '../components/global/Fetchable.vue'
 import CustomFields from '../components/global/fields/CustomFields.vue'
 import ColorCircle from '../components/global/color/ColorCircle.vue'
 import { getRouteParam } from '../utils'
-import MemberSummarry from '../components/global/members/MemberSummarry.vue'
+import MemberSummary from '../components/global/members/MemberSummary.vue'
 
 export default defineComponent({
   components: {
-    MemberSummarry,
+    MemberSummary,
     ColorCircle,
     CustomFields,
     Fetchable,
