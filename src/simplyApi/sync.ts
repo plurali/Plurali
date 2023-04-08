@@ -75,7 +75,7 @@ export const syncWithApi = async (user: User) => {
 
     for (const fieldId in system.content.fields) {
         //const field = system.content.fields[fieldId];
-        const userField = userFields.find(f => f.id === fieldId);
+        const userField = userFields.find(f => f.pluralId === fieldId);
 
         if (!userField) {
             fieldsToCreate.push({
