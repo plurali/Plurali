@@ -1,13 +1,9 @@
-import {UserField} from "@prisma/client";
+import { UserField } from '@prisma/client'
 
 export class UserFieldDataDto {
-    constructor(
-        public description: string,
-        public visible: boolean,
-    ) {
-    }
+  constructor(public description: string, public visible: boolean) {}
 
-    public static from(userField: UserField): UserFieldDataDto {
-        return new this(userField.description, userField.visible)
-    }
+  public static from(userField: UserField): UserFieldDataDto {
+    return new this(userField.description, userField.visible)
+  }
 }
