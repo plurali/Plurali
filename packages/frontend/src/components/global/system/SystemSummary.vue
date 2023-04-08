@@ -26,7 +26,7 @@
         <a
           v-if="isDashboard && currentSystem.data.visible"
           :href="`/${currentSystem.data.slug}`"
-          class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
+          class="text-sm text-gray-700 font-normal"
           target="_blank"
           rel="noopener noreferrer"
         >
