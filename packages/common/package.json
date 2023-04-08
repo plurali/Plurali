@@ -1,0 +1,10 @@
+{
+  "name": "@plurali/common",
+  "version": "1.0.0",
+  "author": "Liliana V. <lilianalillyy@gmail.com>",
+  "license": "MIT",
+  "main": "dist",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  }
+}

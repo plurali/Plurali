@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#plurali > #visual > path {
+  @apply transition;
+}
