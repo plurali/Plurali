@@ -10,8 +10,9 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarn backend build && yarn frontend build",
+    "build": "yarm common build && concurrently 'yarn frontend build' 'yarn backend build'",
     "lint": "eslint --ignore-path .gitignore .",
+    "common": "yarn workspace @plurali/common",
     "backend": "yarn workspace @plurali/backend",
     "frontend": "yarn workspace @plurali/frontend",
     "db": "yarn prisma"
@@ -26,6 +27,7 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "babel-eslint": "^10.1.0",
+    "concurrently": "^8.0.1",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
