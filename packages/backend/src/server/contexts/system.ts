@@ -40,14 +40,7 @@ export const createSystemContext = async ({ req }: SystemContextDeps): Promise<S
       return await fetchMembers(userContext, system)
     },
     async getSystemMember(id: string): Promise<Member | null> {
-      const userMember = await $db.userMember.findFirst({
-        where: {
-          OR: [{ slug: id }, { pluralId: id }],
-          AND: { pluralOwnerId: system.id },
-        },
-      })
-
-      return fetchMember({ user: userContext.user, id }, system, userMember)
+      return await fetchMember({ user: userContext.user, id }, system)
     },
   }
 }
