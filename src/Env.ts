@@ -17,7 +17,10 @@ export class Env<T extends { [key: string]: any }> {
 
         console.warn("No .env file found, skipping dotenv")
 
-        this._env = out.error ? (out.parsed as any) ?? {} : {};
+        this._env = {
+            ...process.env,
+            ...(out.error ? (out.parsed as any) ?? {} : {})
+        };
     }
 
     get<Throw extends boolean = true>(key: keyof T, throwException: Throw): Throw extends true ?  T[typeof key] : T[typeof key] | null {
