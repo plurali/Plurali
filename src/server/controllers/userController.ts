@@ -56,9 +56,6 @@ export default controller(async (server) => {
             user = await $db.user.update({
                 where: {id: user.id},
                 data: input,
-                include: {
-                    data: true
-                }
             });
 
             user = await syncWithApi(user);

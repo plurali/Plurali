@@ -1,11 +1,10 @@
-import {BaseData, BaseEntry, VisibilityAttrs, parseVisibility, parseAvatar, parseFieldType} from ".."
+import {BaseData, BaseEntry, parseAvatar, parseVisibility, VisibilityAttrs} from ".."
 import {createEndpointCall} from "../client";
 import {Member} from "../../system/Member";
-import {MemberField, MemberFieldWithValue} from "../../system/MemberField";
+import {MemberFieldWithValue} from "../../system/MemberField";
 import {System} from "../../system/System";
-import {UserField, UserFieldData, UserMember, UserMemberData} from "@prisma/client";
+import {Prisma, UserField, UserMember} from "@prisma/client";
 import {$db} from "../../db";
-import {Prisma} from "@prisma/client";
 import {UserMemberDataDto} from "../../db/UserMemberDataDto";
 import {UserFieldDataDto} from "../../db/UserFieldDataDto";
 
@@ -41,20 +40,20 @@ export type GetMemberResponse<TMemberContentInfo extends Record<string, string> 
 export const getMembers = createEndpointCall<GetMembersResponse, GetMembersData>(
     async (client, data) => await client.request({
         url: `/v1/members/${data.systemId}`,
-        method: 'GET'
+        method: 'GET',
+        //id: `>>${data.user.id}>>@getMembers(system::${data.systemId})`
     })
 );
 
 export const getMember = createEndpointCall<GetMemberResponse, GetMemberData>(
     async (client, data) => await client.request({
         url: `/v1/member/${data.systemId}/${data.memberId}`,
-        method: 'GET'
+        method: 'GET',
+        //id: `>>${data.user.id}>>@getMember(system::${data.systemId}|member::${data.memberId})`
     })
 );
 
-export const transformFieldWithValue = (id: string, member: MemberEntry, system: System, userField: UserField & {
-    data: UserFieldData
-}) => {
+export const transformFieldWithValue = (id: string, member: MemberEntry, system: System, userField: UserField) => {
     const field = system.fields.find(field => field.fieldId === id);
 
     return new MemberFieldWithValue(
@@ -63,15 +62,12 @@ export const transformFieldWithValue = (id: string, member: MemberEntry, system:
         field.position,
         field.type,
         field.pluralVisibility,
-        UserFieldDataDto.from(userField.data),
+        UserFieldDataDto.from(userField),
         member.content.info[id]
     )
 }
 
-
-export const transformMember = async (data: MemberEntry, system: System, userMember: UserMember & {
-    data: UserMemberData
-}, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<Member> => {
+export const transformMember = async (data: MemberEntry, system: System, userMember: UserMember, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<Member> => {
     let fields: MemberFieldWithValue[] = [];
 
     const userFields = await $db.userField.findMany({
@@ -79,9 +75,6 @@ export const transformMember = async (data: MemberEntry, system: System, userMem
             pluralOwnerId: system.id,
             ...fieldWhere
         },
-        include: {
-            data: true
-        }
     })
 
     for (const fieldId in data.content.info) {
@@ -102,8 +95,8 @@ export const transformMember = async (data: MemberEntry, system: System, userMem
         data.content.desc.trim().length >= 1 ? data.content.desc : null,
         fields,
         parseAvatar(data.content),
-        UserMemberDataDto.from(userMember.data),
-    )
+        UserMemberDataDto.from(userMember),
+    );
 }
 
 export const fetchMembers = async (data: BaseData, system: System, where: Partial<Prisma.UserMemberWhereInput> = {}, fieldWhere: Partial<Prisma.UserFieldWhereInput> = {}): Promise<Member[]> => {
@@ -118,9 +111,6 @@ export const fetchMembers = async (data: BaseData, system: System, where: Partia
                     userId: data.user.id,
                     ...where
                 },
-                include: {
-                    data: true
-                }
             })
 
             if (!userMember) {
@@ -145,9 +135,6 @@ export const fetchMember = async (data: BaseData & {
                 pluralId: data.id,
                 pluralOwnerId: system.id
             },
-            include: {
-                data: true
-            }
         })
 
         if (!userMember) {

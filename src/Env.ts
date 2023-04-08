@@ -7,6 +7,8 @@ export interface Variables {
     HOST: string;
     PORT: string;
     CORS_ORIGIN: string;
+    REDIS_HOST: string;
+    REDIS_PASS: string;
 }
 
 export class Env<T extends { [key: string]: any }> {

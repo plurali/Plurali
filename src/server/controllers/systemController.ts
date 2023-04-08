@@ -4,7 +4,6 @@ import {withSystemContext} from "../contexts/systemContext";
 import S from "fluent-json-schema";
 import {$db} from "../../db";
 import {fetchMe, transformMemberField} from "../../simplyApi/api/users";
-import {transformMember} from "../../simplyApi/api/members";
 
 export interface IdSchema {
     Params: {
@@ -47,16 +46,9 @@ export default controller(async (server) => {
                         id: user.id
                     },
                     data: {
-                        data: {
-                            update: {
-                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
-                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
-                            }
-                        }
+                        ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                        ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
                 res.send(data({system: await fetchMe({user})}))
@@ -91,9 +83,6 @@ export default controller(async (server) => {
                         pluralId: req.params.id,
                         pluralOwnerId: system.id
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
                 if (!member) {
@@ -105,16 +94,9 @@ export default controller(async (server) => {
                         id: member.id
                     },
                     data: {
-                        data: {
-                            update: {
-                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
-                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
-                            }
-                        }
+                        ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                        ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
                 res.send(data({member: await get(req.params.id)}))
@@ -136,9 +118,6 @@ export default controller(async (server) => {
                         pluralId: req.params.id,
                         pluralOwnerId: system.id
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
                 if (!field) {
@@ -150,19 +129,12 @@ export default controller(async (server) => {
                         id: field.id
                     },
                     data: {
-                        data: {
-                            update: {
-                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
-                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
-                            }
-                        }
+                        ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                        ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
-                res.send(data({field: transformMemberField(field.pluralId, system, field.data)}))
+                res.send(data({field: transformMemberField(field.pluralId, system, field)}))
             }
         )
     )

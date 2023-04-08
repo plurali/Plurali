@@ -6,6 +6,7 @@ import {System} from '../../system/System'
 import {Status, ErrorResponse, error} from '../status'
 import {createUserContext, UserContext} from './userContext'
 import {$db} from "../../db";
+import {ObjectId} from "bson";
 
 interface UseSystemContext {
     req: FastifyRequest
@@ -52,16 +53,13 @@ const createSystemContext = async ({
             const userMember = await $db.userMember.findFirst({
                 where: {
                     OR: [
-                        {data: {slug: id}},
-                        {id}
+                        {slug: id},
+                        {pluralId: id}
                     ],
                     AND: {
                         pluralOwnerId: system.id,
                     }
                 },
-                include: {
-                    data: true
-                }
             })
 
             return fetchMember({user: userContext.user, id}, system, userMember)

@@ -1,4 +1,4 @@
-import {User, UserData, UserMember, UserMemberData} from "@prisma/client";
+import {Prisma, User, UserMember} from "@prisma/client";
 import {getMe, UserEntry} from "./api/users";
 import {getMembers, MemberEntry} from "./api/members";
 import {$db} from "../db";
@@ -6,63 +6,36 @@ import {createSlug} from "../utils";
 import {parseVisibility} from "./index";
 import {PluralVisibility} from "../system/PluralVisibility";
 
-export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User & {
-    data: UserData
-}): Promise<UserMember & {
-    data: UserMemberData
-}> => {
-    const member = (await $db.userMember.findFirst({
+export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User): Promise<UserMember> => {
+    const member = (await $db.userMember.upsert({
         where: {
-            userId: user.id,
-            pluralId: fetchedMember.id,
-            pluralOwnerId: system.id
+            pluralId: fetchedMember.id
         },
-        include: {
-            data: true
+        update: {},
+        create: {
+            user: {connect: {id: user.id}},
+            pluralId: fetchedMember.id,
+            pluralOwnerId: system.id,
+            slug: createSlug(fetchedMember.content.name),
+            visible: parseVisibility(fetchedMember.content) === PluralVisibility.Public,
         }
     }));
 
-    if (!member) {
-        return $db.userMember.create({
-            data: {
-                user: {connect: {id: user.id}},
-                pluralId: fetchedMember.id,
-                pluralOwnerId: system.id,
-                data: {
-                    create: {
-                        slug: createSlug(fetchedMember.content.name),
-                        visible: parseVisibility(fetchedMember.content) === PluralVisibility.Public,
-                    }
-                }
-            },
-            include: {
-                data: true
-            }
-        });
-    }
-
-    if (!member.data.slug) {
+    if (!member.slug) {
         return $db.userMember.update({
             where: {
-                id: member.data.id,
+                id: member.id,
             },
             data: {
-                data: {
-                    update: {
-                        slug: createSlug(fetchedMember.content.name)
-                    }
-                }
+                slug: createSlug(fetchedMember.content.name)
             },
-            include: {
-                data: true
-            }
         })
     }
 
     return member;
 };
 
-export const syncWithApi = async (user: User & { data: UserData }) => {
+export const syncWithApi = async (user: User) => {
     if (!user.pluralKey) {
         return user;
     }
@@ -70,6 +43,7 @@ export const syncWithApi = async (user: User & { data: UserData }) => {
     const system = (await getMe({user})).data;
 
     if (!system.content.isAsystem) {
+        // TODO: handle?
         user = await $db.user.update({
             where: {
                 id: user.id
@@ -77,75 +51,47 @@ export const syncWithApi = async (user: User & { data: UserData }) => {
             data: {
                 pluralKey: null
             },
-            include: {
-                data: true
-            }
         })
         return user;
     }
 
-    if (!user.data) {
-        user = await $db.user.update({
-            where: {
-                id: user.id
-            },
-            data: {
-                data: {
-                    create: {
-                        visible: false,
-                        slug: createSlug(system.content.username)
-                    }
-                }
-            },
-            include: {
-                data: true
-            }
-        })
-    } else {
-        if (!user.data.slug) {
-            user = await $db.user.update({
-                where: {
-                    id: user.data.id,
-                },
-                data: {
-                    data: {
-                        update: {
-                            slug: createSlug(system.content.username)
-                        }
-                    }
-                },
-                include: {
-                    data: true
-                }
-            })
+    user = await $db.user.update({
+        where: {
+            id: user.id
+        },
+        data: {
+            visible: user.visible ?? false,
+            slug: user.slug ?? createSlug(system.content.username)
+        },
+    })
+
+    const userFields = await $db.userField.findMany({
+        where: {
+            pluralOwnerId: system.id
         }
-    }
+    })
+
+    const fieldsToCreate: Prisma.UserFieldCreateManyInput[] = [];
 
     for (const fieldId in system.content.fields) {
         //const field = system.content.fields[fieldId];
-        const userField = await $db.userField.findFirst({
-            where: {
-                pluralId: fieldId,
-                pluralOwnerId: system.id
-            }
-        })
+        const userField = userFields.find(f => f.id === fieldId);
 
         if (!userField) {
-            await $db.userField.create({
-                data: {
-                    pluralId: fieldId,
-                    pluralOwnerId: system.id,
-                    user: {connect: {id: user.id}},
-                    data: {
-                        create: {
-                            visible: false,
-                            description: null
-                        }
-                    }
-                }
+            fieldsToCreate.push({
+                pluralId: fieldId,
+                pluralOwnerId: system.id,
+                userId: user.id,
+                visible: false,
+                description: null
             })
         }
     }
+
+    // Batch insert fields at once
+    await $db.userField.createMany({
+        data: fieldsToCreate
+    })
 
     const members = (await getMembers({user, systemId: system.id})).data;
 
