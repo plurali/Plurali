@@ -1,4 +1,4 @@
-import {UserData, UserMemberData} from "@prisma/client";
+import {User} from "@prisma/client";
 export class UserDataDto {
     constructor(
         public slug: string,
@@ -7,7 +7,7 @@ export class UserDataDto {
     ) {
     }
 
-    public static from(userData: UserData): UserDataDto {
-        return new this(userData.slug, userData.description, userData.visible)
+    public static from(user: User): UserDataDto {
+        return new this(user.slug, user.description, user.visible)
     }
 }

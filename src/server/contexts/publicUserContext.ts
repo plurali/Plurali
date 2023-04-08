@@ -1,4 +1,4 @@
-import {User, UserData} from '@prisma/client'
+import {User} from '@prisma/client'
 import {FastifyRequest, FastifyReply} from 'fastify'
 import {$db} from '../../db'
 import {Status, ErrorResponse, error} from '../status'
@@ -6,6 +6,7 @@ import {System} from "../../system/System";
 import {fetchMe} from "../../simplyApi/api/users";
 import {Member} from "../../system/Member";
 import {fetchMember, fetchMembers, getMember, transformMember} from "../../simplyApi/api/members";
+import {ObjectId} from "bson";
 
 interface UsePublicUserContext {
     req: FastifyRequest
@@ -14,7 +15,7 @@ interface UsePublicUserContext {
 
 interface PublicUserContext {
     success: true,
-    user: User & { data: UserData }
+    user: User,
     system: System
     members: Promise<Member[]>
 
@@ -29,8 +30,8 @@ interface PublicUserContext {
  * @returns {PublicUserContext | ErrorResponse}
  */
 const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>): Promise<PublicUserContext | ErrorResponse> => {
-    const userId = (req.params as any).id
-    if (!userId)
+    const identifier = (req.params as any).id
+    if (!identifier)
         return error(Status.ResourceNotFound)
 
     /**
@@ -38,61 +39,39 @@ const createPublicUserContext = async ({req}: Omit<UsePublicUserContext, 'res'>)
      */
     const user = await $db.user.findFirst({
         where: {
-            OR: [
-                {data: {slug: userId}},
-                {id: userId}
-            ],
-            AND: {
-                data: {
-                    visible: true
-                }
-            }
+            slug: identifier,
+            visible: true
         },
-        include: {
-            data: true
-        }
     })
 
     if (!user) {
         return error(Status.ResourceNotFound)
     }
 
-    const system = await fetchMe({user}, {data: {visible: true}});
-
-    console.log(system)
+    const system = await fetchMe({user}, {visible: true});
 
     return {
         success: true,
         user,
         system,
         get members(): Promise<Member[]> {
-            return fetchMembers({user}, system, {data: {visible: true}}, {data: {visible: true}})
+            return fetchMembers({user}, system, {visible: true}, {visible: true})
         },
         async member(id: string): Promise<Member | null> {
             try {
                 const userMember = await $db.userMember.findFirst({
                     where: {
-                        OR: [
-                            {data: {slug: id}},
-                            {id}
-                        ],
-                        AND: {
-                            pluralOwnerId: system.id,
-                            data: {
-                                visible: true,
-                            }
-                        }
+                        slug: id,
+                        pluralOwnerId: system.id,
+                        visible: true
                     },
-                    include: {
-                        data: true
-                    }
                 })
 
                 return userMember ? await transformMember((await getMember({
                     user,
                     systemId: system.id,
                     memberId: userMember.pluralId
-                })).data, system, userMember, {data: {visible: true}}) : null;
+                })).data, system, userMember, {visible: true}) : null;
             } catch {
                 return null;
             }

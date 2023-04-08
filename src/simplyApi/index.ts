@@ -1,9 +1,9 @@
 import {PluralVisibility} from "../system/PluralVisibility";
-import {User, UserData} from "@prisma/client";
+import {User} from "@prisma/client";
 import {MemberFieldType} from "../system/MemberField";
 
 export interface BaseData {
-    user: User & { data: UserData }
+    user: User
 }
 
 export interface BaseEntry<TContent extends object = {}> {

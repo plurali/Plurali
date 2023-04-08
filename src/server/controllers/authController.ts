@@ -35,7 +35,8 @@ export default controller(async (server) => {
         const user = await $db.user.create({
             data: {
                 username,
-                passwordHash: await bcrypt.hash(password, 10)
+                passwordHash: await bcrypt.hash(password, 10),
+                visible: false,
             }
         })
 
@@ -53,9 +54,6 @@ export default controller(async (server) => {
             where: {
                 username
             },
-            include: {
-                data: true
-            }
         })
 
         if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
