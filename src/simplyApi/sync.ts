@@ -89,9 +89,11 @@ export const syncWithApi = async (user: User) => {
     }
 
     // Batch insert fields at once
-    await $db.userField.createMany({
-        data: fieldsToCreate
-    })
+    if (fieldsToCreate.length >= 1) {
+        await $db.userField.createMany({
+            data: fieldsToCreate
+        })
+    }
 
     const members = (await getMembers({user, systemId: system.id})).data;
 
