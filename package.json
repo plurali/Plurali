@@ -37,6 +37,6 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node src",
     "build": "tsc -p tsconfig.json",
-    "prod": "cross-env NODE_ENV=production node dist"
+    "prod": "cross-env NODE_ENV=production node dist/index.js"
   }
 }
