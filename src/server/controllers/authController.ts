@@ -28,7 +28,7 @@ export default controller(async (server) => {
 
         if (!!(await $db.user.findUnique({ where: { username } }))) {
             return res.status(400).send({
-                error: 'This email is already registered!'
+                error: 'This username is already used!'
             })
         }
 
