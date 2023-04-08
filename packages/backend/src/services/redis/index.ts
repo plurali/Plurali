@@ -7,15 +7,27 @@ export const $redis = new Redis({
     enableAutoPipelining: true
 });
 
-export const axiosToRedisKey = (key: string) => `plurali:sp:${key}`
+export const fullKey = (key: string) => `plurali|${key}`
 
-export const cache = async <T = {}>(key: string, value: T, expiry = 300): Promise<void> => {
-    // TODO expiry
-    await $redis.set(`plurali|${key}`, JSON.stringify(value));
+export const cache = async <T = {}>(key: string, value: T, expiry: number|null = 300): Promise<void> => {
+    key = fullKey(key);
+    await $redis.set(key, JSON.stringify(value));
+    
+    if (expiry) {
+        if (expiry < 1) {
+            throw new Error("Expiry must be at least 1")
+        }
+
+        await $redis.expire(key, expiry)
+    }
+}
+
+export const uncache = async (key: string): Promise<void> => {
+    await $redis.del(fullKey(key));
 }
 
 export const cached = async <T = {}>(key: string): Promise<T|null> => {
-    const res = await $redis.get(`plurali|${key}`);
+    const res = await $redis.get(fullKey(key));
     if (!res) return null;
 
     return JSON.parse(res) as T;
