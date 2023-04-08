@@ -41,7 +41,6 @@ export const getMembers = createEndpointCall<GetMembersResponse, GetMembersData>
     await client.request({
       url: `/v1/members/${data.systemId}`,
       method: 'GET',
-      //id: `>>${data.user.id}>>@getMembers(system::${data.systemId})`
     })
 )
 
@@ -50,6 +49,5 @@ export const getMember = createEndpointCall<GetMemberResponse, GetMemberData>(
     await client.request({
       url: `/v1/member/${data.systemId}/${data.memberId}`,
       method: 'GET',
-      //id: `>>${data.user.id}>>@getMember(system::${data.systemId}|member::${data.memberId})`
     })
 )

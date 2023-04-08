@@ -2,19 +2,22 @@ import * as plural from '@plurali/common/dist/plural'
 import { AxiosResponse } from 'axios'
 import { cache, cached } from '../services/redis'
 
-export const createCachedEndpoint = <T, TA = any>(
+export interface CachableResult<TData = any> {
+  data: TData
+  cached: boolean
+}
+
+export const createCachedEndpoint = <T, TA>(
   fn: (...args: TA[]) => Promise<AxiosResponse<T>>,
   id: string | ((...args: TA[]) => string),
   expiry = 300
-  //   wrapped as .data to prevent workarounds for everything consuming axiosResponse.data
-): ((...args: TA[]) => Promise<{ data: T }>) => {
+): ((...args: TA[]) => Promise<CachableResult<T>>) => {
   return async function (...args: TA[]) {
     id = typeof id === 'function' ? id(...args) : id
     const cachedData = await cached<T>(id)
 
     if (cachedData) {
-        console.log(`${id} is cached!`)
-      return { data: cachedData }
+      return { data: cachedData, cached: true }
     }
 
     try {
@@ -24,7 +27,7 @@ export const createCachedEndpoint = <T, TA = any>(
         await cache(id, res.data, expiry)
       }
 
-      return { data: res.data }
+      return { data: res.data, cached: false }
     } catch (e) {
       throw e
     }
