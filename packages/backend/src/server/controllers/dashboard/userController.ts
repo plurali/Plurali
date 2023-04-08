@@ -41,7 +41,8 @@ export default controller(async server => {
         input.pluralKey = null
       }
 
-      // dev: disguise your own
+      // dev: disguise your own plural user id, however the pluralKey must have access
+      // (eg. friends)
       if (req.body.overridePluralId) {
         if (!user.admin) {
           return res.status(400).send(error(Status.Unauthorized))
