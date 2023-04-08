@@ -44,7 +44,7 @@ export const createEndpointCall = <T = unknown, D extends BaseData = BaseData>(
     const client = $simplyClient
     client.defaults.headers.common.Authorization = data.user.pluralKey
 
-    return await fn($simplyClient, data)
+    return await fn(client, data)
   }
 }
 
