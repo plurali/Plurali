@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "yarm common build && concurrently 'yarn frontend build' 'yarn backend build'",
+    "build": "yarn common build && concurrently 'yarn frontend build' 'yarn backend build'",
     "lint": "eslint --ignore-path .gitignore .",
     "common": "yarn workspace @plurali/common",
     "backend": "yarn workspace @plurali/backend",
