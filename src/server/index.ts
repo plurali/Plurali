@@ -25,7 +25,7 @@ server.register(cors, {
 // server.setErrorHandler(errorHandler);
 
 server.register(controllers, {
-    paths: ["src/server/controllers/*.{ts,js}"],
+    paths: [process[Symbol.for("ts-node.register.instance")] ? "src/server/controllers/*.{ts,js}" : "dist/server/controllers/*.{ts,js}"],
 });
 
 server.register(view, {
