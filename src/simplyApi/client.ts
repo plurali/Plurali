@@ -1,5 +1,5 @@
-import axios, {AxiosInstance, AxiosResponse} from "axios";
-import {BaseData} from ".";
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { BaseData } from '.'
 
 /*
 import {buildStorage, CachedStorageValue, canStale, setupCache} from "axios-cache-interceptor";
@@ -30,39 +30,37 @@ let $simplyClient = setupCache(axios.create({
 })
 */
 
-
 let $simplyClient = axios.create({
-    baseURL: "https://api.apparyllis.com:8443",
-    headers: {
-        Accept: 'application/json'
-    }
-});
-
+  baseURL: 'https://api.apparyllis.com:8443',
+  headers: {
+    Accept: 'application/json',
+  },
+})
 
 export const createEndpointCall = <T = unknown, D extends BaseData = BaseData>(
-    fn: (client: typeof $simplyClient, data: D) => Promise<AxiosResponse<T>>
-): (data: D) => Promise<AxiosResponse<T>> => {
-    return async (data: D) => {
-        const client = $simplyClient;
-        client.defaults.headers.common.Authorization = data.user.pluralKey;
+  fn: (client: typeof $simplyClient, data: D) => Promise<AxiosResponse<T>>
+): ((data: D) => Promise<AxiosResponse<T>>) => {
+  return async (data: D) => {
+    const client = $simplyClient
+    client.defaults.headers.common.Authorization = data.user.pluralKey
 
-        return await fn($simplyClient, data)
-    };
+    return await fn($simplyClient, data)
+  }
 }
 
 export const testKey = async (key: string): Promise<boolean> => {
-    try {
-        await $simplyClient.request({
-            method: "GET",
-            url: "/v1/me",
-            headers: {
-                Authorization: key
-            },
-        })
-        return true;
-    } catch (_) {
-        return false;
-    }
+  try {
+    await $simplyClient.request({
+      method: 'GET',
+      url: '/v1/me',
+      headers: {
+        Authorization: key,
+      },
+    })
+    return true
+  } catch (_) {
+    return false
+  }
 }
 
-export {$simplyClient}
+export { $simplyClient }

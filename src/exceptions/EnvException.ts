@@ -1,13 +1,13 @@
-import { Exception } from "./Exception";
+import { Exception } from './Exception'
 
 export class EnvMissingException extends Exception {
-    name = "EnvMissingException"
+  name = 'EnvMissingException'
 }
 
 export class EnvNotFoundException extends Exception {
-    name = "EnvNotFoundException"
+  name = 'EnvNotFoundException'
 
-    constructor(key: string) {
-        super(`Missing environment variable: ${key}`);
-    }
+  constructor(key: string) {
+    super(`Missing environment variable: ${key}`)
+  }
 }

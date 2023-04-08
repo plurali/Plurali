@@ -1,5 +1,5 @@
 export enum PluralVisibility {
-    Trusted = 'Trusted',
-    Private = 'Private',
-    Public = 'Public'
+  Trusted = 'Trusted',
+  Private = 'Private',
+  Public = 'Public',
 }

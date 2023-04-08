@@ -1,5 +1,5 @@
-import path from "path";
+import path from 'path'
 
-export const __app = __dirname;
+export const __app = __dirname
 
-export const __root = path.join(__app, "..")
+export const __root = path.join(__app, '..')

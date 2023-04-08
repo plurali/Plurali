@@ -1,13 +1,13 @@
-import { Exception } from "./Exception";
+import { Exception } from './Exception'
 
 export class ValidationException extends Exception {
-    name = "ValidationException"
+  name = 'ValidationException'
 }
 
 export class UnexpectedValueException extends ValidationException {
-    name = "UnexpectedValueException"
+  name = 'UnexpectedValueException'
 
-    constructor(expected: any, got: any) {
-        super(`Expected type: ${String(expected)}, got: ${String(got)} of type '${typeof got}'`)
-    }
+  constructor(expected: any, got: any) {
+    super(`Expected type: ${String(expected)}, got: ${String(got)} of type '${typeof got}'`)
+  }
 }
