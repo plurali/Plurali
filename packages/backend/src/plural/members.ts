@@ -1,5 +1,11 @@
 import { UserMemberDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
-import { BaseData, getMember, getMembers, MemberEntry, parseAvatar, parseVisibility } from '@plurali/common/dist/plural'
+import {
+  BaseData,
+  /*getMember, getMembers,*/ MemberEntry,
+  parseAvatar,
+  parseVisibility,
+} from '@plurali/common/dist/plural'
+import { getMember, getMembers } from './cached'
 import { Member, MemberFieldWithValue, System } from '@plurali/common/dist/system'
 import { Prisma, UserField, UserMember } from '@prisma/client'
 import { $db } from '../services/db'
@@ -69,15 +75,17 @@ export const fetchMembers = async (
         systemId: system.id,
       })
     ).data
+
+    const userMembers = await $db.userMember.findMany({
+      where: {
+        pluralOwnerId: system.id,
+        userId: data.user.id,
+        ...where,
+      }
+    })
+
     for (const member of members) {
-      const userMember = await $db.userMember.findFirst({
-        where: {
-          pluralId: member.id,
-          pluralOwnerId: system.id,
-          userId: data.user.id,
-          ...where,
-        },
-      })
+      const userMember = userMembers.find((um) => um.pluralId === member.id)
 
       if (!userMember) {
         continue

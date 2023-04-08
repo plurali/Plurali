@@ -1,27 +1,22 @@
-/*import Redis from "ioredis";
-import {$env} from "../Env";
+import Redis from "ioredis";
+import {$env} from "../../utils/env";
 
 export const $redis = new Redis({
-    host: $env.get("REDIS_HOST", false) ?? '127.0.0.1',
-    password: $env.get("REDIS_PASS", false),
+    host: $env("REDIS_HOST") ?? '127.0.0.1',
+    password: $env("REDIS_PASS"),
     enableAutoPipelining: true
 });
 
 export const axiosToRedisKey = (key: string) => `plurali:sp:${key}`
 
-
-export const cache = async <T = {}>(namespace: string, key: string, value: T, expiry = 300): Promise<string> => {
+export const cache = async <T = {}>(key: string, value: T, expiry = 300): Promise<void> => {
     // TODO expiry
-    const fullKey = `plurali.${namespace}-${key}`;
-
-    await $redis.set(fullKey, JSON.stringify(value));
-
-    return fullKey;
+    await $redis.set(`plurali|${key}`, JSON.stringify(value));
 }
 
 export const cached = async <T = {}>(key: string): Promise<T|null> => {
-    const res = await $redis.get(key);
+    const res = await $redis.get(`plurali|${key}`);
     if (!res) return null;
 
     return JSON.parse(res) as T;
-}*/
+}
