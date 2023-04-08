@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": "./src",
     "target": "ES2018",
     "module": "CommonJS",
     "lib": ["ESNext"],
@@ -10,6 +11,13 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+  },
+  "buildOptions": {
+    "incremental": false
+  },
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true
   }
 }

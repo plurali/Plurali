@@ -8,13 +8,12 @@ import { __app, __root } from '../constants'
 import { createSecret } from '../utils'
 import { ControllerConfig } from '../utils/server'
 import { sync as glob } from 'glob'
-
 // Constants
 
 const ControllerPaths = [
-  process[Symbol.for('ts-node.register.instance')]
-    ? 'src/server/controllers/*.{ts,js}'
-    : 'dist/server/controllers/**/*.{ts,js}',
+  (process as any)[Symbol.for('ts-node.register.instance')]
+    ? 'src/server/controllers/**/*.ts'
+    : 'dist/server/controllers/**/*.js',
 ]
 
 const SessionKeyPath = path.join(__app, '../../../../', '.session_key')
@@ -35,7 +34,6 @@ $server.register(cors, {
 
 $server.register(async server => {
   const globPaths = ControllerPaths.map(path => glob(path.replace(/\\/g, '/'))).flat(1)
-
   const controllers: ControllerConfig[] = (
     await Promise.all(globPaths.map(pth => import(path.join(__root, pth)).then(module => module.default)))
   ).filter(val => !!val && typeof val === 'object')

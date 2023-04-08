@@ -5,13 +5,13 @@ import { data, error, Status } from '../../../status'
 import { systemBaseDataSchema, SystemBaseDataSchema, idSchema, IdSchema } from '../../../../utils/server'
 
 export default controller(async server => {
-  server.get('/members', async (req, res) =>
+  server.get('/', async (req, res) =>
     withSystemContext({ req, res }, async ({ getSystemMembers }) =>
       res.send(data({ members: await getSystemMembers() }))
     )
   )
 
-  server.get<IdSchema>('/members/:id', { schema: idSchema.valueOf() }, async (req, res) =>
+  server.get<IdSchema>('/:id', { schema: idSchema.valueOf() }, async (req, res) =>
     withSystemContext({ req, res }, async ({ getSystemMember }) => {
       const member = await getSystemMember(req.params.id)
       if (!member) {
@@ -22,7 +22,7 @@ export default controller(async server => {
     })
   )
 
-  server.post<SystemBaseDataSchema>('/members/:id', { schema: systemBaseDataSchema.valueOf() }, async (req, res) =>
+  server.post<SystemBaseDataSchema>('/:id', { schema: systemBaseDataSchema.valueOf() }, async (req, res) =>
     withSystemContext({ req, res }, async ({ system, getSystemMember }) => {
       const member = await $db.userMember.findFirst({
         where: {
@@ -46,4 +46,4 @@ export default controller(async server => {
       res.send(data({ member: await getSystemMember(req.params.id) }))
     })
   )
-})
+}, '/system/members')
