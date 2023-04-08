@@ -41,9 +41,9 @@ export default controller(async (server) => {
 
         req.session.set("userId", user.id);
 
-        return res.send({
+        return res.send(data({
             user
-        })
+        }))
     })
 
     server.post<AuthSchema>("/login", { schema: authSchema.valueOf() }, async (req, res) => {
