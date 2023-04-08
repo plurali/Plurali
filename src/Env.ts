@@ -15,11 +15,9 @@ export class Env<T extends { [key: string]: any }> {
     constructor() {
         const out = dotenv.config();
 
-        if (out.error) {
-            throw new EnvMissingException("Cannot load .env file! Please make sure it's located in the root directory.");
-        }
+        console.warn("No .env file found, skipping dotenv")
 
-        this._env = (out.parsed as any) ?? {};
+        this._env = out.error ? (out.parsed as any) ?? {} : {};
     }
 
     get<Throw extends boolean = true>(key: keyof T, throwException: Throw): Throw extends true ?  T[typeof key] : T[typeof key] | null {
