@@ -28,11 +28,11 @@
             <a
               v-if="isDashboard && data.member.data.visible"
               :href="`/${data.system.data.slug}/${data.member.data.slug}`"
-              class="text-sm text-gray-700 border-b border-b-gray-400 font-normal"
+              class="text-sm text-gray-700 border-b-gray-400 font-normal"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open public view
+              <u>Open public view</u>
             </a>
           </span>
         </PageTitle>
