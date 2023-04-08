@@ -30,7 +30,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          Click to open public view
+          <u>Open public view</u>
         </a>
       </PageTitle>
       <Subtitle class="mb-3">{{ currentSystem.description ?? 'No description' }}</Subtitle>

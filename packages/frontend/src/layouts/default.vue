@@ -64,6 +64,19 @@
           </div>
 
           <router-view />
+
+          <div class="pt-5 mt-5 inline-flex w-full justify-start items-center font-normal text-gray-700 border-t">
+            <p>
+              {{ new Date().getFullYear() }} &ndash; <router-link to="/" class="text-violet-700 font-medium">Plurali</router-link> 
+              by <a href="https://github.com" class="text-violet-700 font-medium">Liliana</a>
+              <br> 
+              <span>This is a development/staging instance &ndash; things <i>may</i> break. Feel free to
+                <a href="" target="_blank" rel="noreferrer noopener"><u>report them</u></a>.
+              </span>
+              <br>
+              <span class="text-sm text-gray-500">Not affiliated with Apparyllis/Simply Plural</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
