@@ -2601,10 +2601,12 @@ liquid@^5.1.1:
   dependencies:
     strftime "~0.9.2"
 
-liquidjs@^9.42.0:
-  version "9.43.0"
-  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-9.43.0.tgz#69924ed3bbe143c17c13ea675cc70390d72eb307"
-  integrity sha512-qZZuL5Emja2UgCqiLewiw9bvwZQwm19TTGFxDkonVzB4YSTOZ8tuTVo/7Uu/AeW1cL2Qb/at3DSoV8wwyFXQCw==
+liquidjs@^10.7.0:
+  version "10.7.0"
+  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-10.7.0.tgz#bf801aac4fba4131d1f8f4e72a076645f390b529"
+  integrity sha512-AEgEgbybxc17h2WBl5DTzj1tNy18ANpM/KJ2LigkNBwd/8sBc0uDaJH/MnvUbv1t2Md5RArTTZj5Wq1MGncIbg==
+  dependencies:
+    commander "^10.0.0"
 
 listr2@^5.0.7:
   version "5.0.8"
