@@ -3,7 +3,7 @@ import {data, error, Status} from "../status";
 import {withSystemContext} from "../contexts/systemContext";
 import S from "fluent-json-schema";
 import {$db} from "../../db";
-import {transformMemberField} from "../../simplyApi/api/users";
+import {fetchMe, transformMemberField} from "../../simplyApi/api/users";
 import {transformMember} from "../../simplyApi/api/members";
 
 export interface IdSchema {
@@ -19,16 +19,48 @@ export interface FieldAndMemberSchema extends IdSchema {
     }
 }
 
+export interface SystemSchema {
+    Body: FieldAndMemberSchema["Body"]
+}
+
 export const idSchema = S.object()
     .prop("params", S.object().prop("id", S.string().required()))
 
 export const fieldAndMemberSchema = {...idSchema}
     .prop("body", S.object().prop("visible", S.boolean()).prop("description", S.string()))
 
+export const systemSchema = S.object()
+    .prop("body", S.object().prop("visible", S.boolean()).prop("description", S.string()))
+
 export default controller(async (server) => {
     server.get("/", async (req, res) =>
         withSystemContext(
             {req, res}, ({system}) => res.send(data({system}))
+        )
+    )
+
+    server.post<SystemSchema>("/", {schema: systemSchema.valueOf()}, async (req, res) =>
+        withSystemContext(
+            {req, res}, async ({user}) => {
+                user = await $db.user.update({
+                    where: {
+                        id: user.id
+                    },
+                    data: {
+                        data: {
+                            update: {
+                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
+                            }
+                        }
+                    },
+                    include: {
+                        data: true
+                    }
+                })
+
+                res.send(data({system: await fetchMe({user})}))
+            }
         )
     )
 
@@ -75,8 +107,8 @@ export default controller(async (server) => {
                     data: {
                         data: {
                             update: {
-                                ...(typeof req.body.visible === 'boolean' ? { visible: req.body.visible } : {}),
-                                ...(req.body.description?.trim().length >= 1 ? { visible: req.body.visible } : {})
+                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
                             }
                         }
                     },
@@ -120,8 +152,8 @@ export default controller(async (server) => {
                     data: {
                         data: {
                             update: {
-                                ...(typeof req.body.visible === 'boolean' ? { visible: req.body.visible } : {}),
-                                ...(req.body.description?.trim().length >= 1 ? { visible: req.body.visible } : {})
+                                ...(typeof req.body.visible === 'boolean' ? {visible: req.body.visible} : {}),
+                                ...(req.body.description?.trim().length >= 1 ? {visible: req.body.visible} : {})
                             }
                         }
                     },
