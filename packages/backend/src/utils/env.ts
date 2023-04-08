@@ -1,4 +1,6 @@
 import dotenv from 'dotenv'
+import path from 'path'
+import { __root } from '../constants'
 
 export interface Variables {
   NODE_ENV: string
@@ -9,11 +11,13 @@ export interface Variables {
   REDIS_PASS: string
 }
 
-let dotenvData = dotenv.config()
+let dotenvData = dotenv.config({
+  path: path.join(__root, "..", "..", ".env")
+});
 
 let _env: Record<string, string> = {
-  ...process.env,
-  ...(!dotenvData.error ? dotenvData.parsed ?? {} : {}),
+  ...process.env as any,
+  ...(!dotenvData.error ? dotenvData.parsed ?? {} : {}) as any,
 }
 
 function $env(key: keyof Variables): Variables[typeof key] | null {
@@ -23,7 +27,7 @@ function $env(key: keyof Variables): Variables[typeof key] | null {
 
 $env.orFail = (key: keyof Variables): Variables[typeof key] => {
   const value = $env(key)
-  if (!value) throw new Error(`Undefined environment variable ${value}`)
+  if (!value) throw new Error(`Undefined environment variable '${key}'`)
 
   return value
 }

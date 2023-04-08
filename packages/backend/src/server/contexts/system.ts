@@ -37,7 +37,7 @@ export const createSystemContext = async ({ req }: SystemContextDeps): Promise<S
     ...userContext,
     system,
     async getSystemMembers(): Promise<Member[]> {
-      return fetchMembers(userContext, system)
+      return await fetchMembers(userContext, system)
     },
     async getSystemMember(id: string): Promise<Member | null> {
       const userMember = await $db.userMember.findFirst({

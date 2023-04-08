@@ -55,11 +55,7 @@ export default controller(async server => {
         input.overridePluralId = null
       }
 
-      user = await $db.user.update({
-        where: { id: user.id },
-        data: input,
-      })
-
+      user = await $db.user.update({ where: { id: user.id }, data: input })
       // Sync on user update (token&/override)
       user = await syncWithApi(user)
 
