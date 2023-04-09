@@ -53,7 +53,6 @@ export const syncWithApi = async (user: User) => {
   ).data
 
   if (!system.content.isAsystem) {
-    // TODO: handle?information about your system & members
     user = await $db.user.update({
       where: {
         id: user.id,
@@ -83,7 +82,6 @@ export const syncWithApi = async (user: User) => {
   const fieldsToCreate: Prisma.UserFieldCreateManyInput[] = []
 
   for (const fieldId in system.content.fields) {
-    //const field = system.content.fields[fieldId];
     const userField = userFields.find(f => f.pluralId === fieldId)
 
     if (!userField) {
@@ -110,12 +108,23 @@ export const syncWithApi = async (user: User) => {
       systemId: system.id,
     })
   ).data
+  //const field = system.content.fields[fieldId];
 
   for (const fetchedMember of members) {
     await syncMember(fetchedMember, system, user)
   }
 
-  // TODO clear any members not in list
+  // Delete all members that are not listed by SP anymore
+  await $db.userMember.deleteMany({
+    where: {
+      userId: user.id,
+      id: {
+        not: {
+          in: members.map(m => m.id)
+        }
+      }
+    }
+  })
 
   return user
 }
