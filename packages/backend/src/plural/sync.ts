@@ -2,13 +2,10 @@ import { getMe, getMembers, MemberEntry, parseVisibility, UserEntry } from '@plu
 import { PluralVisibility } from '@plurali/common/dist/system/PluralVisibility'
 import { Prisma, User, UserMember } from '@prisma/client'
 import { $db } from '../services/db'
-import { clearUserCache } from '../services/redis/user'
 import { createSlug } from '../utils'
+import { clearUserCache } from '../services/redis/user'
 
 export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User): Promise<UserMember> => {
-  // Clear cache for this user to prevent any BS
-  await clearUserCache(user)
-
   const member = await $db.userMember.upsert({
     where: {
       pluralId: fetchedMember.id,
@@ -42,6 +39,9 @@ export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, 
 }
 
 export const syncWithApi = async (user: User) => {
+  // Clear cache for this user to prevent any BS
+  await clearUserCache(user)
+
   if (!user.pluralKey) {
     return user
   }
@@ -53,7 +53,7 @@ export const syncWithApi = async (user: User) => {
   ).data
 
   if (!system.content.isAsystem) {
-    // TODO: handle?
+    // TODO: handle?information about your system & members
     user = await $db.user.update({
       where: {
         id: user.id,
@@ -70,7 +70,6 @@ export const syncWithApi = async (user: User) => {
       id: user.id,
     },
     data: {
-      visible: user.visible ?? false,
       slug: user.slug ?? createSlug(system.content.username),
     },
   })
@@ -92,7 +91,7 @@ export const syncWithApi = async (user: User) => {
         pluralId: fieldId,
         pluralOwnerId: system.id,
         userId: user.id,
-        visible: false,
+        visible: parseVisibility(system.content.fields[fieldId]) === PluralVisibility.Public,
         description: null,
       })
     }
@@ -115,6 +114,8 @@ export const syncWithApi = async (user: User) => {
   for (const fetchedMember of members) {
     await syncMember(fetchedMember, system, user)
   }
+
+  // TODO clear any members not in list
 
   return user
 }
