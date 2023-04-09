@@ -36,14 +36,14 @@ export const createCachedEndpoint = <T, TA>(
 
 export const getMe = createCachedEndpoint(
   plural.getMe,
-  data => `getMe_${data.user.id}_${data.user.overridePluralId ?? 'unset'}`
+  data => `getMe_pluraliUser__{data.user.id}_${data.user.overridePluralId ?? 'unset'}`
 )
 
 export const getUser = createCachedEndpoint(plural.getUser, data => `getUser_${data.user}`)
 
 export const getMember = createCachedEndpoint(
   plural.getMember,
-  data => `getMember_${data.user.id}_${data.systemId}_${data.memberId}`
+  data => `getMember_pluraliUser__${data.user.id}_${data.systemId}_${data.memberId}`
 )
 
-export const getMembers = createCachedEndpoint(plural.getMembers, data => `getMembers_${data.user.id}_${data.systemId}`)
+export const getMembers = createCachedEndpoint(plural.getMembers, data => `getMembers_pluraliUser__${data.user.id}_${data.systemId}`)
