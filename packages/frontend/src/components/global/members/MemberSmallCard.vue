@@ -3,7 +3,6 @@
     :disabled="loading"
     :aria-disabled="loading"
     @click.ctrl.prevent="toggleVisibility"
-    v-long-press="toggleVisibility"
     :to="
       isDashboard
         ? `/dashboard/member/${systemMember.id}`
