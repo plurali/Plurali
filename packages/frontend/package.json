@@ -16,7 +16,6 @@
     "markdown-it": "^13.0.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
-    "vue3-directive-long-press": "^1.1.0",
     "xss": "^1.0.14"
   },
   "devDependencies": {
