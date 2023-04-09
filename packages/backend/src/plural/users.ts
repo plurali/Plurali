@@ -1,8 +1,6 @@
 import { UserDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
 import {
   BaseData,
-  /*getMe,
-  getUser,*/
   GetUserData,
   parseAvatar,
   parseFieldType,

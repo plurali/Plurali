@@ -1,7 +1,7 @@
 import { UserMemberDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
 import {
   BaseData,
-  /*getMember, getMembers,*/ MemberEntry,
+  MemberEntry,
   parseAvatar,
   parseVisibility,
 } from '@plurali/common/dist/plural'
