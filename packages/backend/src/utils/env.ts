@@ -11,16 +11,19 @@ export interface Variables {
   REDIS_PASS: string
 }
 
-let dotenvData = dotenv.config({
-  path: path.join(__root, "..", "..", ".env")
-});
-
-let _env: Record<string, string> = {
-  ...process.env as any,
-  ...(!dotenvData.error ? dotenvData.parsed ?? {} : {}) as any,
-}
+let _env: Record<string, string> |null= null;
 
 function $env(key: keyof Variables): Variables[typeof key] | null {
+  if (!_env) {
+    const dotenvData = dotenv.config({
+      path: path.join(__root, "..", "..", ".env")
+    });
+    
+    _env = {
+      ...process.env as any,
+      ...(!dotenvData.error ? dotenvData.parsed ?? {} : {}) as any,
+    }
+  }
   const value = (_env as unknown as Variables)[key]
   return value ?? null
 }
