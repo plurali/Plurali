@@ -74,7 +74,7 @@
                 <a href="https://github.com/plurali/Plurali/issues" target="_blank" rel="noreferrer noopener"><u>report them</u></a>.
               </span>
               <br>
-              <span class="text-sm text-gray-500">Not affiliated with Apparyllis/Simply Plural | <a href="https://github.com/plurali/plurali" class="text-violet-500">Data Transparency</a></span>
+              <span class="text-sm text-gray-500">Not affiliated with Apparyllis/Simply Plural | <a href="https://github.com/plurali/Plurali/blob/dev/DATA.md" target="_blank" rel="noreferrer noopener" class="text-violet-500">Data Transparency</a></span>
             </p>
           </div>
         </div>
