@@ -59,7 +59,7 @@ export default controller(async server => {
   })
 
   server.post<AuthSchema>('/logout', { schema: authSchema.valueOf() }, async (req, res) => {
-    req.session.delete()
+    req.session.set('userId', null)
     res.send(data({ message: 'ok' }))
   })
 }, '/auth')
