@@ -13,6 +13,7 @@ export const createCachedEndpoint = <T, TA>(
   expiry = 300
 ): ((...args: TA[]) => Promise<CachableResult<T>>) => {
   return async function (...args: TA[]) {
+    console.log({args})
     id = typeof id === 'function' ? id(...args) : id
     const cachedData = await cached<T>(id)
 
