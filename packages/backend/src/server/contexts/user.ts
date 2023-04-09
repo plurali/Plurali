@@ -1,4 +1,5 @@
 import { User } from '@prisma/client'
+import { ObjectId } from 'bson'
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { $db } from '../../services/db'
 import { Status, ErrorResponse, error } from '../status'
@@ -15,9 +16,10 @@ export interface UserContext {
 
 export const createUserContext = async ({ req }: UserContextDeps): Promise<UserContext | ErrorResponse> => {
   const userId = req.session.get('userId')
-  if (!userId) return error(Status.NotAuthenticated)
+  if (!userId || !ObjectId.isValid(userId)) return error(Status.NotAuthenticated)
 
   const user = await $db.user.findUnique({ where: { id: userId } })
+
   if (!user) {
     return error(Status.NotAuthenticated)
   }
