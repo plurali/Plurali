@@ -30,11 +30,15 @@
     <Button
       :disabled="loading"
       type="submit"
-      class="w-full border border-violet-700 text-violet-700 mb-3.5 inline-flex justify-between items-center"
+      class="w-full border border-violet-700 text-violet-700 mb-1 inline-flex justify-between items-center"
     >
       <p>Update user settings</p>
       <Spinner v-if="loading" class="!text-violet-700" />
     </Button>
+
+    <p class="text-sm text-gray-700 mb-3.5">
+      *The "Update user settings" button also works as "clear cache" for now, same as re-authenticating.
+    </p>
   </form>
 </template>
 
