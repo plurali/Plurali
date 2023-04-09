@@ -10,7 +10,6 @@ export const $redis = new Redis({
 export const fullKey = (key: string) => `plurali|${key}`
 
 export const cache = async <T = {}>(key: string, value: T, expiry: number|null = 300): Promise<void> => {
-    key = fullKey(key);
     await $redis.set(key, JSON.stringify(value));
     
     if (expiry) {
@@ -23,11 +22,11 @@ export const cache = async <T = {}>(key: string, value: T, expiry: number|null =
 }
 
 export const uncache = async (key: string): Promise<void> => {
-    await $redis.del(fullKey(key));
+    await $redis.del(key);
 }
 
 export const cached = async <T = {}>(key: string): Promise<T|null> => {
-    const res = await $redis.get(fullKey(key));
+    const res = await $redis.get(key);
     if (!res) return null;
 
     return JSON.parse(res) as T;

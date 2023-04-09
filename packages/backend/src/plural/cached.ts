@@ -13,7 +13,6 @@ export const createCachedEndpoint = <T, TA>(
   expiry = 300
 ): ((...args: TA[]) => Promise<CachableResult<T>>) => {
   return async function (...args: TA[]) {
-    console.dir({args}, {depth: null})
     id = typeof id === 'function' ? id(...args) : id
     const cachedData = await cached<T>(id)
 
@@ -37,17 +36,14 @@ export const createCachedEndpoint = <T, TA>(
 
 export const getMe = createCachedEndpoint(
   plural.getMe,
-  data => `@getMe|::${data.user.id}::|overridePluralId=${data.user.overridePluralId ?? 'unset'}`
+  data => `getMe_${data.user.id}_${data.user.overridePluralId ?? 'unset'}`
 )
 
-export const getUser = createCachedEndpoint(plural.getUser, data => `@getUser|::${data.user}:::`)
+export const getUser = createCachedEndpoint(plural.getUser, data => `getUser_${data.user}`)
 
 export const getMember = createCachedEndpoint(
   plural.getMember,
-  data => `@getMember|::${data.user.id}::|system=${data.systemId},queryMember=${data.memberId}`
+  data => `getMember_${data.user.id}_${data.systemId}_${data.memberId}`
 )
 
-export const getMembers = createCachedEndpoint(
-  plural.getMembers,
-  data => `@getMembers|::${data.user.id}::|system=${data.systemId}`
-)
+export const getMembers = createCachedEndpoint(plural.getMembers, data => `getMembers_${data.user.id}_${data.systemId}`)
