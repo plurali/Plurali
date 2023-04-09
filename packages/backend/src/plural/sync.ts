@@ -1,20 +1,14 @@
-import {
-  getMe,
-  getMembers,
-  MemberEntry,
-  parseVisibility,
-  UserEntry,
-} from '@plurali/common/dist/plural'
+import { getMe, getMembers, MemberEntry, parseVisibility, UserEntry } from '@plurali/common/dist/plural'
 import { PluralVisibility } from '@plurali/common/dist/system/PluralVisibility'
 import { Prisma, User, UserMember } from '@prisma/client'
 import { $db } from '../services/db'
+import { clearUserCache } from '../services/redis/user'
 import { createSlug } from '../utils'
 
-export const syncMember = async (
-  fetchedMember: MemberEntry,
-  system: UserEntry,
-  user: User
-): Promise<UserMember> => {
+export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User): Promise<UserMember> => {
+  // Clear cache for this user to prevent any BS
+  await clearUserCache(user)
+
   const member = await $db.userMember.upsert({
     where: {
       pluralId: fetchedMember.id,
