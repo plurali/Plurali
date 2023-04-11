@@ -45,7 +45,7 @@ export default controller(async server => {
       // (eg. friends)
       if (req.body.overridePluralId) {
         if (!user.admin) {
-          return res.status(400).send(error(Status.Unauthorized))
+          return res.status(403).send(error(Status.Unauthorized))
         }
         if (!(await getUser({ user, id: req.body.overridePluralId }))) {
           return res.status(400).send(error(Status.UserUpdate.InvalidOverride))

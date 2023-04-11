@@ -1,6 +1,8 @@
-import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
+import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 import { flash, flashes, FlashType, user } from './store'
 import { getUser } from './api/user'
+import { AxiosError } from 'axios'
+import { formatError } from './api'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -52,35 +54,45 @@ const router = createRouter({
   routes,
 })
 
+export const isAuth = (route: string | RouteLocationNormalized) =>
+  (typeof route === 'string' ? route : route.path).startsWith('/auth')
+
+export const isDashboard = (route: string | RouteLocationNormalized) =>
+  (typeof route === 'string' ? route : route.path).startsWith('/dashboard')
+
+export const isFront = (route: string | RouteLocationNormalized) => !isAuth(route) && !isDashboard(route)
+
 router.beforeEach(async to => {
   flashes.value = []
 
-  try {
-    const data = (await getUser()).data
-    if (!data.success) throw new Error()
+  const promise = (async () => {
+    try {
+      const data = (await getUser()).data
+      if (!data.success) throw new Error()
 
-    user.value = data.data.user
-  } catch (error) {
-    user.value = null
-  }
+      user.value = data.data.user
+      if (isAuth(to)) return '/dashboard'
 
-  if (to.path.startsWith('/auth') && !!user.value) {
-    return router.push('/dashboard')
-  }
-
-  if (to.path.startsWith('/dashboard')) {
-    if (!user.value) {
-      return router.push('/auth/login')
-    }
-
-    if (!user.value.pluralKey) {
-      flash('You must setup your Simply Plural API key!', FlashType.Danger)
-      if (to.path !== '/dashboard/user') {
-        router.push('/dashboard/user')
+      if (isDashboard(to) && !user.value.pluralKey) {
+        flash('You must setup your Simply Plural API key!', FlashType.Danger)
+        if (to.path !== '/dashboard/user') {
+          return '/dashboard/user'
+        }
       }
-      return
+    } catch (error) {
+      user.value = null
+      if (!(error instanceof AxiosError) || (error.status ?? 400) !== 401) {
+        flash(formatError(error), FlashType.Danger, true)
+      }
+      if (isDashboard(to)) return '/auth/login'
     }
+  })()
+
+  if (isFront(to)) {
+    return
   }
+
+  await promise
 })
 
 export { router }
