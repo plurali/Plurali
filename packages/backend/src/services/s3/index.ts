@@ -17,7 +17,9 @@ export enum S3Prefix {
 
 export class Storage {
   public s3: S3Client = new S3Client({
+    forcePathStyle: true,
     endpoint: $env.orFail('S3_ENDPOINT'),
+    region: $env.orFail('S3_REGION'),
     credentials: {
       accessKeyId: $env.orFail('S3_ACCESS_KEY_ID'),
       secretAccessKey: $env.orFail('S3_ACCESS_KEY_SECRET'),
