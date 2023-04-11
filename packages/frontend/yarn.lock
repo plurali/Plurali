@@ -1093,13 +1093,6 @@ vue-tsc@^1.2.0:
     "@volar/vue-language-core" "1.2.0"
     "@volar/vue-typescript" "1.2.0"
 
-vue3-directive-long-press@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/vue3-directive-long-press/-/vue3-directive-long-press-1.1.0.tgz#b391b9ce6b766e696d13d3041a443b293425bfc2"
-  integrity sha512-fSZfZHF8RAkkFAc0Fdi8iPH9YIBFkDSnWyES7O0CxI+Lbj7XxL0tDnki3qgD17IghUdvzDgsnPjTB1EHRnTeYg==
-  dependencies:
-    vanilla-long-press "^1.4.0"
-
 vue@^3.2.47:
   version "3.2.47"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.47.tgz"

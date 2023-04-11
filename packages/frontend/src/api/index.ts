@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { clearFlashes, flash, FlashType } from '../store'
 import {SuccessResponse, ErrorResponse, Response} from "@plurali/backend/src/server/status"
+import { $topbar } from '../utils/topbar'
 
 export const $axios = axios.create({
   baseURL: (import.meta as any).env?.DEV
@@ -17,7 +18,7 @@ export const wrapRequest = async <T extends object = object>(
 ): Promise<T | false> => {
   clearFlashes()
   try {
-    const res = await promise()
+    const res = await $topbar.promised(promise())
     if (!res.data.success) throw new Error(res.data.error)
 
     return res.data.data

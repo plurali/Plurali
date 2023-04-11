@@ -37,7 +37,7 @@ export const withUserContext = async (
 ) => {
   const context = await createUserContext(ctx)
   if (!context.success) {
-    if (ctx.res) return ctx.res.send(context)
+    if (ctx.res) return ctx.res.status(401).send(context)
     return errFn?.()
   }
 
