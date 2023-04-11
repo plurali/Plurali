@@ -456,10 +456,10 @@
   dependencies:
     fast-json-stringify "^5.0.0"
 
-"@fastify/secure-session@^6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@fastify/secure-session/-/secure-session-6.0.0.tgz#376c6153d8ddfdb26d25d643d4da5c9e27bf066b"
-  integrity sha512-Jlw9gkaKPxLO/pDQWWdD4zFIINBxgO3To/KBv3w//Kynh2pKE6fpJEmGp7PI8j9YenEo42yNcm3pPPoY/EV1LQ==
+"@fastify/secure-session@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@fastify/secure-session/-/secure-session-6.1.0.tgz#cc02885cea2a6b1372c2676521e7a2c627731ed4"
+  integrity sha512-TBg8tNw1SejDOmjnS/wpaDzvXfrEPQ3ZlYekQqqu+lXimWBZYbXyF1yT4EftOBW87PtmVEIAabR5ogBbz12diQ==
   dependencies:
     "@fastify/cookie" "^8.0.0"
     fastify-plugin "^4.0.0"
