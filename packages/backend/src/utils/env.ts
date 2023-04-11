@@ -9,6 +9,10 @@ export interface Variables {
   CORS_ORIGIN: string
   REDIS_HOST: string
   REDIS_PASS: string
+  S3_ENDPOINT: string
+  S3_ACCESS_KEY_ID: string
+  S3_ACCESS_KEY_SECRET: string
+  S3_BUCKET: string
 }
 
 let _env: Record<string, string> |null= null;
