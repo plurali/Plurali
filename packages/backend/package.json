@@ -7,7 +7,7 @@
   "private": true,
   "dependencies": {
     "@fastify/cors": "^8.2.1",
-    "@fastify/secure-session": "^6.0.0",
+    "@fastify/secure-session": "^6.1.0",
     "@fastify/view": "^7.4.1",
     "@fastify/websocket": "^7.2.0",
     "@plurali/common": "^1.0.0",
