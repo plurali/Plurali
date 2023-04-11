@@ -1,8 +1,9 @@
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
-import { flash, flashes, FlashType, user } from './store'
+import { flash, flashes, FlashType, nextRedirect, user } from './store'
 import { getUser } from './api/user'
 import { AxiosError } from 'axios'
 import { formatError } from './api'
+import { Status } from '@plurali/backend/src/server/status'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -57,13 +58,13 @@ const router = createRouter({
 export const isAuth = (route: string | RouteLocationNormalized) =>
   (typeof route === 'string' ? route : route.path).startsWith('/auth')
 
-export const isDashboard = (route: string | RouteLocationNormalized) =>
+export const isDashboard = (route: string | { path: string }) =>
   (typeof route === 'string' ? route : route.path).startsWith('/dashboard')
 
 export const isFront = (route: string | RouteLocationNormalized) => !isAuth(route) && !isDashboard(route)
 
 router.beforeEach(async to => {
-  flashes.value = []
+  nextRedirect();
 
   const promise = (async () => {
     try {
@@ -81,10 +82,13 @@ router.beforeEach(async to => {
       }
     } catch (error) {
       user.value = null
-      if (!(error instanceof AxiosError) || (error.status ?? 400) !== 401) {
-        flash(formatError(error), FlashType.Danger, true)
+      const status = formatError(error)
+      if (status !== Status.NotAuthenticated) {
+        flash(status, FlashType.Danger, true)
+      } else if (isDashboard(to)) {
+        flash('You need to be logged in to access the dashboard!', FlashType.Warning, true, false)
+        return '/auth/login'
       }
-      if (isDashboard(to)) return '/auth/login'
     }
   })()
 
@@ -92,7 +96,7 @@ router.beforeEach(async to => {
     return
   }
 
-  await promise
+  return await promise
 })
 
 export { router }
