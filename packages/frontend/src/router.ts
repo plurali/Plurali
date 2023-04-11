@@ -1,7 +1,6 @@
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
-import { flash, flashes, FlashType, nextRedirect, user } from './store'
+import { flash, FlashType, nextRedirect, user } from './store'
 import { getUser } from './api/user'
-import { AxiosError } from 'axios'
 import { formatError } from './api'
 import { Status } from '@plurali/backend/src/server/status'
 

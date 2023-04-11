@@ -13,19 +13,19 @@ export const createCachedEndpoint = <T, TA>(
   expiry = 300
 ): ((...args: TA[]) => Promise<CachableResult<T>>) => {
   return async function (...args: TA[]) {
-    /*id = typeof id === 'function' ? id(...args) : id
+    id = typeof id === 'function' ? id(...args) : id
     const cachedData = await cached<T>(id)
 
     if (cachedData) {
       return { data: cachedData, cached: true }
-    }*/
+    }
 
     try {
       const res = await fn(...args)
 
-      /*if ([200, 201].includes(res.status) && !!res.data) {
+      if ([200, 201].includes(res.status) && !!res.data) {
         await cache(id, res.data, expiry)
-      }*/
+      }
 
       return { data: res.data, cached: false }
     } catch (e) {

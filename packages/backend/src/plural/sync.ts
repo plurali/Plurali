@@ -108,6 +108,8 @@ export const syncWithApi = async (user: User) => {
       systemId: system.id,
     })
   ).data
+
+  console.log(members);
   //const field = system.content.fields[fieldId];
 
   for (const fetchedMember of members) {
@@ -118,10 +120,18 @@ export const syncWithApi = async (user: User) => {
   await $db.userMember.deleteMany({
     where: {
       userId: user.id,
-      id: {
-        not: {
-          in: members.map(m => m.id)
-        }
+      pluralId: {
+        notIn: members.map(member => member.id)
+      }
+    }
+  })
+
+  // Delete all fields that are not listed by SP anymore
+  await $db.userField.deleteMany({
+    where: {
+      userId: user.id,
+      pluralId: {
+        notIn: Object.keys(system.content.fields)
       }
     }
   })
