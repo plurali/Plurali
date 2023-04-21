@@ -6,7 +6,7 @@
   "main": "src/index.ts",
   "private": true,
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.309.0",
+    "@aws-sdk/client-s3": "^3.317.0",
     "@fastify/cors": "^8.2.1",
     "@fastify/secure-session": "^6.1.0",
     "@fastify/view": "^7.4.1",
