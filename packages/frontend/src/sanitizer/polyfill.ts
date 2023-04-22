@@ -1,12 +1,12 @@
 import { Sanitizer } from '.';
 import type { SetHTMLOptions } from './types';
 
-export const polyfill = () => {
+export const polyfill = (force = false) => {
   if (typeof window === 'undefined' || !window.isSecureContext) {
     return;
   }
 
-  if (typeof window[Sanitizer.GLOBALNAME] === 'function' && location.hash.indexOf('mustpolyfill') === -1) {
+  if (!force && typeof window[Sanitizer.GLOBALNAME] === 'function') {
     console.warn("Skipping Sanitizer polyfill as it's available natively.");
     return;
   }

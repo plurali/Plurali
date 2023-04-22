@@ -4,6 +4,6 @@ import { RouterView } from 'vue-router'
 import { polyfill as sanitizer } from './sanitizer/polyfill'
 import './assets/app.css'
 
-sanitizer();
+sanitizer(true);
 
 createApp(RouterView).use(router).mount('#app')
