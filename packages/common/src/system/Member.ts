@@ -13,7 +13,7 @@ export class Member {
     public color: string | null,
     public description: string | null,
     public fields: MemberFieldWithValue[],
+    public data: UserMemberDataDto,
     public avatar: string | null = null,
-    public data: UserMemberDataDto
   ) {}
 }

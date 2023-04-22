@@ -14,11 +14,15 @@ export const formatError = (e: any) =>
   e?.response?.data?.error ?? e?.message ?? 'Unknown error has occurred. Please try again.'
 
 export const wrapRequest = async <T extends object = object>(
-  promise: () => Promise<AxiosResponse<Response<T>>>
+  fn: () => Promise<AxiosResponse<Response<T>>>|null
 ): Promise<T | false> => {
   clearFlashes()
+  
+  const promise = fn();
+  if (!promise) return false;
+  
   try {
-    const res = await $topbar.promised(promise())
+    const res = await $topbar.promised(promise)
     if (!res.data.success) throw new Error(res.data.error)
 
     return res.data.data

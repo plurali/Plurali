@@ -13,7 +13,7 @@ export default controller(async server => {
         where: { id: user.id },
         data: {
           ...(typeof req.body.visible === 'boolean' ? { visible: req.body.visible } : {}),
-          ...(req.body.description?.trim().length >= 1 ? { visible: req.body.visible } : {}),
+          ...(req.body.customDescription?.trim().length >= 1 ? { customDescription: req.body.customDescription } : {}),
         },
       })
 

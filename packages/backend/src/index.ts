@@ -3,12 +3,14 @@ import { $db } from './services/db';
 import { $server } from './server';
 import { $storage } from './services/s3';
 import { $watcherBag } from './ws/watcher/bag';
+import { ensureSchemaIntegrity } from './services/db/schema';
 
 const run = async () => {
   /**
    * Initialize database connection
    */
   await $db.$connect();
+  await ensureSchemaIntegrity();
 
   /**
    * Initialize s3

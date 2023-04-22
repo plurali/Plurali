@@ -56,8 +56,8 @@ export const transformMember = async (
     data.content.color.trim().length >= 1 ? data.content.color : null,
     data.content.desc.trim().length >= 1 ? data.content.desc : null,
     fields,
+    UserMemberDataDto.from(userMember),
     parseAvatar(data.content),
-    UserMemberDataDto.from(userMember)
   )
 }
 
@@ -85,7 +85,7 @@ export const fetchMembers = async (
     })
 
     for (const member of members) {
-      const userMember = userMembers.find((um) => um.pluralId === member.id)
+      let userMember = userMembers.find((um) => um.pluralId === member.id)
 
       if (!userMember) {
         continue
@@ -109,7 +109,7 @@ export const fetchMember = async (
   fieldWhere: Partial<Prisma.UserMemberWhereInput> = {}
 ): Promise<Member | null> => {
   try {
-    const userMember = await $db.userMember.findFirst({
+    let userMember = await $db.userMember.findFirst({
       where: {
         pluralId: data.id,
         pluralOwnerId: system.id,

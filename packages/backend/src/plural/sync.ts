@@ -56,7 +56,7 @@ export const syncFields = async (system: UserEntry, user: User) => {
         pluralOwnerId: system.id,
         userId: user.id,
         visible: parseVisibility(system.content.fields[fieldId]) === PluralVisibility.Public,
-        description: null,
+        customDescription: null,
       })
     }
   }
@@ -79,7 +79,7 @@ export const syncFields = async (system: UserEntry, user: User) => {
   })
 }
 
-export const syncWithApi = async (user: User) => {
+export const syncWithApi = async (user: User): Promise<User> => {
   // Clear cache for this user to prevent any BS
   await clearCacheByUser(user)
 

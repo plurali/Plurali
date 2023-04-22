@@ -24,6 +24,7 @@
       :src="systemMember.avatar"
       :alt="systemMember.name"
       class="w-16 h-16 rounded-full object-cover"
+      loading="lazy"
     />
     <Color
       v-else

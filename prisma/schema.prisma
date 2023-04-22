@@ -17,7 +17,7 @@ model User {
   members          UserMember[]
   fields           UserField[]
   slug             String?
-  description      String?
+  customDescription      String?
   visible          Boolean
 }
 
@@ -27,7 +27,7 @@ model UserField {
   pluralOwnerId String
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String  @db.ObjectId
-  description   String?
+  customDescription   String?
   visible       Boolean
 }
 
@@ -38,8 +38,8 @@ model UserMember {
   user            User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId          String  @db.ObjectId
   slug            String?
-  description     String?
   visible         Boolean
   backgroundColor String?
   backgroundImage String?
+  customDescription String?
 }

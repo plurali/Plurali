@@ -4,7 +4,7 @@ import { Member, MemberField, System } from '@plurali/common/src/system'
 
 export interface UpdateSystemData {
   visible?: boolean
-  description?: string
+  customDescription?: string | null
 }
 
 export interface SystemData {
@@ -13,7 +13,7 @@ export interface SystemData {
 
 export interface UpdateSystemMemberData {
   visible?: boolean
-  description?: string
+  customDescription?: string | null
 }
 
 export interface SystemMembersData {
@@ -26,7 +26,7 @@ export interface SystemMemberData {
 
 export interface UpdateSystemFieldRequest {
   visible?: boolean
-  description?: string
+  customDescription?: string | null
 }
 
 export interface SystemFieldData {
