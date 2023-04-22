@@ -1,13 +1,14 @@
 import { UserDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
 import {
   BaseData,
+  getUser,
   GetUserData,
   parseAvatar,
   parseFieldType,
   parseVisibility,
   UserEntry,
 } from '@plurali/common/dist/plural'
-import { getMe, getUser } from './cached'
+import { getMe } from './cached'
 import { MemberField, System } from '@plurali/common/dist/system'
 import { Prisma, User, UserField } from '@prisma/client'
 import { $db } from '../services/db'
