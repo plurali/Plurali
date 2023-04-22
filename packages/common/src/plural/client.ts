@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 import { BaseData } from '.'
 
-const $simplyClient = axios.create({
+export const $simplyClient = axios.create({
   baseURL: 'https://api.apparyllis.com:8443',
   headers: {
     Accept: 'application/json',
@@ -18,5 +18,3 @@ export const createEndpointCall = <T = unknown, D extends BaseData = BaseData>(
     return await fn(client, data)
   }
 }
-
-export { $simplyClient }

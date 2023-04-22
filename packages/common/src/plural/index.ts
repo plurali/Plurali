@@ -23,6 +23,12 @@ export interface AvatarAttrs {
   avatarUrl: string
 }
 
+export interface ResolvedToken {
+  uid: string,
+  accessTypes: 1 | 2 | 3,
+  jwt: boolean
+}
+
 // TODO: proxy external (non-apparyllis as AR is a trusted source) URLs
 // https://github.com/ApparyllisOrg/SimplyPluralApi/blob/e8950618419bcd6aefcb238d71b09d5814034adf/src/api/v1/user/generateReport.ts#L47
 export const parseAvatar = (
@@ -70,3 +76,5 @@ export const testKey = async (key: string): Promise<boolean> => {
 
 export * from './members'
 export * from './users'
+export * from "./ws"
+export * from "./client"

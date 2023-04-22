@@ -1,4 +1,4 @@
-import Redis from "ioredis";
+import Redis, { ChainableCommander } from "ioredis";
 import {$env} from "../../utils/env";
 
 export const $redis = new Redis({
@@ -17,20 +17,37 @@ export enum CacheStore {
 
 export const createKey = <S extends CacheStore, K extends string>(s: S, k: K): `${S}__${K}` => `${s}__${k}` 
 
-export const cache = async <T = {}>(store: CacheStore, key: string, value: T, expiry: number|null = 300): Promise<void> => {
+export const cache = async <T = {}>(store: CacheStore, key: string, value: T, expiry: number|null = 300, transaction?: ChainableCommander): Promise<void> => {
+    const t = transaction ?? $redis.multi();
+
     key = createKey(store, key);
-    await $redis.set(key, JSON.stringify(value));
+    
+    if (await $redis.exists(key)) {
+        t.del(key);
+    }
+
+    t.set(key, JSON.stringify(value));
 
     if (expiry) {
         if (expiry < 1) {
             throw new Error("Expiry must be at least 1")
         }
-        await $redis.expire(key, expiry)
+        t.expire(key, expiry)
+    }
+
+    if (!transaction) {
+        await t.exec();
     }
 }
 
-export const uncache = async (store: CacheStore, key: string): Promise<void> => {
-    await $redis.del(createKey(store, key));
+export const uncache = async (store: CacheStore, key: string, transaction?: ChainableCommander): Promise<void> => {
+    const t = transaction ?? $redis.multi();
+    
+    await t.del(createKey(store, key));
+
+    if (!transaction) {
+        await t.exec();
+    }
 }
 
 export const cached = async <T = {}>(store: CacheStore, key: string): Promise<T|null> => {
