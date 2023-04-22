@@ -15,7 +15,7 @@ export const idSchema = S.object().prop('params', S.object().prop('id', S.string
 export interface SystemBaseDataSchema extends IdSchema {
   Body: {
     visible?: boolean
-    description?: string
+    customDescription?: string | null
   }
 }
 

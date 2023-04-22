@@ -45,13 +45,13 @@ export default controller(async server => {
   server.post<AuthSchema>('/login', { schema: authSchema.valueOf() }, async (req, res) => {
     const { username, password } = req.body
 
-    const user = await $db.user.findUnique({ where: { username } })
+    let user = await $db.user.findUnique({ where: { username } })
 
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       return res.status(400).send(error(Status.Login.InvalidCredentials))
     }
 
-    await syncWithApi(user)
+    user = await syncWithApi(user)
 
     req.session.set('userId', user.id)
 
