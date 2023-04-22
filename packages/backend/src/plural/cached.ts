@@ -1,49 +1,73 @@
 import * as plural from '@plurali/common/dist/plural'
 import { AxiosResponse } from 'axios'
-import { cache, cached } from '../services/redis'
+import { CacheStore, cache, cached } from '../services/redis'
 
 export interface CachableResult<TData = any> {
   data: TData
   cached: boolean
 }
 
-export const createCachedEndpoint = <T, TA>(
+export const defaultCacheCallback = <T>(
+  data: T,
+  store: CacheStore,
+  key: string,
+  expiry: number,
+  _cache: typeof cache
+) => _cache(store, key, data, expiry)
+
+export const createCachedEndpoint = <T, TA, K extends string>(
   fn: (...args: TA[]) => Promise<AxiosResponse<T>>,
-  id: string | ((...args: TA[]) => string),
-  expiry = 300
+  store: CacheStore,
+  key: K | ((...args: TA[]) => K),
+  expiry = 300,
+  cacheCb: (
+    _data: T,
+    _store: typeof store,
+    _key: K,
+    _expiry: typeof expiry,
+    _cache: typeof cache,
+    ...args: TA[]
+  ) => Promise<void> = defaultCacheCallback
 ): ((...args: TA[]) => Promise<CachableResult<T>>) => {
   return async function (...args: TA[]) {
-    id = typeof id === 'function' ? id(...args) : id
-    const cachedData = await cached<T>(id)
+    key = typeof key === 'function' ? key(...args) : key
+    const cachedData = await cached<T>(store, key)
 
     if (cachedData) {
       return { data: cachedData, cached: true }
     }
 
-    try {
-      const res = await fn(...args)
+    const res = await fn(...args)
 
-      if ([200, 201].includes(res.status) && !!res.data) {
-        await cache(id, res.data, expiry)
-      }
-
-      return { data: res.data, cached: false }
-    } catch (e) {
-      throw e
+    if ([200, 201].includes(res.status) && !!res.data) {
+      await cacheCb(res.data, store, key, expiry, cache, ...args)
     }
+
+    return { data: res.data, cached: false }
   }
 }
 
 export const getMe = createCachedEndpoint(
   plural.getMe,
-  data => `getMe_pluraliUser__{data.user.id}_${data.user.overridePluralId ?? 'unset'}`
+  CacheStore.System,
+  args => `PluraliUser${args.user.id}_Override${args.user.overridePluralId ?? 'Unset'}`
 )
-
-export const getUser = createCachedEndpoint(plural.getUser, data => `getUser_${data.user}`)
 
 export const getMember = createCachedEndpoint(
   plural.getMember,
-  data => `getMember_pluraliUser__${data.user.id}_${data.systemId}_${data.memberId}`
+  CacheStore.Member,
+  args => `PluraliUser${args.user.id}_OwnerSID${args.systemId}_MemberSID${args.memberId}`
 )
 
-export const getMembers = createCachedEndpoint(plural.getMembers, data => `getMembers_pluraliUser__${data.user.id}_${data.systemId}`)
+export const getMembers = createCachedEndpoint(
+  plural.getMembers,
+  CacheStore.MemberList,
+  args => `PluraliUser${args.user.id}_OwnerSID${args.systemId}`,
+  300,
+  async (members, store, key, expiry, cache) => {
+    await cache(store, key, members, expiry)
+    for (const member of members) {
+      await cache(CacheStore.Member, `${key}_MemberSID${member.id}`, member, expiry)
+    }
+  }
+)
