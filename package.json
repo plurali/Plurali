@@ -33,7 +33,11 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.1",
-    "prettier": "^2.8.7"
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   },
   "lint-staged": {
     "*.{js,ts,vue,json}": "eslint"

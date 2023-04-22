@@ -1,6 +1,16 @@
-import topbar from 'topbar'
+import topbar from 'topbar';
 
 const bar = topbar;
+
+bar.config({
+  barColors: {
+    '0.3': '#c084fc',
+    '0.5': '#af74e8',
+    '0.75': '#9e64d4',
+    '0.95': '#8d54c0',
+    '1': '#7c45ad',
+  },
+});
 
 export const $topbar = {
   ...bar,
@@ -15,7 +25,7 @@ export const $topbar = {
    */
   promised<TPromise extends Promise<unknown> = Promise<unknown>>(promise: TPromise): TPromise {
     bar.show();
-    promise.finally(() => bar.hide())
-    return promise
+    promise.finally(() => bar.hide());
+    return promise;
   },
-}
+};
