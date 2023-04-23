@@ -75,13 +75,12 @@ export default defineComponent({
     };
 
     const onDrop = (e: DragEvent) => {
-      alert('dropped  ');
       dragged.value = false;
       if (e.dataTransfer?.files && e.dataTransfer.files.length >= 1) {
         const file = e.dataTransfer.files.item(0);
-        if (file?.type && props.accept.find(accepted => file.type.toLowerCase() === accepted.toLowerCase())) {
+        // if (file?.type && props.accept.find(accepted => file.type.toLowerCase() === accepted.toLowerCase())) {
           upload.value = file;
-        }
+        // }
       }
     };
 
