@@ -7,6 +7,7 @@ export interface BackgroundData  {
     backgroundType: Background,
     backgroundImage: string | null,
     backgroundColor: string | null,
+    lastTimeAssetChanged: Date
 }
 
 // The priority is the following:

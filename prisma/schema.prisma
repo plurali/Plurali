@@ -27,6 +27,7 @@ model User {
   backgroundImage    String?
   customDescription  String?
   visible            Boolean
+  lastTimeAssetChanged DateTime @default(now())
 }
 
 model UserField {
@@ -50,4 +51,5 @@ model UserMember {
   backgroundColor String?
   backgroundImage String?
   customDescription String?
+  lastTimeAssetChanged DateTime @default(now())
 }
