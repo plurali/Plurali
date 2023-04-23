@@ -1,9 +1,6 @@
 <template>
   <Fetchable :retry="fetchSystem" :result="system">
     <SystemSummary v-if="system" :system="system" />
-
-    <CustomFields v-if="system" :fields="system.fields" :modifiable="false" />
-
     <Members />
   </Fetchable>
 </template>
