@@ -27,7 +27,6 @@ model UserField {
   pluralOwnerId String
   user          User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId        String  @db.ObjectId
-  customDescription   String?
   visible       Boolean
 }
 
