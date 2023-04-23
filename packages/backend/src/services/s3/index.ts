@@ -11,9 +11,15 @@ import {
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { $env } from '../../utils/env.js';
+import { clearCdnCache } from '../../digitalocean/index.js';
 
 export enum S3Prefix {
   Userdata = '@userdata',
+}
+
+export interface StoreResult {
+  ok: boolean;
+  cacheFail: boolean;
 }
 
 export class Storage {
@@ -116,36 +122,33 @@ export class Storage {
     }
   }
 
-  public async store(
-    path: string,
-    body: Buffer,
-    replaceIfExists = false,
-    acl = 'public-read'
-  ): Promise<boolean> {
-    if ((await this.exists(path)) && !replaceIfExists) {
-      throw new Error(`'${path}' already exists`);
+  public async store(path: string, body: Buffer, replaceIfExists = false, acl = 'public-read'): Promise<StoreResult> {
+    let cacheFail = false;
+    if (await this.exists(path)) {
+      if (!replaceIfExists) throw new Error(`'${path}' already exists`);
+
+      await this.delete(path);
+      cacheFail = await clearCdnCache(path);
     }
 
-    return (
-      (
-        await this.s3.send(
-          new PutObjectCommand({
-            Bucket: this.bucketName,
-            Key: path,
-            ACL: acl,
-            Body: body,
-            ContentLength: body.byteLength 
-          })
-        )
-      ).$metadata.httpStatusCode === 200
-    );
+    return {
+      ok:
+        (
+          await this.s3.send(
+            new PutObjectCommand({
+              Bucket: this.bucketName,
+              Key: path,
+              ACL: acl,
+              Body: body,
+              ContentLength: body.byteLength,
+            })
+          )
+        ).$metadata.httpStatusCode === 200,
+      cacheFail,
+    };
   }
 
-  public async delete(path: string, replaceIfExists = false): Promise<boolean> {
-    if ((await this.exists(path)) && !replaceIfExists) {
-      throw new Error(`'${path}' already exists`);
-    }
-
+  public async delete(path: string): Promise<boolean> {
     return (
       (
         await this.s3.send(

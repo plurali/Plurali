@@ -1,17 +1,18 @@
 import { AxiosResponse } from 'axios'
 import { $axios, Response } from '.'
 import { UserDto } from '@plurali/common/src/dto'
+import { SuccessData } from '@plurali/backend/src/server/status'
 
 export interface AuthInput {
   username: string
   password: string
 }
 
-export interface AuthData {
+export interface AuthData extends SuccessData {
   user: UserDto
 }
 
-export interface AuthLogoutData {
+export interface AuthLogoutData extends SuccessData {
   message: 'ok'
 }
 

@@ -14,6 +14,8 @@ export interface Variables {
   S3_ACCESS_KEY_SECRET: string
   S3_BUCKET: string
   S3_REGION: string
+  DO_API_TOKEN: string
+  DO_ENDPOINT_ID: string;
 }
 
 let _env: Record<string, string> |null= null;
