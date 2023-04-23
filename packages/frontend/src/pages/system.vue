@@ -1,6 +1,6 @@
 <template>
   <Fetchable :retry="fetchSystem" :result="system">
-    <SystemSummary v-if="system" :system="system" />
+    <SystemSummary v-if="system" v-model:entity="system" />
     <Members />
   </Fetchable>
 </template>

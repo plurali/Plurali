@@ -1,52 +1,58 @@
 <template>
-  <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
-    <img
-      v-if="currentSystem.avatar"
-      :src="currentSystem.avatar"
-      :alt="currentSystem.username"
-      class="flex-shrink-0 w-32 h-32 rounded-full object-cover"
-    />
-    <Color v-else :color="currentSystem.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25" />
-    <div>
-      <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ currentSystem.id }}</p>
-      <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
-        {{ currentSystem.username }}
-        <VisibilityTag
-          v-if="isDashboard"
-          :disabled="loading"
-          :visible="currentSystem.data.visible"
-          @click.prevent="toggleVisibility"
-        />
-        <a
-          v-if="isDashboard && currentSystem.data.visible"
-          :href="`/${currentSystem.data.slug}`"
-          class="text-sm text-gray-700 font-normal"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <u>Open public view</u>
-        </a>
-      </PageTitle>
-      <Subtitle class="mb-3">{{ currentSystem.description ?? 'No description' }}</Subtitle>
-      <span v-if="currentSystem.color" class="inline-flex text-gray-700 items-center gap-1">
-        Color: {{ currentSystem.color }}
-        <ColorCircle :color="currentSystem.color" />
-      </span>
+  <div class="flex justify-between items-start">
+    <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
+      <img
+        v-if="system.avatar"
+        :src="system.avatar"
+        :alt="system.username"
+        class="flex-shrink-0 w-32 h-32 rounded-full object-cover"
+      />
+      <Color v-else :color="system.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25" />
+      <div>
+        <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ system.id }}</p>
+        <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
+          {{ system.username }}
+          <VisibilityTag
+            v-if="isDashboard"
+            :disabled="loading"
+            :visible="system.data.visible"
+            @click.prevent="toggleVisibility"
+          />
+          <a
+            v-if="isDashboard && system.data.visible"
+            :href="`/${system.data.slug}`"
+            class="text-sm text-gray-700 font-normal"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <u>Open public view</u>
+          </a>
+        </PageTitle>
+        <Subtitle class="mb-3">{{ system.description ?? 'No description' }}</Subtitle>
+        <span v-if="system.color" class="inline-flex text-gray-700 items-center gap-1">
+          Color: {{ system.color }}
+          <ColorCircle :color="system.color" />
+        </span>
+      </div>
+    </div>
+
+    <div v-if="isDashboard">
+      <BackgroundChooser v-model:entity="system" type="system" />
     </div>
   </div>
 
-  <CustomFields :fields="currentSystem.fields" :modifiable="isDashboard" />
+  <CustomFields :fields="system.fields" :modifiable="isDashboard" />
 
   <Editor
     v-if="isDashboard"
-    :id="`${currentSystem.id}-customDescription`"
-    :initial-value="currentSystem.data.customDescription"
-    :placeholder="`Add custom description for ${currentSystem.username}...`"
+    :id="`${system.id}-customDescription`"
+    :initial-value="system.data.customDescription"
+    :placeholder="`Add custom description for ${system.username}...`"
     @save="updateCustomDescription"
   />
-  <UserContent class="mb-5" v-else-if="currentSystem.data.customDescription">
-    <Sanitized :value="currentSystem.data.customDescription" />
-  </UserContent> 
+  <UserContent class="mb-5" v-else-if="system.data.customDescription">
+    <Sanitized :value="system.data.customDescription" />
+  </UserContent>
 </template>
 <script lang="ts">
 import PageTitle from '../../Title.vue';
@@ -64,6 +70,7 @@ import CustomFields from '../fields/CustomFields.vue';
 import UserContent from '../UserContent.vue';
 import Sanitized from '../Sanitized.vue';
 import Editor from '../../dashboard/Editor.vue';
+import BackgroundChooser from '../BackgroundChooser.vue';
 
 export default defineComponent({
   components: {
@@ -76,19 +83,28 @@ export default defineComponent({
     Editor,
     UserContent,
     Sanitized,
+    BackgroundChooser,
   },
   props: {
-    system: {
+    entity: {
       type: Object as PropType<System>,
       required: true,
     },
   },
-  setup({ system: _system }) {
+  emits: ['update:entity'],
+  setup(props, { emit }) {
     const route = useRoute();
 
     const loading = ref(false);
 
-    const currentSystem = ref(_system);
+    const system = computed({
+      get() {
+        return props.entity;
+      },
+      set(v) {
+        emit('update:entity', v);
+      },
+    });
 
     const toggleVisibility = async () => {
       if (loading.value) return;
@@ -96,14 +112,14 @@ export default defineComponent({
 
       const res = await wrapRequest(() =>
         updateSystem({
-          visible: !currentSystem.value.data.visible,
+          visible: !system.value.data.visible,
         })
       );
 
       // fail??? refresh
       if (!res) return (window.location.href = '');
 
-      currentSystem.value = res.system;
+      system.value = res.system;
       loading.value = false;
     };
 
@@ -112,7 +128,7 @@ export default defineComponent({
       loading.value = true;
 
       const res = await wrapRequest(() => {
-        if (!currentSystem.value) return null;
+        if (!system.value) return null;
 
         editor.readonly = true;
         let customDescription: string | null = editor.getContent({ format: 'html' });
@@ -127,17 +143,17 @@ export default defineComponent({
       });
 
       if (res) {
-        currentSystem.value = res.system;
+        system.value = res.system;
       }
 
       loading.value = false;
     };
 
     return {
-      currentSystem,
       toggleVisibility,
       updateCustomDescription,
       loading,
+      system,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
     };
   },

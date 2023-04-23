@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { Sanitizer } from '../../sanitizer';
+import { setHTML } from '../../sanitizer/polyfill';
 
 export default defineComponent({
   props: {
@@ -19,7 +20,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (div.value) {
-        div.value.setHTML(props.value, { sanitizer: s.value });
+        setHTML.bind(div.value)(props.value, { sanitizer: s.value });
       }
     });
 
