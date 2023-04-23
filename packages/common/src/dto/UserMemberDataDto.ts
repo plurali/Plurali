@@ -8,6 +8,7 @@ export class UserMemberDataDto implements BackgroundData {
     public backgroundColor: string | null,
     public backgroundImage: string | null,
     public customDescription: string | null,
+    public lastTimeAssetChanged: Date,
     public visible: boolean
   ) {}
 
@@ -18,6 +19,7 @@ export class UserMemberDataDto implements BackgroundData {
       userMember.backgroundColor,
       userMember.backgroundImage,
       userMember.customDescription,
+      userMember.lastTimeAssetChanged,
       userMember.visible
     );
   }

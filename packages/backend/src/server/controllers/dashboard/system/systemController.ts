@@ -60,6 +60,7 @@ export default controller(async server => {
         data: {
           backgroundType: Background.Image,
           backgroundImage: key,
+          lastTimeAssetChanged: new Date()
         },
       });
 
