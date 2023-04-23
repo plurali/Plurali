@@ -48,7 +48,7 @@ export default controller(async server => {
 
       const key = `${S3Prefix.Userdata}/${user.id}/${system.id}/background.${fileType.ext}`;
 
-      const success = await $storage.store(key, buf);
+      const success = await $storage.store(key, buf, true);
       if (!success) {
         return res.status(400).send(error(Status.FileProcessingFailed));
       }
