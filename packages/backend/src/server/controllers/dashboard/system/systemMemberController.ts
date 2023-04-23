@@ -38,23 +38,14 @@ export default controller(async server => {
         return res.status(400).send(error(Status.ResourceNotFound));
       }
 
-      const background = {
-        backgroundColor: member.backgroundColor,
-        backgroundType: member.backgroundType,
-        backgroundImage: member.backgroundImage,
-      };
-
-      if (req.body.backgroundColor) {
-        background.backgroundType = Background.Color;
-        background.backgroundColor = req.body.backgroundColor;
-      }
-
       await $db.userMember.update({
         where: { id: member.id },
         data: {
           ...(typeof req.body.visible === 'boolean' ? { visible: req.body.visible } : {}),
           ...(req.body.customDescription?.trim().length >= 1 ? { customDescription: req.body.customDescription } : {}),
-          ...background,
+          ...(req.body.backgroundColor
+            ? { backgroundColor: req.body.backgroundColor, backgroundType: Background.Color }
+            : {}),
         },
       });
 
@@ -89,7 +80,7 @@ export default controller(async server => {
 
       const key = `${S3Prefix.Userdata}/${user.id}/${system.id}/${member.pluralId}/background.${fileType.ext}`;
 
-      const success = await $storage.store(key, buf);
+      const success = await $storage.store(key, buf, true);
       if (!success) {
         return res.status(400).send(error(Status.FileProcessingFailed))
       }
