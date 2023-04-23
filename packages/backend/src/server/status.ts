@@ -16,10 +16,15 @@ export const Status = {
   Unauthorized: 'Unauthorized',
   UnsupportedFile: 'Unsupported or invalid file given',
   FileProcessingFailed: 'Failed to process the given file',
-  MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form'
+  MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form',
+  CacheDemand: 'Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.'
 }
 
-export interface SuccessResponse<TData extends object = object> {
+export interface SuccessData {
+  warning?: string
+}
+
+export interface SuccessResponse<TData extends SuccessData = SuccessData> {
   success: true
   data: TData
 }
@@ -29,7 +34,7 @@ export interface ErrorResponse {
   error: string
 }
 
-export type Response<TData extends object> = SuccessResponse<TData> | ErrorResponse
+export type Response<TData extends SuccessData> = SuccessResponse<TData> | ErrorResponse
 
 export const error = (error: string): ErrorResponse => ({
   success: false,

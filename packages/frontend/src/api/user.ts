@@ -1,12 +1,13 @@
 import { UserDto } from '@plurali/common/src/dto'
 import { AxiosResponse } from 'axios'
 import { $axios, Response } from '.'
+import { SuccessData } from '@plurali/backend/src/server/status'
 
 export interface UserUpdateInput {
   pluralKey: string
 }
 
-export interface UserData {
+export interface UserData extends SuccessData {
   user: UserDto
 }
 

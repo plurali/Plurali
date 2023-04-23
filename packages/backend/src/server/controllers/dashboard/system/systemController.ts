@@ -48,14 +48,8 @@ export default controller(async server => {
 
       const key = `${S3Prefix.Userdata}/${user.id}/${system.id}/background.${fileType.ext}`;
 
-      const success = await $storage.store(key, buf, true);
-      if (!success) {
-        return res.status(400).send(error(Status.FileProcessingFailed));
-      }
-
-      // validate image is indeed on S3
-      const image = await $storage.get(key);
-      if (!image) {
+      const result = await $storage.store(key, buf, true);
+      if (!result.ok) {
         return res.status(400).send(error(Status.FileProcessingFailed));
       }
 
@@ -69,7 +63,7 @@ export default controller(async server => {
         },
       });
 
-      return res.send(data({ system: await fetchMe({ user }) }));
+      return res.send(data({ system: await fetchMe({ user }), ...(result ? { warning: Status.CacheDemand } : {}) }));
     })
   );
 }, '/system');

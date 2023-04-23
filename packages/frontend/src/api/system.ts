@@ -1,28 +1,29 @@
 import { AxiosResponse } from 'axios';
 import { $axios, Response } from '.';
 import { Member, MemberField, System } from '@plurali/common/src/system';
+import { SuccessData } from '@plurali/backend/src/server/status';
 
-export interface UpdateSystemData {
+export interface UpdateSystemData extends SuccessData {
   visible?: boolean;
   customDescription?: string | null;
   backgroundColor?: string;
 }
 
-export interface SystemData {
+export interface SystemData extends SuccessData {
   system: System;
 }
 
-export interface UpdateSystemMemberData {
+export interface UpdateSystemMemberData extends SuccessData {
   visible?: boolean;
   customDescription?: string | null;
   backgroundColor?: string;
 }
 
-export interface SystemMembersData {
+export interface SystemMembersData extends SuccessData {
   members: Member[];
 }
 
-export interface SystemMemberData {
+export interface SystemMemberData extends SuccessData {
   member: Member;
 }
 
@@ -31,11 +32,11 @@ export interface UpdateSystemFieldRequest {
   customDescription?: string | null;
 }
 
-export interface SystemFieldData {
+export interface SystemFieldData extends SuccessData {
   field: MemberField;
 }
 
-export interface SystemFieldsData {
+export interface SystemFieldsData extends SuccessData {
   fields: MemberField[];
 }
 
