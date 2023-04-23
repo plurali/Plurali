@@ -1,8 +1,8 @@
-import { controller } from "../../../utils/server"
-import { data, error, Status } from '../../status'
-import S from 'fluent-json-schema'
-import { withPublicUserContext } from '../../contexts/publicUser'
-import { idSchema, IdSchema } from '../../../utils/server'
+import { controller } from "../../../utils/server.js"
+import { data, error, Status } from '../../status.js'
+import {S} from 'fluent-json-schema'
+import { withPublicUserContext } from '../../contexts/publicUser.js'
+import { idSchema, IdSchema } from '../../../utils/server.js'
 
 export interface MemberIdSchema {
   Params: IdSchema['Params'] & {

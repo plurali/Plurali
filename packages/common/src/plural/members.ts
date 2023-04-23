@@ -1,5 +1,5 @@
-import { BaseData, BaseEntry, VisibilityAttrs } from '.'
-import { createEndpointCall } from './client'
+import { BaseData, BaseEntry, VisibilityAttrs } from './index.js'
+import { createEndpointCall } from './client.js'
 
 export type MemberEntry<TContentInfo extends Record<string, string> = Record<string, string>> =
   BaseEntry<MemberContent<TContentInfo>>

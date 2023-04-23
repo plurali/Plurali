@@ -1,7 +1,8 @@
-import { MemberField } from './MemberField'
-import { UserDataDto } from '../dto/UserDataDto'
+import { MemberField } from './MemberField.js'
+import { UserDataDto } from '../dto/UserDataDto.js'
+import { WithBackground } from '../data/index.js'
 
-export class System {
+export class System implements WithBackground {
   constructor(
     public id: string,
     public lastModified: Date,

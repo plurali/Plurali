@@ -1,7 +1,7 @@
-import { PluralVisibility } from '../system/PluralVisibility'
+import { PluralVisibility } from '../system/PluralVisibility.js'
 import { User } from '@prisma/client'
-import { MemberFieldType } from '../system/MemberField'
-import { $simplyClient } from './client'
+import { MemberFieldType } from '../system/MemberField.js'
+import { $simplyClient } from './client.js'
 
 export interface BaseData {
   user: User
@@ -74,7 +74,7 @@ export const testKey = async (key: string): Promise<boolean> => {
   }
 }
 
-export * from './members'
-export * from './users'
-export * from "./ws"
-export * from "./client"
+export * from './members.js'
+export * from './users.js'
+export * from "./ws.js"
+export * from "./client.js"

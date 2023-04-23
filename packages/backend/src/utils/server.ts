@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
-import S from 'fluent-json-schema'
-import { __app, __root } from '../constants'
+import {S} from 'fluent-json-schema'
+import { __app, __root } from '../constants.js'
 
 // Common Schemas
 
@@ -16,12 +16,14 @@ export interface SystemBaseDataSchema extends IdSchema {
   Body: {
     visible?: boolean
     customDescription?: string | null
+    backgroundColor?: string | null
+    backgroundImage?: string | null
   }
 }
 
 export const systemBaseDataSchema = { ...idSchema }.prop(
   'body',
-  S.object().prop('visible', S.boolean()).prop('description', S.string())
+  S.object().prop('visible', S.boolean()).prop('description', S.string()).prop('backgroundColor', S.string()).prop('backgroundImage', S.string())
 )
 
 // Controllers

@@ -1,14 +1,14 @@
-import { UserMemberDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
+import { UserMemberDataDto, UserFieldDataDto } from '@plurali/common/dist/dto/index.js'
 import {
   BaseData,
   MemberEntry,
   parseAvatar,
   parseVisibility,
-} from '@plurali/common/dist/plural'
-import { getMember, getMembers } from './cached'
-import { Member, MemberFieldWithValue, System } from '@plurali/common/dist/system'
+} from '@plurali/common/dist/plural/index.js'
+import { getMember, getMembers } from './cached.js'
+import { Member, MemberFieldWithValue, System } from '@plurali/common/dist/system/index.js'
 import { Prisma, UserField, UserMember } from '@prisma/client'
-import { $db } from '../services/db'
+import { $db } from '../services/db/index.js'
 
 export const transformFieldWithValue = (id: string, member: MemberEntry, system: System, userField: UserField) => {
   const field = system.fields.find(field => field.fieldId === id)

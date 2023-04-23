@@ -1,12 +1,12 @@
 import { User } from '@prisma/client';
 import WebSocket from 'ws';
-import { Message, OperationType } from '@plurali/common/dist/plural';
-import { $server } from '../../server';
-import EventEmitter from 'eventemitter3';
-import { clearMemberListCache } from '../../services/redis/utils';
-import { $db } from '../../services/db';
-import { getMembers } from '../../plural/cached';
-import { $redis } from '../../services/redis';
+import { Message, OperationType } from '@plurali/common/dist/plural/index.js';
+import { $server } from '../../server/index.js';
+import {EventEmitter} from 'eventemitter3';
+import { clearMemberListCache } from '../../services/redis/utils.js';
+import { $db } from '../../services/db/index.js';
+import { getMembers } from '../../plural/cached.js';
+import { $redis } from '../../services/redis/index.js';
 
 export class Watcher extends EventEmitter {
   private connection: WebSocket | null = null;

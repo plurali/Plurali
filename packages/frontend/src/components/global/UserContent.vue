@@ -5,6 +5,10 @@
 </template>
 
 <style>
+.user-content {
+  @apply bg-white bg-opacity-25 rounded-2xl;
+}
+
 .user-content .mce-content-body {
   @apply rounded-2xl border-[3px] border-violet-300 p-6;
 }

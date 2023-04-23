@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { BaseData } from '.'
+import { BaseData } from './index.js'
 
 export const $simplyClient = axios.create({
   baseURL: 'https://api.apparyllis.com:8443',

@@ -1,13 +1,13 @@
-import { UserDto } from '@plurali/common/dist/dto';
-import { getUser, testKey } from '@plurali/common/dist/plural';
+import { UserDto } from '@plurali/common/dist/dto/index.js';
+import { getUser, testKey } from '@plurali/common/dist/plural/index.js';
 import { Prisma } from '@prisma/client';
-import S from 'fluent-json-schema';
-import { syncWithApi } from '../../../plural';
-import { $db } from '../../../services/db';
-import { withUserContext } from '../../contexts/user';
-import { controller } from '../../../utils/server';
-import { data, error, Status } from '../../status';
-import { $watcherBag } from '../../../ws/watcher/bag';
+import {S} from 'fluent-json-schema';
+import { syncWithApi } from '../../../plural/sync.js';
+import { $db } from '../../../services/db/index.js';
+import { withUserContext } from '../../contexts/user.js';
+import { controller } from '../../../utils/server.js';
+import { data, error, Status } from '../../status.js';
+import { $watcherBag } from '../../../ws/watcher/bag.js';
 
 export const userUpdateSchema = S.object().prop(
   'body',

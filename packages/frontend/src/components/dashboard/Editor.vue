@@ -67,12 +67,6 @@ export default defineComponent({
       emit('save', editor.value)
     }
 
-    watch(
-      () => editor.value,
-      val => console.log(val),
-      { immediate: true }
-    );
-
     return {
       API_KEY,
       value,

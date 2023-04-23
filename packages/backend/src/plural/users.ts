@@ -1,4 +1,4 @@
-import { UserDataDto, UserFieldDataDto } from '@plurali/common/dist/dto'
+import { UserDataDto, UserFieldDataDto } from '@plurali/common/dist/dto/index.js'
 import {
   BaseData,
   getUser,
@@ -7,11 +7,11 @@ import {
   parseFieldType,
   parseVisibility,
   UserEntry,
-} from '@plurali/common/dist/plural'
-import { getMe } from './cached'
-import { MemberField, System } from '@plurali/common/dist/system'
+} from '@plurali/common/dist/plural/index.js'
+import { getMe } from './cached.js'
+import { MemberField, System } from '@plurali/common/dist/system/index.js'
 import { Prisma, User, UserField } from '@prisma/client'
-import { $db } from '../services/db'
+import { $db } from '../services/db/index.js'
 
 export const transformMemberField = (
   id: string,

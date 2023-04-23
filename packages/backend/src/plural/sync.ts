@@ -1,9 +1,9 @@
-import { getMe, getMembers, MemberEntry, parseVisibility, UserEntry } from '@plurali/common/dist/plural'
-import { PluralVisibility } from '@plurali/common/dist/system/PluralVisibility'
+import { getMe, getMembers, MemberEntry, parseVisibility, UserEntry } from '@plurali/common/dist/plural/index.js'
+import { PluralVisibility } from '@plurali/common/dist/system/PluralVisibility.js'
 import { Prisma, User, UserMember } from '@prisma/client'
-import { $db } from '../services/db'
-import { createSlug } from '../utils'
-import { clearCacheByUser } from '../services/redis/utils'
+import { $db } from '../services/db/index.js'
+import { createSlug } from '../utils/index.js'
+import { clearCacheByUser } from '../services/redis/utils.js'
 
 export const syncMember = async (fetchedMember: MemberEntry, system: UserEntry, user: User): Promise<UserMember> => {
   const member = await $db.userMember.upsert({
@@ -56,7 +56,6 @@ export const syncFields = async (system: UserEntry, user: User) => {
         pluralOwnerId: system.id,
         userId: user.id,
         visible: parseVisibility(system.content.fields[fieldId]) === PluralVisibility.Public,
-        customDescription: null,
       })
     }
   }

@@ -1,11 +1,11 @@
-import { controller } from '../../../utils/server'
+import { controller } from '../../../utils/server.js'
 import { S } from 'fluent-json-schema'
-import { RouteGenericInterface } from 'fastify/types/route'
+import { RouteGenericInterface } from 'fastify/types/route.js'
 import bcrypt from 'bcrypt'
-import { $db } from '../../../services/db'
-import { data, error, Status } from '../../status'
-import { syncWithApi } from '../../../plural/sync'
-import { UserDto } from '@plurali/common/dist/dto'
+import { $db } from '../../../services/db/index.js'
+import { data, error, Status } from '../../status.js'
+import { syncWithApi } from '../../../plural/sync.js'
+import { UserDto } from '@plurali/common/dist/dto/index.js'
 
 const authSchema = S.object().prop(
   'body',

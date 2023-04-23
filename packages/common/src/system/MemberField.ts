@@ -1,5 +1,5 @@
-import { PluralVisibility } from './PluralVisibility'
-import { UserFieldDataDto } from '../dto/UserFieldDataDto'
+import { PluralVisibility } from './PluralVisibility.js'
+import { UserFieldDataDto } from '../dto/UserFieldDataDto.js'
 
 export enum MemberFieldType {
   String = 'String',

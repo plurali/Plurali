@@ -95,7 +95,7 @@ export default defineComponent({
       loading.value = true;
 
       const res = await wrapRequest(() =>
-        updateSystem(currentSystem.value.id, {
+        updateSystem({
           visible: !currentSystem.value.data.visible,
         })
       );
@@ -121,7 +121,7 @@ export default defineComponent({
           customDescription = null;
         }
 
-        return updateSystem(currentSystem.value.id, {
+        return updateSystem({
           customDescription,
         });
       });

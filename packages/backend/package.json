@@ -5,9 +5,11 @@
   "license": "MIT",
   "main": "src/index.ts",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.317.0",
     "@fastify/cors": "^8.2.1",
+    "@fastify/multipart": "^7.6.0",
     "@fastify/secure-session": "^6.1.0",
     "@fastify/view": "^7.4.1",
     "@fastify/websocket": "^7.2.0",
@@ -20,6 +22,7 @@
     "eventemitter3": "^5.0.0",
     "fastify": "^4.15.0",
     "fastify-plugin": "^4.5.0",
+    "file-type": "18",
     "fluent-json-schema": "^4.1.0",
     "glob": "^9.3.4",
     "ioredis": "^5.3.2",
@@ -32,12 +35,13 @@
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/glob": "^8.1.0",
+    "@types/ioredis": "^5.0.0",
     "@types/node": "^18.15.11",
     "@types/sodium-native": "^2.3.5",
     "@types/ws": "^8.5.4"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development ts-node src",
+    "dev": "cross-env NODE_ENV=development ts-node-esm src",
     "watch": "nodemon . ",
     "build": "tsc -p tsconfig.json",
     "prod": "cross-env NODE_ENV=production node dist/index.js"

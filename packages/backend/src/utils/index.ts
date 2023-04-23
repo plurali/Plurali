@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs'
+import { writeFileSync } from 'node:fs'
 import slugify from 'slugify'
 import sodium from 'sodium-native'
 
@@ -13,7 +13,7 @@ export const generateRandomString = (length: number) => {
 }
 
 export const createSlug = (name: string) =>
-  `${generateRandomString(6)}-${slugify(name, {
+  `${generateRandomString(6)}-${slugify.default(name, {
     lower: true,
   })}`
 

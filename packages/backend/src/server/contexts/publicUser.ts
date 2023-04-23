@@ -1,10 +1,10 @@
 import { User } from '@prisma/client'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { $db } from '../../services/db'
-import { Status, ErrorResponse, error } from '../status'
-import { Member, System } from '@plurali/common/dist/system'
-import { getMember } from '@plurali/common/dist/plural'
-import { fetchMe, fetchMembers, transformMember } from '../../plural'
+import { $db } from '../../services/db/index.js'
+import { Status, ErrorResponse, error } from '../status.js'
+import { Member, System } from '@plurali/common/dist/system/index.js'
+import { getMember } from '@plurali/common/dist/plural/index.js'
+import { fetchMe, fetchMembers, transformMember } from '../../plural/index.js'
 
 export interface UsePublicUserContext {
   req: FastifyRequest
