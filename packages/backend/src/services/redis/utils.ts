@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
-import { $redis, CacheStore, createKey } from '.';
-import { Member, System } from '@plurali/common/dist/system';
+import { $redis, CacheStore, createKey } from './index.js';
+import { Member, System } from '@plurali/common/dist/system/index.js';
 import { ChainableCommander } from 'ioredis';
 
 export const clearCacheByUser = async (user: string | User, transaction?: ChainableCommander) => {

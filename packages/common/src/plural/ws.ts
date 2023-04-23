@@ -1,4 +1,4 @@
-import { ResolvedToken } from '.'
+import { ResolvedToken } from './index.js'
 
 export const socketEndpoint = 'wss://v2.apparyllis.com/v1/socket'
 

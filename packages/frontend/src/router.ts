@@ -6,42 +6,52 @@ import { Status } from '@plurali/backend/src/server/status'
 
 const routes: RouteRecordRaw[] = [
   {
+    name: 'index_',
     path: '/',
     component: () => import('./layouts/default.vue' as string),
     children: [
       {
+        name: 'index',
         path: '/',
         component: () => import('./pages/index.vue' as string),
       },
       {
+        name: 'auth:login',
         path: '/auth/login',
         component: () => import('./pages/auth/login.vue' as string),
       },
       {
+        name: 'auth:register',
         path: '/auth/register',
         component: () => import('./pages/auth/register.vue' as string),
       },
       {
+        name: 'dashboard:index',
         path: '/dashboard',
         component: () => import('./pages/dashboard/index.vue' as string),
       },
       {
+        name: 'dashboard:user',
         path: '/dashboard/user',
         component: () => import('./pages/dashboard/user.vue' as string),
       },
       {
+        name: 'dashboard:system',
         path: '/dashboard/system',
         component: () => import('./pages/dashboard/system.vue' as string),
       },
       {
+        name: 'dashboard:member',
         path: '/dashboard/member/:id',
         component: () => import('./pages/dashboard/member.vue' as string),
       },
       {
+        name: 'public:system',
         path: '/:systemId',
         component: () => import('./pages/system.vue' as string),
       },
       {
+        name: 'public:member',
         path: '/:systemId/:memberId',
         component: () => import('./pages/member.vue' as string),
       },

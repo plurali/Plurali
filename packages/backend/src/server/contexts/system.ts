@@ -1,9 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { Status, ErrorResponse, error } from '../status'
-import { createUserContext, UserContext } from './user'
-import { $db } from '../../services/db'
-import { Member, System } from '@plurali/common/dist/system'
-import { fetchMe, fetchMember, fetchMembers } from '../../plural'
+import { Status, ErrorResponse, error } from '../status.js'
+import { createUserContext, UserContext } from './user.js'
+import { Member, System } from '@plurali/common/dist/system/index.js'
+import { fetchMe, fetchMember, fetchMembers } from '../../plural/index.js'
 
 interface SystemContextDeps {
   req: FastifyRequest

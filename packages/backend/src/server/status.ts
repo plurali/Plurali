@@ -14,6 +14,9 @@ export const Status = {
   },
   ResourceNotFound: 'Resource not found',
   Unauthorized: 'Unauthorized',
+  UnsupportedFile: 'Unsupported or invalid file given',
+  FileProcessingFailed: 'Failed to process the given file',
+  MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form'
 }
 
 export interface SuccessResponse<TData extends object = object> {

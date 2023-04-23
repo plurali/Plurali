@@ -6,12 +6,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import Title from '../components/Title.vue'
 import Subtitle from '../components/Subtitle.vue'
 import ButtonLink from '../components/ButtonLink.vue'
 import Button from '../components/Button.vue'
-import { bgColor } from '../store'
 import Spinner from '../components/Spinner.vue'
 import { System } from '@plurali/common/src/system'
 import { wrapRequest } from '../api'
@@ -21,9 +20,10 @@ import Fetchable from '../components/global/Fetchable.vue'
 import CustomFields from '../components/global/fields/CustomFields.vue'
 import Members from '../components/front/members/Members.vue'
 import ColorCircle from '../components/global/color/ColorCircle.vue'
-import { getSystem } from '../api/public'
 import SystemSummary from '../components/global/system/SystemSummary.vue'
-import { getRouteParam } from '../utils'
+import { getRouteParam } from '@plurali/common/src/utils'
+import { withBackground } from '../composables/background'
+import { getSystem } from '../api/public'
 
 export default defineComponent({
   components: {
@@ -49,18 +49,12 @@ export default defineComponent({
       system.value = null
 
       const res = await wrapRequest(() => getSystem(getRouteParam(route.params.systemId)))
-      system.value = res ? res.system : res
-
-      if (res && res.system.color) {
-        bgColor.value = res.system.color
-      }
+      system.value = res ? res.system : res;
     }
 
-    onMounted(() => fetchSystem())
+    withBackground(system);   
 
-    onBeforeUnmount(() => {
-      bgColor.value = null
-    })
+    onMounted(() => fetchSystem())
 
     return {
       fetchSystem,

@@ -1,9 +1,9 @@
-import { $env } from './utils/env';
-import { $db } from './services/db';
-import { $server } from './server';
-import { $storage } from './services/s3';
-import { $watcherBag } from './ws/watcher/bag';
-import { ensureSchemaIntegrity } from './services/db/schema';
+import { $env } from './utils/env.js';
+import { $db } from './services/db/index.js';
+import { $server } from './server/index.js';
+import { $storage } from './services/s3/index.js';
+import { $watcherBag } from './ws/watcher/bag.js';
+import { ensureSchemaIntegrity } from './services/db/schema.js';
 
 const run = async () => {
   /**

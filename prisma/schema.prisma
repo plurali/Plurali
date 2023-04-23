@@ -7,18 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Background {
+  Color
+  Image
+}
+
 model User {
-  id               String       @id @default(auto()) @map("_id") @db.ObjectId
-  username         String       @unique
-  passwordHash     String
-  pluralKey        String?
-  overridePluralId String?
-  admin            Boolean      @default(false)
-  members          UserMember[]
-  fields           UserField[]
-  slug             String?
-  customDescription      String?
-  visible          Boolean
+  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
+  username           String       @unique
+  passwordHash       String
+  pluralKey          String?
+  overridePluralId   String?
+  admin              Boolean      @default(false)
+  members            UserMember[]
+  fields             UserField[]
+  slug               String?
+  backgroundType     Background @default(Color)
+  backgroundColor    String?
+  backgroundImage    String?
+  customDescription  String?
+  visible            Boolean
 }
 
 model UserField {
@@ -38,6 +46,7 @@ model UserMember {
   userId          String  @db.ObjectId
   slug            String?
   visible         Boolean
+  backgroundType  Background @default(Color)
   backgroundColor String?
   backgroundImage String?
   customDescription String?

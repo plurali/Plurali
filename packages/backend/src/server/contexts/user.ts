@@ -1,8 +1,8 @@
 import { User } from '@prisma/client'
 import { ObjectId } from 'bson'
 import { FastifyRequest, FastifyReply } from 'fastify'
-import { $db } from '../../services/db'
-import { Status, ErrorResponse, error } from '../status'
+import { $db } from '../../services/db/index.js'
+import { Status, ErrorResponse, error } from '../status.js'
 
 export interface UserContextDeps {
   req: FastifyRequest

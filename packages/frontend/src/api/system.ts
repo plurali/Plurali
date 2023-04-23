@@ -1,66 +1,71 @@
-import { AxiosResponse } from 'axios'
-import { $axios, Response } from '.'
-import { Member, MemberField, System } from '@plurali/common/src/system'
+import { AxiosResponse } from 'axios';
+import { $axios, Response } from '.';
+import { Member, MemberField, System } from '@plurali/common/src/system';
 
 export interface UpdateSystemData {
-  visible?: boolean
-  customDescription?: string | null
+  visible?: boolean;
+  customDescription?: string | null;
+  backgroundColor?: string;
 }
 
 export interface SystemData {
-  system: System
+  system: System;
 }
 
 export interface UpdateSystemMemberData {
-  visible?: boolean
-  customDescription?: string | null
+  visible?: boolean;
+  customDescription?: string | null;
+  backgroundColor?: string;
 }
 
 export interface SystemMembersData {
-  members: Member[]
+  members: Member[];
 }
 
 export interface SystemMemberData {
-  member: Member
+  member: Member;
 }
 
 export interface UpdateSystemFieldRequest {
-  visible?: boolean
-  customDescription?: string | null
+  visible?: boolean;
+  customDescription?: string | null;
 }
 
 export interface SystemFieldData {
-  field: MemberField
+  field: MemberField;
 }
 
 export interface SystemFieldsData {
-  fields: MemberField[]
+  fields: MemberField[];
 }
 
 export const getSystem = (): Promise<AxiosResponse<Response<SystemData>>> =>
   $axios.request<Response<SystemData>>({
     url: '/system',
     method: 'GET',
-  })
+  });
 
-export const updateSystem = (id: string, data: UpdateSystemData): Promise<AxiosResponse<Response<SystemData>>> =>
+export const updateSystem = (data: UpdateSystemData): Promise<AxiosResponse<Response<SystemData>>> =>
   $axios.request<Response<SystemData>>({
     url: `/system`,
     method: 'POST',
     data,
-  })
+  });
+
+export const updateSystemBackgroundImage = (file: Blob): Promise<AxiosResponse<Response<SystemMemberData>>> =>
+  $axios.postForm<Response<SystemMemberData>>('/system/background', { file });
 
 export const getMembers = (): Promise<AxiosResponse<Response<SystemMembersData>>> =>
   $axios.request<Response<SystemMembersData>>({
     url: '/system/members',
     method: 'GET',
-  })
+  });
 
 export const getMember = (id: string): Promise<AxiosResponse<Response<SystemMemberData>>> =>
   $axios.request<Response<SystemMemberData>>({
     url: `/system/members/${id}`,
     method: 'GET',
-  })
+  });
 
 export const updateMember = (
   id: string,
@@ -70,9 +75,15 @@ export const updateMember = (
     url: `/system/members/${id}`,
     method: 'POST',
     data,
-  })
+  });
 
-export const updateField = (
+export const updateMemberBackgroundImage = (
+  id: string,
+  file: Blob
+): Promise<AxiosResponse<Response<SystemMemberData>>> =>
+  $axios.postForm<Response<SystemMemberData>>(`/system/members/${id}/background`, { file })
+
+  export const updateField = (
   id: string,
   data: UpdateSystemFieldRequest
 ): Promise<AxiosResponse<Response<SystemFieldData>>> =>
@@ -80,4 +91,4 @@ export const updateField = (
     url: `/system/fields/${id}`,
     method: 'POST',
     data,
-  })
+  });

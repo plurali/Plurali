@@ -16,7 +16,7 @@ export interface Flash {
 
 export const flashes = ref<Flash[]>([])
 
-export const flash = (message: string, type: FlashType = FlashType.Info, clear = false, removeOnNextRedirect = true) => {
+export const flash = (message: string = 'An error has occurred, please refresh the site.', type: FlashType = FlashType.Danger, clear = true, removeOnNextRedirect = true) => {
   const f: Flash = {
     message,
     type,
@@ -41,7 +41,7 @@ export const nextRedirect = () => {
 
 export const clearFlashes = () => (flashes.value = [])
 
-export const bgColor = ref<string | null>(null)
+export const background = ref<string | null>(null)
 
 export const goBack = ref<string | null>(null)
 

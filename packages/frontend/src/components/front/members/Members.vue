@@ -15,7 +15,7 @@ import { getMembers } from '../../../api/public'
 import Fetchable from '../../global/Fetchable.vue'
 import Color from '../../global/color/ColorCircle.vue'
 import MemberSmallCard from '../../global/members/MemberSmallCard.vue'
-import { getRouteParam } from '../../../utils'
+import { getRouteParam } from '@plurali/common/src/utils'
 import { useRoute } from 'vue-router'
 
 export default defineComponent({

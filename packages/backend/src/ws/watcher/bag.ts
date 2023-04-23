@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
-import { Watcher } from '.';
-import { $db } from '../../services/db';
-import { getMe } from '@plurali/common/dist/plural';
+import { Watcher } from './index.js';
+import { $db } from '../../services/db/index.js';
+import { getMe } from '@plurali/common/dist/plural/index.js';
 
 export class WatcherBag {
   private watchers: Map<string, Watcher> = new Map();

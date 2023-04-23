@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
-import path from 'path'
-import { __root } from '../constants'
+import path from 'node:path'
+import { __root } from '../constants.js'
 
 export interface Variables {
   NODE_ENV: string

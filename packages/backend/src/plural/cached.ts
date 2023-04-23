@@ -1,8 +1,8 @@
-import * as plural from '@plurali/common/dist/plural';
+import * as plural from '@plurali/common/dist/plural/index.js';
 import { AxiosResponse } from 'axios';
-import { $redis, CacheStore, cache, cached } from '../services/redis';
+import { $redis, CacheStore, cache, cached } from '../services/redis/index.js';
 import { ChainableCommander } from 'ioredis';
-import { $server } from '../server';
+import { $server } from '../server/index.js';
 
 export interface CachableResult<TData = any> {
   data: TData;

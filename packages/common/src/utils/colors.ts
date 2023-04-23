@@ -30,3 +30,7 @@ function rgbToHex(rgb: number[]) {
   const b = rgb[2].toString(16).padStart(2, '0')
   return `#${r}${g}${b}`
 }
+
+export function isHex(value: string): boolean {
+  return /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3,4})$/.test(value);
+}

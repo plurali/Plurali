@@ -1,6 +1,6 @@
-import { controller, idSchema, IdSchema } from '../../../utils/server'
-import { data, error, Status } from '../../status'
-import { withPublicUserContext } from '../../contexts/publicUser'
+import { controller, idSchema, IdSchema } from '../../../utils/server.js'
+import { data } from '../../status.js'
+import { withPublicUserContext } from '../../contexts/publicUser.js'
 
 export default controller(async server => {
   server.get<IdSchema>('/:id', { schema: idSchema.valueOf() }, async (req, res) =>

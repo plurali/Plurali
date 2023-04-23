@@ -9,10 +9,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import Title from '../../components/Title.vue';
 import Subtitle from '../../components/Subtitle.vue';
-import { bgColor } from '../../store';
 import { System } from '@plurali/common/src/system';
 import { wrapRequest } from '../../api';
 import { getSystem } from '../../api/system';
@@ -23,6 +22,7 @@ import Fetchable from '../../components/global/Fetchable.vue';
 import { useGoBack } from '../../composables/goBack';
 import Color from '../../components/global/color/ColorCircle.vue';
 import SystemSummary from '../../components/global/system/SystemSummary.vue';
+import { withBackground } from '../../composables/background';
 
 export default defineComponent({
   components: {
@@ -46,17 +46,11 @@ export default defineComponent({
 
       const res = await wrapRequest(getSystem);
       system.value = res ? res.system : res;
-
-      if (res && res.system.color) {
-        bgColor.value = res.system.color;
-      }
     };
 
-    onMounted(() => fetchSystem());
+    withBackground(system);
 
-    onBeforeUnmount(() => {
-      bgColor.value = null;
-    });
+    onMounted(() => fetchSystem());
 
     return {
       fetchSystem,

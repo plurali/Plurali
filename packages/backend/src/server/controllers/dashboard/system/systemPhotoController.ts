@@ -1,4 +1,4 @@
-import { controller } from '../../../../utils/server'
+import { controller } from '../../../../utils/server.js'
 
 export default controller(async server => {
     

@@ -13,12 +13,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import Title from '../components/Title.vue';
 import Subtitle from '../components/Subtitle.vue';
 import ButtonLink from '../components/ButtonLink.vue';
 import Button from '../components/Button.vue';
-import { bgColor } from '../store';
 import Spinner from '../components/Spinner.vue';
 import { wrapRequest } from '../api';
 import { getMember } from '../api/public';
@@ -28,11 +27,13 @@ import { useGoBack } from '../composables/goBack';
 import Fetchable from '../components/global/Fetchable.vue';
 import CustomFields from '../components/global/fields/CustomFields.vue';
 import ColorCircle from '../components/global/color/ColorCircle.vue';
-import { getRouteParam } from '../utils';
+import { getRouteParam } from '@plurali/common/src/utils';
 import MemberSummary from '../components/global/members/MemberSummary.vue';
 import UserContent from '../components/global/UserContent.vue';
 import { Member } from '@plurali/common/src/system';
 import Sanitized from '../components/global/Sanitized.vue';
+import { withBackground } from '../composables/background';
+import { SystemMemberData } from '../api/system';
 
 export default defineComponent({
   components: {
@@ -64,17 +65,11 @@ export default defineComponent({
 
       const res = await wrapRequest(() => getMember(systemId.value, getRouteParam(route.params.memberId)));
       member.value = res ? res.member : res;
-
-      if (res && res.member.color) {
-        bgColor.value = res.member.color;
-      }
     };
 
-    onMounted(() => fetchMember());
+    withBackground(member);
 
-    onBeforeUnmount(() => {
-      bgColor.value = null;
-    });
+    onMounted(() => fetchMember());
 
     return {
       fetchMember,
