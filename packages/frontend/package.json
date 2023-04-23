@@ -19,6 +19,7 @@
     "sass": "^1.62.0",
     "tinymce": "^6.4.1",
     "topbar": "^2.0.1",
+    "vite": "^4.3.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "xss": "^1.0.14"
@@ -38,7 +39,6 @@
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
     "typescript": "^5.0.4",
-    "vite": "npm:@liliana1110/vite-nonce",
     "vue-tsc": "^1.2.0"
   }
 }

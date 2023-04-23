@@ -1,5 +1,6 @@
 {{$nonce := randAlphaNum 32}}
-{{.RespHeader.Set "Content-Security-Policy" (printf "default-src 'self'; script-src 'report-sample' 'unsafe-inline' 'self' https://cdn.tiny.cloud 'nonce-%[1]v'; script-src-attr 'none'; style-src 'report-sample' 'unsafe-inline' 'nonce-%[1]v' 'self' https://cdn.tiny.cloud; base-uri 'self'; connect-src 'self'; font-src 'self'; frame-src 'self'; img-src 'self' blob: data: https://cdn.plurali.icu https://sp.tinymce.com https://cdn.tiny.cloud 'nonce-%[1]v'; manifest-src 'self'; media-src 'self';" $nonce)}}
+<!-- For now 'nonce-%[1]v' is not in script-src because nonces and Vite, at least at the moment, are not friendly. -->
+{{.RespHeader.Set "Content-Security-Policy" (printf "default-src 'self'; script-src 'report-sample' 'unsafe-inline' 'self' https://cdn.tiny.cloud; script-src-attr 'none'; style-src 'report-sample' 'unsafe-inline' 'nonce-%[1]v' 'self' https://cdn.tiny.cloud; base-uri 'self'; connect-src 'self'; font-src 'self'; frame-src 'self'; img-src 'self' blob: data: https://cdn.plurali.icu https://sp.tinymce.com https://cdn.tiny.cloud 'nonce-%[1]v'; manifest-src 'self'; media-src 'self';" $nonce)}}
 {{.RespHeader.Set "X-Nonce" $nonce}}
 <!DOCTYPE html>
 <html lang="en">
