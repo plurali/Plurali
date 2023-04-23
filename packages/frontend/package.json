@@ -19,6 +19,7 @@
     "sass": "^1.62.0",
     "tinymce": "^6.4.1",
     "topbar": "^2.0.1",
+    "vite": "^4.3.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
     "xss": "^1.0.14"
@@ -26,14 +27,18 @@
   "devDependencies": {
     "@plurali/backend": "^1.0.0",
     "@plurali/common": "^1.0.0",
+    "@types/cheerio": "^0.22.31",
     "@types/dompurify": "^3.0.2",
     "@types/markdown-it": "^12.2.3",
+    "@types/node-fetch": "^2.6.3",
     "@vitejs/plugin-vue": "^4.1.0",
     "autoprefixer": "^10.4.14",
+    "cheerio": "^1.0.0-rc.12",
+    "crypto": "^1.0.1",
+    "node-fetch": "^3.3.1",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.1",
     "typescript": "^5.0.4",
-    "vite": "^4.2.1",
     "vue-tsc": "^1.2.0"
   }
 }
