@@ -53,10 +53,10 @@ export default controller(async server => {
     })
   );
 
-  server.post<IdSchema>('/:id/background', { schema: idSchema.valueOf() } , async (req, res) =>
+  server.post<IdSchema>('/:id/background', { schema: idSchema.valueOf() }, async (req, res) =>
     withSystemContext({ req, res }, async ({ system, getSystemMember, user }) => {
       if (!req.isMultipart()) {
-        return res.status(400).send(error(Status.MultipartEndpoint))
+        return res.status(400).send(error(Status.MultipartEndpoint));
       }
 
       let member = await $db.userMember.findFirst({
@@ -74,34 +74,32 @@ export default controller(async server => {
       const buf = await file.toBuffer();
       const fileType = await fileTypeFromBuffer(buf);
 
-      if (!fileType || !fileType.mime.startsWith("image/")) {
+      if (!fileType || !fileType.mime.startsWith('image/')) {
         return res.status(400).send(error(Status.UnsupportedFile));
       }
 
       const key = `${S3Prefix.Userdata}/${user.id}/${system.id}/${member.pluralId}/background.${fileType.ext}`;
 
-      const success = await $storage.store(key, buf, true);
-      if (!success) {
-        return res.status(400).send(error(Status.FileProcessingFailed))
-      }
+      const result = await $storage.store(key, buf, true);
 
-      // validate image is indeed on S3
-      const image = await $storage.get(key);
-      if (!image) {
-        return res.status(400).send(error(Status.FileProcessingFailed))
+      if (!result.ok) {
+        return res.status(400).send(error(Status.FileProcessingFailed));
       }
 
       member = await $db.userMember.update({
         where: {
-          id: member.id
+          id: member.id,
         },
         data: {
           backgroundType: Background.Image,
-          backgroundImage: key
-        }
-      })
+          backgroundImage: key,
+          lastTimeAssetChanged: new Date()
+        },
+      });
 
-      return res.send(data({member: await getSystemMember(req.params.id)}));
+      return res.send(
+        data({ member: await getSystemMember(req.params.id), ...(result ? { warning: Status.CacheDemand } : {}) })
+      );
     })
   );
 }, '/system/members');
