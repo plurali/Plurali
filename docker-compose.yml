@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  keydb:
+    image: eqalpha/keydb:latest
+    restart: unless-stopped
+    command: keydb-server /etc/keydb/redis.conf --server-threads 4
+    volumes:
+      - redis:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+
+  # scylla:
+  #   image: scylladb/scylla:5.2
+  #   restart: unless-stopped
+  #   command: "--smp 1 --memory 1536M --overprovisioned 1"
+  #   volumes:
+  #     - database:/var/lib/scylla
+  #   ports:
+  #     - "${DB_PORT:-9042}:9042"
+  
+  minio:
+    image: minio/minio:latest
+    command: "--address ${S3_ENDPOINT}"
+    volumes:
+      - "data:/data"
+    environment:
+      - MINION_ACCESS_KEY=${S3_ACCESS_KEY_ID}
+      - MINIO_SECRET_KEY=${S3_ACCESS_KEY_SECRET}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+
+volumes:
+  redis:
+  # database:
+  data:

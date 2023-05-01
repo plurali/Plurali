@@ -7,49 +7,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Background {
+enum BackgroundType {
   Color
   Image
 }
 
+enum Visibility {
+  Public
+  Private
+}
+
+enum UserRole {
+  User
+  Admin
+}
+
+enum MemberFieldType {
+  String
+  Color
+  Date
+  Month
+  Year
+  MonthYear
+  Timestamp
+  MonthDay
+}
+
+// this is just a dummy model for Prisma to generate a dummy delegate that
+// the PrismaRepository can extend
+model BaseModel {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+
+  @@map("_internal")
+}
+
 model User {
-  id                 String       @id @default(auto()) @map("_id") @db.ObjectId
-  username           String       @unique
-  passwordHash       String
-  pluralKey          String?
-  overridePluralId   String?
-  admin              Boolean      @default(false)
-  members            UserMember[]
-  fields             UserField[]
-  slug               String?
-  backgroundType     Background @default(Color)
-  backgroundColor    String?
-  backgroundImage    String?
-  customDescription  String?
-  visible            Boolean
-  lastTimeAssetChanged DateTime @default(now())
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  username String @unique
+
+  system System?
+
+  passwordHash String
+
+  pluralAccessToken String? @unique
+  pluralOverride    String?
+
+  role UserRole @default(User)
+  
+  @@map("pluraliapp_users")
 }
 
-model UserField {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  pluralId      String  @unique
-  pluralOwnerId String
-  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId        String  @db.ObjectId
-  visible       Boolean
-}
+model System {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug String?
 
-model UserMember {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
-  pluralId        String  @unique
-  pluralOwnerId   String
-  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId          String  @db.ObjectId
-  slug            String?
-  visible         Boolean
-  backgroundType  Background @default(Color)
+  pluralId      String @unique
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique @db.ObjectId
+
+  members Member[]
+  fields  Field[]
+
+  visibility Visibility @default(Private)
+
+  backgroundType  BackgroundType @default(Color)
   backgroundColor String?
   backgroundImage String?
-  customDescription String?
-  lastTimeAssetChanged DateTime @default(now())
+
+  description String?
+
+  assetsUpdatedAt DateTime @default(now())
+
+  @@map("pluraliapp_systems")
+}
+
+model Field {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pluralId      String @unique
+  pluralParentId String
+
+  name String
+  position Int @default(0)
+  type MemberFieldType
+
+  system   System @relation(fields: [systemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  systemId String @db.ObjectId
+
+  visibility Visibility @default(Private)
+
+  @@map("pluraliapp_systems_fields")
+}
+
+model Member {
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug String?
+
+  pluralId       String @unique
+  pluralParentId String
+
+  system   System @relation(fields: [systemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  systemId String @db.ObjectId
+
+  visibility Visibility @default(Private)
+
+  backgroundType  BackgroundType @default(Color)
+  backgroundColor String?
+  backgroundImage String?
+
+  description String?
+
+  assetsUpdatedAt DateTime @default(now())
+
+  @@map("pluraliapp_systems_members")
 }
