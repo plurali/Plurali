@@ -23,7 +23,9 @@
       "@domain/*": ["./src/domain/*"],
       "@infra/*": ["src/infrastructure/*"],
       "@app/*": ["./src/application/*"],
-      "@observer/*": ["./src/observer/*"]
+      "@observer/*": ["./src/observer/*"],
     }
-  }
+  },
+  "include": ["src"],
+  "exclude": ["packages"]
 }
