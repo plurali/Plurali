@@ -44,6 +44,6 @@
     "postcss": "^8.4.23",
     "tailwindcss": "^3.3.1",
     "typescript": "^5.0.4",
-    "vue-tsc": "^1.2.0"
+    "vue-tsc": "^1.6.5"
   }
 }
