@@ -1,6 +1,6 @@
-import { SocketOperationType } from "../utils";
+import { SocketOperationType } from '../utils';
 
-export interface Content<C = {}> {
+export interface Content<C = object> {
   content: C;
 }
 
@@ -38,9 +38,9 @@ export interface BaseMessage {
 }
 
 export interface ResolvedToken {
-  uid: string,
-  accessTypes: 1 | 2 | 3,
-  jwt: boolean
+  uid: string;
+  accessTypes: 1 | 2 | 3;
+  jwt: boolean;
 }
 
 export interface AuthenticatedMessage {

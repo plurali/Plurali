@@ -1,7 +1,7 @@
 import type { Logger } from '@nestjs/common';
 import slugify from 'slugify';
 
-export const id = <T = {}, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
+export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
   key = 'id'
 ): T => (typeof val === 'object' ? val[key] : val);

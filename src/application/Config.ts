@@ -72,7 +72,7 @@ export class Config implements ConfigInterface {
 
   @IsNumber()
   @IsOptional()
-  protected REDIS_PORT: number = 6379;
+  protected REDIS_PORT = 6379;
 
   @IsString()
   @IsOptional()
@@ -103,23 +103,23 @@ export class Config implements ConfigInterface {
 
   @IsString()
   @IsOptional()
-  protected PLURAL_API: string = 'https://v2.apparyllis.com/v1';
+  protected PLURAL_API = 'https://v2.apparyllis.com/v1';
 
   @IsString()
   @IsOptional()
-  protected PLURAL_WS: string = 'wss://v2.apparyllis.com/v1/socket';
+  protected PLURAL_WS = 'wss://v2.apparyllis.com/v1/socket';
 
   @IsBoolean()
   @IsOptional()
-  protected PLURAL_OBSERVER_FORK: boolean = false;
+  protected PLURAL_OBSERVER_FORK = false;
 
   @IsString()
   @IsOptional()
-  protected PLURAL_OBSERVER_HOST: string = '127.0.0.1';
+  protected PLURAL_OBSERVER_HOST = '127.0.0.1';
 
   @IsNumber()
   @IsOptional()
-  protected PLURAL_OBSERVER_PORT: number = 4444;
+  protected PLURAL_OBSERVER_PORT = 4444;
 
   get env(): Environment {
     return this.NODE_ENV;

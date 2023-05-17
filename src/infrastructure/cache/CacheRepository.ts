@@ -4,7 +4,6 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { CacheNamespace } from './utils.js';
 import { RedisStore } from 'cache-manager-ioredis-yet';
 import { LazyCachedResult } from './types.js';
-import { safeStringify } from '@domain/common/index.js';
 
 @Injectable()
 export class CacheRepository {
@@ -14,12 +13,12 @@ export class CacheRepository {
     return `${ns}__${k}`;
   }
 
-  public async find<T = {}>(namespace: CacheNamespace, key: string): Promise<T | null> {
+  public async find<T = object>(namespace: CacheNamespace, key: string): Promise<T | null> {
     const data = await this.cache.get<string>(CacheRepository.createKey(namespace, key));
     return data ? (JSON.parse(data) as T) : null;
   }
 
-  public async store<T = {}>(
+  public async store<T = object>(
     namespace: CacheNamespace,
     key: string,
     value: T,
@@ -32,7 +31,7 @@ export class CacheRepository {
     await this.cache.del(CacheRepository.createKey(namespace, key));
   }
 
-  public async lazy<T = {}>(
+  public async lazy<T = object>(
     namespace: CacheNamespace,
     key: string,
     hotData: () => Promise<T>,
@@ -44,14 +43,14 @@ export class CacheRepository {
       key: string,
       expiry: number
     ) => Promise<T> = async function (d, ns, k, e) {
-      await this.store(ns, k, d, e)
+      await this.store(ns, k, d, e);
       return d;
     }
   ): Promise<LazyCachedResult<T>> {
     const cacheData = await this.find<T>(namespace, key);
     return {
       hot: !!cacheData,
-      data: cacheData ? cacheData : await storeHotData.bind(this)(await hotData(), namespace, key, expiry)
-    }
+      data: cacheData ? cacheData : await storeHotData.bind(this)(await hotData(), namespace, key, expiry),
+    };
   }
 }

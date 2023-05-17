@@ -50,7 +50,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     this._destroyAll();
   }
 
-  public async updateUser(user: FullUser, remove: boolean = false): Promise<void> {
+  public async updateUser(user: FullUser, remove = false): Promise<void> {
     this._destroy(user);
     if (!remove) {
       await this._create(user);

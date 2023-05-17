@@ -1,10 +1,7 @@
-import { Module } from "@nestjs/common";
-import { DigitalOceanService } from "./DigitalOceanService";
-
+import { Module } from '@nestjs/common';
+import { DigitalOceanService } from './DigitalOceanService';
 
 @Module({
-    providers: [DigitalOceanService]
+  providers: [DigitalOceanService],
 })
-export class DigitalOceanModule {
-
-}
+export class DigitalOceanModule {}

@@ -21,5 +21,5 @@ class _PrismaRepository<N extends PrismaModelName = PrismaModelName> {
 
 // ts cast
 export const PrismaRepository: {
-  new<N extends PrismaModelName>(modelName: N, prisma: PrismaClient): PrismaRepositoryType<N>
+  new <N extends PrismaModelName>(modelName: N, prisma: PrismaClient): PrismaRepositoryType<N>;
 } = _PrismaRepository as any;

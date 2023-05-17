@@ -14,6 +14,6 @@ import { UserModule } from '@domain/user/UserModule';
     }),
   ],
   providers: [PluralObserverBag],
-  exports: [BullModule]
+  exports: [BullModule],
 })
 export class PluralObserverModule {}

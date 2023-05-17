@@ -1,4 +1,3 @@
-import { UserFieldDto } from './UserFieldDto';
 import { UserFieldDataDto } from './UserFieldDataDto';
 import { Field, MemberFieldType, Visibility } from '@prisma/client';
 
@@ -14,8 +13,7 @@ export class UserValueFieldDto {
     public type: MemberFieldType,
     public pluralVisibility: Visibility,
     public data: UserFieldDataDto
-  ) {
-  }
+  ) {}
 
   public static from(field: Field, value: string): UserValueFieldDto {
     return new UserValueFieldDto(

@@ -22,7 +22,14 @@ export class PublicSystemMemberController {
     const plurals = await Promise.all(members.map(member => this.plural.findMember(member)));
 
     return Status.ok({
-      members: await members.map(member => UserMemberDto.from(member, plurals.find(p => p.id === member.pluralId))).filter(v => !!v),
+      members: await members
+        .map(member =>
+          UserMemberDto.from(
+            member,
+            plurals.find(p => p.id === member.pluralId)
+          )
+        )
+        .filter(v => !!v),
     });
   }
 

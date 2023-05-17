@@ -1,4 +1,4 @@
-import { ConsoleLogger, Global, Inject, Logger, Module } from '@nestjs/common';
+import { ConsoleLogger, Global, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
 import { plainToInstance } from 'class-transformer';
@@ -56,9 +56,9 @@ import { PluralModule } from '@domain/plural/PluralModule';
           log: config.get<boolean>('dev') ? ['query', 'warn', 'error'] : [],
           datasources: {
             db: {
-              url: config.get<string>('db')
-            }
-          }
+              url: config.get<string>('db'),
+            },
+          },
         },
       }),
     }),

@@ -4,7 +4,7 @@ import { safeStringify } from '@domain/common';
 import { Message, UpdateMessage } from './types/socket';
 import { SystemWithUser } from '@domain/common/types';
 
-export interface PluralSocketClientEvent<D = {}> {
+export interface PluralSocketClientEvent<D = object> {
   data: D;
   socket: WebSocket;
   isUsable: () => boolean;
@@ -19,11 +19,11 @@ export class PluralSocketClient extends EventEmitter2 {
   // Internal emitter
   private readonly _emitter: EventEmitter2 = new EventEmitter2();
 
-  private _destroyed: boolean = false;
+  private _destroyed = false;
 
-  private _authenticated: boolean = false;
+  private _authenticated = false;
 
-  private _retryAttempts: number = 0;
+  private _retryAttempts = 0;
 
   private static readonly RETRY_ATTEMPTS: number = 10;
 
@@ -154,7 +154,7 @@ export class PluralSocketClient extends EventEmitter2 {
    */
   destroy(): void {
     if (this._destroyed) return;
-    
+
     // Dont do anything past this point.
     this._destroyed = true;
 
@@ -207,7 +207,7 @@ export class PluralSocketClient extends EventEmitter2 {
     this._emitter.emit('ping');
   }
 
-  private _parse<D = {}>(data: unknown): D | null {
+  private _parse<D = object>(data: unknown): D | null {
     try {
       if (typeof data !== 'string') throw new Error();
 

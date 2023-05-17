@@ -25,7 +25,7 @@ export class SystemDto {
       new Date(plural.content.lastOperationTime),
       plural.content.username,
       Object.keys(system.fields)
-        .map((id, _) => {
+        .map(id => {
           const field = system.fields.find(f => f.pluralId === id);
           if (!field) return null;
 

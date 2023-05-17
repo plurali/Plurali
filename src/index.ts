@@ -17,7 +17,7 @@ async function bootstrap() {
   const logger = overrideLoggerPrefix(new ConsoleLogger());
 
   const app = await NestFactory.create<NestFastifyApplication>(ServerKernel, new FastifyAdapter(), {
-    logger
+    logger,
   });
   const config = app.get<ConfigService<ConfigInterface>>(ConfigService);
 
@@ -26,8 +26,8 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: config.get<ServerConfig>("server").cors.origin
-  })
+    origin: config.get<ServerConfig>('server').cors.origin,
+  });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
@@ -49,22 +49,24 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, swagger));
 
   const cacheService = app.get(CacheService);
-  
+
   await cacheService.rebuild();
 
-  let observerProcess: ChildProcess | null = plural.observer.fork ? fork(require.resolve("./application/observer/entry"), {
-    env: process.env,
-    detached: !isDev,
-  }) : null;
+  const observerProcess: ChildProcess | null = plural.observer.fork
+    ? fork(require.resolve('./application/observer/entry'), {
+        env: process.env,
+        detached: !isDev,
+      })
+    : null;
 
   if (observerProcess) {
-    observerProcess.addListener('close', (code) => {
-      throw new Error(`Observer process exited with code ${code}`)
-    })
-    process.on('beforeExit', () => observerProcess?.kill())
+    observerProcess.addListener('close', code => {
+      throw new Error(`Observer process exited with code ${code}`);
+    });
+    process.on('beforeExit', () => observerProcess?.kill());
   }
 
-  app.enableShutdownHooks()
+  app.enableShutdownHooks();
 
   await app.listen(3000);
 }

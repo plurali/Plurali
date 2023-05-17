@@ -1,4 +1,4 @@
-export interface BaseEntry<TContent extends object = {}> {
+export interface BaseEntry<TContent extends object = object> {
   exists: boolean;
   id: string;
   content: TContent;

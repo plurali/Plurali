@@ -28,9 +28,7 @@ export class PrismaModule {
     };
   }
 
-  public static createRepositoryProvider<N extends PrismaModelName>(
-    modelName: N
-  ): Provider<PrismaRepositoryType<N>> {
+  public static createRepositoryProvider<N extends PrismaModelName>(modelName: N): Provider<PrismaRepositoryType<N>> {
     return {
       provide: this.createRepositoryProviderName(modelName),
       useFactory: (prisma: PrismaService) => new PrismaRepository(modelName, prisma),
@@ -62,7 +60,7 @@ export class PrismaModule {
   }
 }
 
-// Only used when basic PrismaRepository is needed or when the repository entry is passed as ExistingProvider<Repository>/Type<Repository> 
+// Only used when basic PrismaRepository is needed or when the repository entry is passed as ExistingProvider<Repository>/Type<Repository>
 export function InjectRepository<N extends PrismaModelName>(modelName: N) {
   return Inject(PrismaModule.createRepositoryProviderName<N>(modelName));
 }

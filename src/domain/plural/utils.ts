@@ -50,4 +50,4 @@ export const parseFieldType = (fieldInfo: { type: number }): MemberFieldType =>
     MemberFieldType.MonthDay,
   ][fieldInfo.type];
 
-export const PluralObserverUpdateQueue = "plural_obsv_update_queue";
+export const PluralObserverUpdateQueue = 'plural_obsv_update_queue';

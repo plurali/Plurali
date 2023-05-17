@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PluralRestService } from './PluralRestService';
 import { ConfigService } from '@nestjs/config';
 import { Config } from '@app/Config';
-import { CacheService } from '@domain/cache/CacheService';
 import { PluralMemberEntry } from './types/rest/members';
 import { PluralUserEntry } from './types/rest/user';
 import { CacheRepository } from '@infra/cache/CacheRepository';
 import { CacheNamespace } from '@infra/cache/utils';
 import { MemberWithSystem, SystemWithUser } from '@domain/common/types';
-import { safeStringify } from '@domain/common';
 
 @Injectable()
 export class PluralCachedRestService extends PluralRestService {

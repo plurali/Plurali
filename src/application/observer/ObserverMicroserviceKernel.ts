@@ -1,6 +1,6 @@
 import { MicroserviceKernel } from '@app/Kernel';
 import { PluralObserverModule } from '@domain/plural/observer/PluralObserverModule';
-import { ConsoleLogger, Global, Logger, Module } from '@nestjs/common';
+import { ConsoleLogger, Global, Module } from '@nestjs/common';
 import { overrideLoggerPrefix } from '@domain/common';
 
 /**

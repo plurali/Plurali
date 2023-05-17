@@ -1,4 +1,4 @@
-import { User, System, Member, Field, PrismaClient, BackgroundType } from '@prisma/client';
+import { User, System, Member, Field, BackgroundType } from '@prisma/client';
 
 export interface SystemWithUser<U extends User = User> extends System {
   user: U;
@@ -22,7 +22,7 @@ export interface UserWithSystem<S extends System | undefined = System | undefine
 }
 undefined;
 
-export interface FullUser<S extends System | undefined = System | undefined> extends UserWithSystem<S> {}
+export type FullUser<S extends System | undefined = System | undefined> = UserWithSystem<S>;
 
 export interface MemberWithSystem<S extends System = System> extends Member {
   system: S;

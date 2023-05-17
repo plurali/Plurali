@@ -5,8 +5,8 @@ import { Ok, Status } from '@app/v1/dto/Status';
 import { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 
 @Controller({
-  path: "/public/system/:systemId",
-  version: '1'
+  path: '/public/system/:systemId',
+  version: '1',
 })
 export class PublicSystemController {
   constructor(private system: SystemRepository, private plural: PluralRestService) {}

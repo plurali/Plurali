@@ -1,4 +1,4 @@
-import { User as BaseUser, UserRole } from '@prisma/client'
+import { User as BaseUser, UserRole } from '@prisma/client';
 
 /**
  * @deprecated
@@ -19,6 +19,6 @@ export class UserDto {
       user.pluralAccessToken ?? null,
       user.pluralOverride ?? null,
       user.role === UserRole.Admin
-    )
+    );
   }
 }

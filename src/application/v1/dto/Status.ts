@@ -41,9 +41,7 @@ export class Status<D extends SuccessData, E extends StatusMapKey> {
     return new Status<D, undefined>(data);
   }
 
-  public static error<E extends StatusMapKey = StatusMapKey>(
-    error: E
-  ): Status<undefined, E> {
+  public static error<E extends StatusMapKey = StatusMapKey>(error: E): Status<undefined, E> {
     return new Status<undefined, E>(undefined, error);
   }
 }

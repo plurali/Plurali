@@ -45,4 +45,4 @@ export type PrismaDelegateFuncArgs<N extends PrismaModelName, F extends keyof Pr
   PrismaDelegate<N>[F]
 >[0];
 
-export type PrismaTx = Parameters<Parameters<PrismaClient["$transaction"]>[0]>[0];
+export type PrismaTx = Parameters<Parameters<PrismaClient['$transaction']>[0]>[0];

@@ -35,7 +35,8 @@ export class DigitalOceanService {
 
       return true;
     } catch (e) {
-      const message = (typeof e === "object" && ((e as any)?.response?.data?.error ?? (e as any)?.message)) ?? '(unknown)';
+      const message =
+        (typeof e === 'object' && ((e as any)?.response?.data?.error ?? (e as any)?.message)) ?? '(unknown)';
 
       this.logger.warn(`Failed to purge cache for ${path}, cause: ${message}`);
 

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { PluralMemberEntry } from './types/rest/members';
-import { User, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { MemberWithSystem, SystemWithUser } from '@domain/common/types';
 import { PluralUserEntry } from './types/rest/user';
 
@@ -18,15 +18,20 @@ export class PluralRestService {
   }
 
   async findMembers(system: SystemWithUser): Promise<PluralMemberEntry[]> {
-    return await this.findMembersForId(system.pluralId);
+    return system.user.pluralAccessToken
+      ? await this.findMembersForId(system.pluralId, system.user.pluralAccessToken)
+      : [];
   }
 
-  async findMembersForId(systemId: string): Promise<PluralMemberEntry[]> {
+  async findMembersForId(systemId: string, Authorization: string): Promise<PluralMemberEntry[]> {
     try {
       return (
         await this.httpClient.request<PluralMemberEntry[]>({
           url: `/v1/members/${systemId}`,
           method: 'GET',
+          headers: {
+            Authorization,
+          },
         })
       ).data;
     } catch {
@@ -44,6 +49,9 @@ export class PluralRestService {
         await this.httpClient.request<PluralMemberEntry>({
           url: `/v1/member/${systemId}/${memberId}`,
           method: 'GET',
+          headers: {
+            Authorization,
+          },
         })
       ).data;
     } catch {
