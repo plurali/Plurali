@@ -23,11 +23,11 @@ export type StatusMapType = typeof StatusMap;
 
 export type StatusMapKey = StatusMapType[keyof StatusMapType];
 
-export type Ok<D extends SuccessData> = Status<D, undefined>;
+export type Ok<D = SuccessData> = Status<D, undefined>;
 
 export type Error<E extends StatusMapKey = StatusMapKey> = Status<undefined, E>;
 
-export class Status<D extends SuccessData, E extends StatusMapKey> {
+export class Status<D = SuccessData, E extends StatusMapKey = StatusMapKey> {
   public data: D;
 
   public error: E;
@@ -37,7 +37,7 @@ export class Status<D extends SuccessData, E extends StatusMapKey> {
     this.error = error;
   }
 
-  public static ok<D extends SuccessData>(data: D): Ok<D> {
+  public static ok<D = SuccessData>(data: D): Ok<D> {
     return new Status<D, undefined>(data);
   }
 

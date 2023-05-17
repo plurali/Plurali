@@ -16,6 +16,8 @@ import { CacheService } from '@domain/cache/CacheService';
 import { ApiV1Module } from './v1/ApiV1Module';
 import { ApiV2Module } from './v2/ApiV2Module';
 import { PluralModule } from '@domain/plural/PluralModule';
+import { SecurityModule } from '@domain/security/SecurityModule';
+import { JwtModule } from '@nestjs/jwt';
 
 @Global()
 @Module({
@@ -74,9 +76,20 @@ import { PluralModule } from '@domain/plural/PluralModule';
       inject: [ConfigService],
     }),
 
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService<Config>) => ({
+        secret: config.getOrThrow('jwt'),
+        global: true,
+        signOptions: {
+          expiresIn: '24h',
+        },
+      }),
+    }),
+
     SystemModule,
     UserModule,
     PluralModule,
+    SecurityModule,
   ],
   providers: [CacheRepository, CacheService],
   exports: [BullModule, CacheRepository, CacheService],

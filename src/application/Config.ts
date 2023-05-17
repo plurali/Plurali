@@ -121,6 +121,9 @@ export class Config implements ConfigInterface {
   @IsOptional()
   protected PLURAL_OBSERVER_PORT = 4444;
 
+  @IsString()
+  protected JWT_SECRET: string;
+
   get env(): Environment {
     return this.NODE_ENV;
   }
@@ -182,5 +185,9 @@ export class Config implements ConfigInterface {
         port: this.PLURAL_OBSERVER_PORT,
       },
     };
+  }
+
+  get jwt(): string {
+    return this.JWT_SECRET;
   }
 }

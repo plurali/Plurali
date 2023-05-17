@@ -1,5 +1,5 @@
 import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
-import { System, Member, UserRole, Visibility } from '@prisma/client';
+import { System, Member, UserRole, Visibility, User } from '@prisma/client';
 import { CacheRepository } from '@infra/cache/CacheRepository';
 import { CacheNamespace } from '@infra/cache/utils';
 import { createSlug } from '@domain/common';
@@ -118,7 +118,7 @@ export class CacheService {
     });
   }
 
-  async rebuildFor(user: UserWithSystem): Promise<void> {
+  async rebuildFor(user: User & { system?: System }): Promise<void> {
     await this.clearSystem(user.system);
 
     let pluralUser: PluralUserEntry | null = null;
@@ -139,7 +139,7 @@ export class CacheService {
     if (!pluralUser) {
       await this.system.delete({
         where: {
-          id: user.system.id,
+          userId: user.id,
         },
       });
 
@@ -154,6 +154,15 @@ export class CacheService {
       });
 
       return;
+    }
+
+    if (!user.system) {
+      // Attempt to fetch system if not passed
+      user.system = await this.system.findUnique({
+        where: {
+          userId: user.id,
+        },
+      });
     }
 
     if (user.system && user.system.pluralId !== pluralUser.id) {
