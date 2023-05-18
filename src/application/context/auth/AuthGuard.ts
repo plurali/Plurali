@@ -1,12 +1,13 @@
+import { UnauthorizedException } from '@app/v1/exception/UnauthorizedException';
 import { JwtDataInterface } from '@domain/security/JwtData';
 import { UserRepository } from '@domain/user/UserRepository';
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FastifyRequest } from 'fastify';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService, private readonly users: UserRepository) {}
+  constructor(private readonly signer: JwtService, private readonly users: UserRepository) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -17,7 +18,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtDataInterface>(token);
+      const payload = await this.signer.verifyAsync<JwtDataInterface>(token);
 
       const user = await this.users.findUnique({
         where: {

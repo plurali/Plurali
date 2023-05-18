@@ -1,5 +1,5 @@
-import { CurrentUser } from '@app/auth/CurrentUser';
-import { AuthGuard } from '@app/auth/AuthGuard';
+import { CurrentUser } from '@app/context/auth/CurrentUser';
+import { AuthGuard } from '@app/context/auth/AuthGuard';
 import { Error, Ok, Status } from '@app/v1/dto/Status';
 import { UserResponse } from '@app/v1/dto/user/response/UserResponse';
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
@@ -7,8 +7,9 @@ import { Prisma, User, UserRole } from '@prisma/client';
 import { UpdateUserRequest } from '@app/v1/dto/user/request/UpdateUserRequest';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { UserRepository } from '@domain/user/UserRepository';
-import { notEmpty } from '@app/misc/request';
+import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { CacheService } from '@domain/cache/CacheService';
+import { UserDto } from '@app/v1/dto/user/UserDto';
 
 @Controller({
   path: '/user',
@@ -24,7 +25,7 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/')
   async me(@CurrentUser() user: User): Promise<Ok<UserResponse>> {
-    return Status.ok(new UserResponse(user));
+    return Status.ok(new UserResponse(UserDto.from(user)));
   }
 
   @UseGuards(AuthGuard)
@@ -42,7 +43,7 @@ export class UserController {
       update.pluralOverride = data.overridePluralId;
     }
 
-    if (Object.keys(update).length >= 1) {
+    if (shouldUpdate(update)) {
       user = await this.users.update({
         where: {
           id: user.id,
@@ -55,6 +56,6 @@ export class UserController {
       await this.cache.rebuildFor(user);
     }
 
-    return Status.ok(new UserResponse(user));
+    return Status.ok(new UserResponse(UserDto.from(user)));
   }
 }

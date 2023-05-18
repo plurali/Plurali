@@ -5,10 +5,10 @@ export class UpdateUserRequest {
   @IsNotEmpty()
   @MinLength(32)
   @IsOptional()
-  public readonly pluralKey: string | null = null;
+  public pluralKey: string | null = null;
 
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  public readonly overridePluralId: string | null = null;
+  public overridePluralId: string | null = null;
 }

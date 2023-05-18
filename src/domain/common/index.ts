@@ -1,4 +1,5 @@
 import type { Logger } from '@nestjs/common';
+import { Field, System, User } from '@prisma/client';
 import slugify from 'slugify';
 
 export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
@@ -57,3 +58,12 @@ export const createSlug = (name: string) =>
   `${generateRandomString(6)}-${slugify(name, {
     lower: true,
   })}`;
+
+export const assignUser = <T extends object, U extends User>(obj: T, user: U): T & { user: U } =>
+  Object.assign({ user }, obj);
+
+export const assignSystem = <T extends object, S extends System>(obj: T, system: S): T & { system: S } =>
+  Object.assign({ system }, obj);
+
+export const assignFields = <T extends object, F extends Field>(obj: T, fields: F[]): T & { fields: F[] } =>
+  Object.assign({ fields }, obj);

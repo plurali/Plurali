@@ -1,5 +1,5 @@
-import { User } from '@prisma/client';
+import { UserDto } from '../UserDto';
 
 export class UserResponse {
-  constructor(public readonly user: User) {}
+  constructor(public readonly user: UserDto) {}
 }

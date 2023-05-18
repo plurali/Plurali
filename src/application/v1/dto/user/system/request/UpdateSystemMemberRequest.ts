@@ -1,6 +1,6 @@
 import { IsBoolean, IsHexColor, IsOptional, IsString } from 'class-validator';
 
-export class UpdateSystemRequest {
+export class UpdateSystemMemberRequest {
   @IsBoolean()
   @IsOptional()
   public visible: boolean | null;
