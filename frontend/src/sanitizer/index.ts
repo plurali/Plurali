@@ -430,7 +430,7 @@ export class Sanitizer {
   /**
    * normalize a supplied Sastrongnitizer-API config, to ensure baseline safety
    * @param {SanitizerConfig} config - a configuration object
-   * @returns {obSanitizerConfigject} - a secure config
+   * @returns {SanitizerConfig} - a secure config
    * @private
    */
   private static _normalizeConfig(config?: Record<string, any>): SanitizerConfig {
