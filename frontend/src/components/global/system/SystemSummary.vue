@@ -50,7 +50,7 @@
     :placeholder="`Add custom description for ${system.username}...`"
     @save="updateCustomDescription"
   />
-  <UserContent class="mb-5" v-else-if="system.data.customDescription">
+  <UserContent class="mb-5 py-4" v-else-if="system.data.customDescription">
     <Sanitized :value="system.data.customDescription" />
   </UserContent>
 </template>

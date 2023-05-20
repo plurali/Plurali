@@ -5,7 +5,7 @@
 
       <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
 
-      <UserContent class="mb-5" v-if="member.data.customDescription">
+      <UserContent class="mb-5 py-4" v-if="member.data.customDescription">
         <Sanitized :value="member.data.customDescription"/>
       </UserContent>
     </div>
