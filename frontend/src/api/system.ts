@@ -11,13 +11,13 @@ import { $axios } from '.';
 
 export const getSystem = (): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.request<Status<SystemResponse>>({
-    url: '/system',
+    url: '/v1/system',
     method: 'GET',
   });
 
 export const updateSystem = (data: Partial<UpdateSystemRequest>): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.request<Status<SystemResponse>>({
-    url: `/system`,
+    url: `/v1/system`,
     method: 'POST',
     data,
   });
@@ -27,13 +27,13 @@ export const updateSystemBackgroundImage = (file: Blob): Promise<AxiosResponse<S
 
 export const getMembers = (): Promise<AxiosResponse<Status<SystemMembersResponse>>> =>
   $axios.request<Status<SystemMembersResponse>>({
-    url: '/system/members',
+    url: '/v1/system/members',
     method: 'GET',
   });
 
 export const getMember = (id: string): Promise<AxiosResponse<Status<SystemMemberResponse>>> =>
   $axios.request<Status<SystemMemberResponse>>({
-    url: `/system/members/${id}`,
+    url: `/v1/system/members/${id}`,
     method: 'GET',
   });
 
@@ -42,7 +42,7 @@ export const updateMember = (
   data: Partial<UpdateSystemMemberRequest>
 ): Promise<AxiosResponse<Status<SystemMemberResponse>>> =>
   $axios.request<Status<SystemMemberResponse>>({
-    url: `/system/members/${id}`,
+    url: `/v1/system/members/${id}`,
     method: 'POST',
     data,
   });
@@ -58,7 +58,7 @@ export const updateField = (
   data: Partial<UpdateSystemFieldRequest>
 ): Promise<AxiosResponse<Status<SystemFieldResponse>>> =>
   $axios.request<Status<SystemFieldResponse>>({
-    url: `/system/fields/${id}`,
+    url: `/v1/system/fields/${id}`,
     method: 'POST',
     data,
   });

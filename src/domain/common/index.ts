@@ -72,3 +72,8 @@ export enum BackgroundType {
   Color = 'Color',
   Image = 'Image',
 }
+
+export enum OwnerType {
+  Member = 'member',
+  System = 'system',
+}

@@ -6,13 +6,13 @@ import type { UpdateUserRequest } from '@app/v1/dto/user/request/UpdateUserReque
 
 export const getUser = (): Promise<AxiosResponse<Status<UserResponse>>> =>
   $axios.request<Status<UserResponse>>({
-    url: '/user',
+    url: '/v1/user',
     method: 'GET',
   });
 
 export const updateUser = (data: UpdateUserRequest): Promise<AxiosResponse<Status<UserResponse>>> =>
   $axios.request<Status<UserResponse>>({
-    url: '/user',
+    url: '/v1/user',
     method: 'POST',
     data,
   });

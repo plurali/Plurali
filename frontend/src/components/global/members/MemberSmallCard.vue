@@ -6,7 +6,7 @@
     :to="
       isDashboard
         ? `/dashboard/member/${systemMember.id}`
-        : `${$route.fullPath}/${systemMember.data.slug}`
+        : `/${$route.params.systemId}/m/${systemMember.data.slug}`
     "
     class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4 transition"
     :class="[
@@ -45,7 +45,7 @@
 <script lang="ts">
 import Color from '../color/ColorCircle.vue'
 import { computed, defineComponent, PropType, ref } from 'vue'
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto'
+import { Member } from '@plurali/common/src/system'
 import { useRoute } from 'vue-router'
 import { updateMember } from '../../../api/system'
 import { flash, FlashType } from '../../../store'
@@ -57,7 +57,7 @@ export default defineComponent({
   },
   props: {
     member: {
-      type: Object as PropType<UserMemberDto>,
+      type: Object as PropType<Member>,
       required: true,
     },
     modifiable: {
@@ -66,7 +66,7 @@ export default defineComponent({
     },
   },
   setup({ member: _member, modifiable }) {
-    const systemMember = ref<UserMemberDto>(_member)
+    const systemMember = ref<Member>(_member)
 
     const loading = ref(false)
 

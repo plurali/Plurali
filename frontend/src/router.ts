@@ -41,19 +41,49 @@ const routes: RouteRecordRaw[] = [
         component: () => import('./pages/dashboard/system.vue' as string),
       },
       {
+        name: 'dashboard:system:page:create',
+        path: '/dashboard/system/page-create',
+        component: () => import('./pages/dashboard/page-create.vue' as string),
+      },
+      {
+        name: 'dashboard:system:page:edit',
+        path: '/dashboard/system/page-edit/:pageId',
+        component: () => import('./pages/dashboard/page-edit.vue' as string),
+      },
+      {
         name: 'dashboard:member',
         path: '/dashboard/member/:id',
         component: () => import('./pages/dashboard/member.vue' as string),
       },
       {
+        name: 'dashboard:member:page:create',
+        path: '/dashboard/member/:id/page-create',
+        component: () => import('./pages/dashboard/page-create.vue' as string),
+      },
+      {
+        name: 'dashboard:member:page:edit',
+        path: '/dashboard/member/:id/page-edit/:pageId',
+        component: () => import('./pages/dashboard/page-edit.vue' as string),
+      },
+      {
         name: 'public:system',
-        path: '/:systemId',
+        path: '/:systemId/',
         component: () => import('./pages/system.vue' as string),
       },
       {
         name: 'public:member',
-        path: '/:systemId/:memberId',
+        path: '/:systemId/m/:memberId',
         component: () => import('./pages/member.vue' as string),
+      },
+      {
+        name: 'public:system:page',
+        path: '/:systemId/p/:pageId',
+        component: () => import('./pages/page.vue' as string),
+      },
+      {
+        name: 'public:member:page',
+        path: '/:systemId/m/:memberId/p/:pageId',
+        component: () => import('./pages/page.vue' as string),
       },
     ],
   },

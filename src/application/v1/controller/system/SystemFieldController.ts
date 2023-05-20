@@ -1,7 +1,7 @@
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Error, Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status } from '@app/v1/dto/Status';
 import { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import { UpdateSystemFieldRequest } from '@app/v1/dto/user/system/request/UpdateSystemFieldRequest';
 import { SystemFieldResponse } from '@app/v1/dto/user/system/response/SystemFieldResponse';
@@ -37,7 +37,7 @@ export class SystemFieldController {
     @Param('fieldId') id: string,
     @Body() data: UpdateSystemFieldRequest
   ): Promise<Ok<SystemFieldResponse>> {
-    let field = await this.findOrThrow(system, id);
+    let field = await this.findOrFail(system, id);
     const update: Prisma.FieldUpdateInput = {};
 
     if (notEmpty(data.visible)) {
@@ -56,7 +56,7 @@ export class SystemFieldController {
     return Status.ok(new SystemFieldResponse(UserFieldDto.from(field)));
   }
 
-  protected async findOrThrow(system: System, id: string): Promise<Field> {
+  protected async findOrFail(system: System, id: string): Promise<Field> {
     const field = await this.fields.findFirst({
       where: {
         systemId: system.id,

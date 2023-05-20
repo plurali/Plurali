@@ -9,7 +9,7 @@
       <Spinner class="w-6 h-6 !text-violet-700" />
       <span class="font-medium text-violet-700">Loading...</span>
     </div>
-    <div class="mt-5 flex justify-end items-center py-4" v-if="editor && editor.isDirty()">
+    <div class="mt-5 flex justify-end items-center py-4" v-if="editor && (forceSave || editor.isDirty())">
       <Button class="text-white bg-violet-700 md:w-48" @click="onSave">Save</Button>
     </div>
   </UserContent>
@@ -70,6 +70,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    forceSave: {
+      type: Boolean,
+      default: () => false,
+    }
   },
   emits: ['save', 'update:modelValue'],
   setup(props, { emit }) {

@@ -53,6 +53,8 @@ model User {
   pluralOverride    String?
 
   role UserRole @default(User)
+
+  pages Page[]
   
   @@map("pluraliapp_users")
 }
@@ -121,4 +123,27 @@ model Member {
   assetsUpdatedAt DateTime @default(now())
 
   @@map("pluraliapp_systems_members")
+}
+
+enum OwnerType {
+  Member
+  System
+}
+
+model Page {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug String? 
+
+  ownerId String // attach to pluralId to bind to member/system
+  ownerType OwnerType
+
+  name String
+  content String
+
+  visibility Visibility
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @db.ObjectId
+
+  @@map("pluraliapp_pages")
 }

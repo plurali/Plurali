@@ -4,7 +4,7 @@ import type { Status, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
 export const $axios = axios.create({
-  baseURL: (import.meta as any).env?.DEV ? 'http://rayliliannotraychel.local:3000/v1' : 'https://plurali.icu/api/v1',
+  baseURL: (import.meta as any).env?.DEV ? 'http://rayliliannotraychel.local:3000' : 'https://plurali.icu/api',
   withCredentials: true,
 });
 
