@@ -12,10 +12,20 @@ import { UserController } from './controller/user/UserController';
 import { UserModule } from '@domain/user/UserModule';
 import { SecurityModule } from '@domain/security/SecurityModule';
 import { CacheModule } from '@domain/cache/CacheModule';
+import { StorageModule } from '@infra/storage/StorageModule';
 
 // @deprecated
 @Module({
-  imports: [SystemModule, PluralModule, UserModule, SecurityModule, CacheModule, JwtModule, PluralModule],
+  imports: [
+    SystemModule,
+    PluralModule,
+    UserModule,
+    SecurityModule,
+    CacheModule,
+    JwtModule,
+    PluralModule,
+    StorageModule,
+  ],
   controllers: [
     PublicSystemController,
     PublicSystemMemberController,

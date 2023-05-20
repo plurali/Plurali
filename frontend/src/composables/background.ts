@@ -1,6 +1,6 @@
 import { WatchSource, watch } from 'vue';
 import { background } from '../store';
-import { HasBackground } from '@domain/common/types';
+import type { HasBackground } from '@domain/common/types';
 import { onBeforeRouteLeave } from 'vue-router';
 import { BackgroundType } from '@prisma/client';
 
@@ -8,11 +8,13 @@ export interface Assetable {
   lastTimeAssetChanged: Date;
 }
 
+export const cdnBaseUrl = (import.meta as any).env?.DEV ? 'http://127.0.0.1:8001/plurali' : 'https://cdn.plurali.icu/v1';
+
 export const parseBackground = (data: HasBackground & Assetable): string | null => {
   if (!data.backgroundImage) return null;
   if (data.backgroundImage.startsWith('http')) return data.backgroundImage;
 
-  return `https://cdn.plurali.icu/v1/${data.backgroundImage}?ltas=${Math.floor(
+  return `${cdnBaseUrl}/${data.backgroundImage}?v=${Math.floor(
     new Date(data.lastTimeAssetChanged).getTime() / 1000
   )}`;
 };

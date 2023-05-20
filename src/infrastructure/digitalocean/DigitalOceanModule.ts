@@ -3,5 +3,6 @@ import { DigitalOceanService } from './DigitalOceanService';
 
 @Module({
   providers: [DigitalOceanService],
+  exports: [DigitalOceanService],
 })
 export class DigitalOceanModule {}

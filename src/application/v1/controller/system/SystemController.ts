@@ -11,8 +11,14 @@ import { assignFields } from '@domain/common';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { SystemRepository } from '@domain/system/SystemRepository';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BackgroundType, Prisma, System, User, Visibility } from '@prisma/client';
+import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
+import { StorageService } from '@infra/storage/StorageService';
+import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileException';
+import { StoragePrefix } from '@infra/storage/StoragePrefix';
+import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
+import * as mime from 'mime-types';
 
 @Controller({
   path: '/system',
@@ -22,7 +28,8 @@ export class SystemController {
   constructor(
     private readonly systems: SystemRepository,
     private readonly fields: FieldRepository,
-    private readonly rest: PluralRestService
+    private readonly rest: PluralRestService,
+    private readonly storage: StorageService
   ) {}
 
   @UseGuards(SystemGuard)
@@ -79,5 +86,40 @@ export class SystemController {
     });
 
     return SystemDto.from(assignFields(system, fields), plural);
+  }
+
+  @Post('/background')
+  @UseGuards(SystemGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async updateBackground(
+    @CurrentSystem() system: System,
+    @CurrentUser() user: User,
+    @UploadedFile() file: MemoryStorageFile
+  ) {
+    if (!file.mimetype.startsWith('image/')) {
+      throw new UnsupportedFileException();
+    }
+
+    const key = `${StoragePrefix.Userdata}/${user.id}/${system.id}/background.${mime.extension(file.mimetype)}`;
+
+    const result = await this.storage.store(key, file.buffer, true);
+    if (!result.ok) {
+      throw new FileProcessingFailedException();
+    }
+
+    system = await this.systems.update({
+      where: {
+        id: system.id,
+      },
+      data: {
+        backgroundType: BackgroundType.Image,
+        backgroundImage: key,
+        assetsUpdatedAt: new Date(),
+      },
+    });
+
+    const warning = result.cacheFail ? StatusMap.CacheDemand : undefined;
+
+    return Status.ok(new SystemResponse(await this.makeDto(system, user), warning));
   }
 }

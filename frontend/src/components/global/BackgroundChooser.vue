@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { HasBackground } from '@domain/common/types';
+import type { HasBackground } from '@domain/common/types';
 import { isHex } from '../../utils';
 import { PropType, computed, defineComponent, ref } from 'vue';
 import { PhotoIcon, SwatchIcon } from '@heroicons/vue/24/outline';

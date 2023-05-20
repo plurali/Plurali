@@ -2,7 +2,7 @@ import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Error, Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { UpdateSystemMemberRequest } from '@app/v1/dto/user/system/request/UpdateSystemMemberRequest';
 import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
@@ -15,8 +15,14 @@ import { PluralRestService } from '@domain/plural/PluralRestService';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BackgroundType, Member, Prisma, System, User, Visibility } from '@prisma/client';
+import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
+import { StorageService } from '@infra/storage/StorageService';
+import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileException';
+import { StoragePrefix } from '@infra/storage/StoragePrefix';
+import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
+import * as mime from 'mime-types';
 
 @Controller({
   path: '/system/members',
@@ -26,15 +32,13 @@ export class SystemMemberController {
   constructor(
     private readonly members: MemberRepository,
     private readonly fields: FieldRepository,
-    private readonly rest: PluralRestService
+    private readonly rest: PluralRestService,
+    private readonly storage: StorageService
   ) {}
 
   @UseGuards(SystemGuard)
   @Get('/')
-  public async list(
-    @CurrentSystem() system: System,
-    @CurrentUser() user: User
-  ): Promise<Ok<SystemMembersResponse>> {
+  public async list(@CurrentSystem() system: System, @CurrentUser() user: User): Promise<Ok<SystemMembersResponse>> {
     const members = await this.members.findMany({
       where: {
         systemId: system.id,
@@ -105,6 +109,48 @@ export class SystemMemberController {
     }
 
     return Status.ok(new SystemMemberResponse(await this.makeDto(member, await this.makeExtendedSystem(system, user))));
+  }
+
+  @Post('/:id/background')
+  @UseGuards(SystemGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async updateBackground(
+    @CurrentSystem() system: System,
+    @CurrentUser() user: User,
+    @Param('id') id: string,
+    @UploadedFile() file: MemoryStorageFile
+  ) {
+    let member = await this.findOrFail(system, id);
+
+    if (!file.mimetype.startsWith('image/')) {
+      throw new UnsupportedFileException();
+    }
+
+    const key = `${StoragePrefix.Userdata}/${user.id}/${system.id}/${member.id}/background.${mime.extension(
+      file.mimetype
+    )}`;
+
+    const result = await this.storage.store(key, file.buffer, true);
+    if (!result.ok) {
+      throw new FileProcessingFailedException();
+    }
+
+    member = await this.members.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        backgroundType: BackgroundType.Image,
+        backgroundImage: key,
+        assetsUpdatedAt: new Date(),
+      },
+    });
+
+    const warning = result.cacheFail ? StatusMap.CacheDemand : undefined;
+
+    return Status.ok(
+      new SystemMemberResponse(await this.makeDto(member, await this.makeExtendedSystem(system, user)), warning)
+    );
   }
 
   protected async findOrFail(system: System, id: string): Promise<Member> {

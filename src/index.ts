@@ -12,6 +12,7 @@ import { csp } from '@app/misc/csp';
 // import { ChildProcess, fork } from 'child_process';
 import { overrideLoggerPrefix } from './domain/common';
 import { CacheService } from '@domain/cache/CacheService';
+import fastifyMultipart from '@fastify/multipart';
 
 async function bootstrap() {
   const logger = overrideLoggerPrefix(new ConsoleLogger());
@@ -36,6 +37,8 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '2',
   });
+
+  app.register(fastifyMultipart);
 
   // Production
   if (!isDev) {
