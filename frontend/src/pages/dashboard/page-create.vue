@@ -86,7 +86,7 @@ export default defineComponent({
           visible: visible.value,
         };
 
-        return isMember.value ? createMemberPage(memberId.value, data) : createSystemPage(data);
+        return isMember.value ? createMemberPage(memberId.value ?? '', data) : createSystemPage(data);
       });
 
       if (res) {

@@ -4,6 +4,12 @@
       <div class="flex items-center gap-2 my-5">
         <h1 class="text-2xl font-medium">Edit {{ isMember ? 'member' : 'system' }} content page</h1>
         <VisibilityTag :visible="page.visible" @click="toggleVisibility" />
+        <Button
+          @click="deletePage"
+          class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1 ml-4"
+        >
+          <TrashIcon class="w-5 h-5" />
+        </Button>
       </div>
       <input
         :disabled="loading"
@@ -27,14 +33,14 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Title from '../../components/Title.vue';
 import Subtitle from '../../components/Subtitle.vue';
 import ButtonLink from '../../components/ButtonLink.vue';
 import Button from '../../components/Button.vue';
 import Spinner from '../../components/Spinner.vue';
 import { wrapRequest } from '../../api';
-import { getSystemPage, getMemberPage, updateMemberPage, updateSystemPage } from '../../api/page';
+import { getSystemPage, getMemberPage, updateMemberPage, updateSystemPage, deleteSystemPage, deleteMemberPage } from '../../api/page';
 import Color from '../../components/global/color/ColorCircle.vue';
 import { useGoBack } from '../../composables/goBack';
 import Fetchable from '../../components/global/Fetchable.vue';
@@ -48,6 +54,8 @@ import type { PageDto } from '@app/v2/dto/page/PageDto';
 import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 import type { Editor as EditorType } from 'tinymce';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
+import { TrashIcon } from '@heroicons/vue/24/outline';
+import { OkResponse } from '@app/v1/dto/OkResponse';
 
 export default defineComponent({
   components: {
@@ -63,20 +71,23 @@ export default defineComponent({
     Color,
     UserContent,
     Editor,
-    VisibilityTag
-},
+    VisibilityTag,
+    TrashIcon,
+  },
   setup() {
     const page = ref<PageDto | null | false>(false);
 
+    const router = useRouter();
+
     const route = useRoute();
 
-    const name = ref("");
+    const name = ref('');
 
     const loading = ref(false);
 
     const isMember = computed(() => String(route.name).includes('dashboard:member'));
 
-    const memberId = computed(() => (isMember.value ?  getRouteParam(route.params.id) : null));
+    const memberId = computed(() => (isMember.value ? getRouteParam(route.params.id) : null));
 
     const parentRoute = computed(() => (isMember.value ? `/dashboard/member/${memberId.value}` : `/dashboard/system`));
 
@@ -118,7 +129,7 @@ export default defineComponent({
       }
 
       loading.value = false;
-    }
+    };
 
     const updatePage = async (editor: EditorType) => {
       if (loading.value) return;
@@ -150,11 +161,27 @@ export default defineComponent({
       loading.value = false;
     };
 
+    const deletePage = async () => {
+      if (loading.value) return;
+      loading.value = true;
+
+      const res = await wrapRequest<OkResponse>(() => isMember.value
+          ? deleteMemberPage(memberId.value ?? '', pageId.value)
+          : deleteSystemPage(pageId.value));
+
+      if (res) {
+        router.push(parentRoute.value);
+      }
+
+      loading.value = false;
+    };
+
     onMounted(() => fetchPage());
 
     return {
       fetchPage,
       updatePage,
+      deletePage,
       page,
       name,
       loading,
