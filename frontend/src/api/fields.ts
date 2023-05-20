@@ -2,7 +2,7 @@ import xss from 'xss';
 import markdown from 'markdown-it';
 import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto';
-import { MemberFieldType } from '@domain/plural/utils';
+import { MemberFieldType } from '../../../src/domain/plural/utils';
 
 const string = (string: string, useMd: boolean): string =>
   useMd
