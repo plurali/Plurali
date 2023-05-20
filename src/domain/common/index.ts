@@ -67,3 +67,8 @@ export const assignSystem = <T extends object, S extends System>(obj: T, system:
 
 export const assignFields = <T extends object, F extends Field>(obj: T, fields: F[]): T & { fields: F[] } =>
   Object.assign({ fields }, obj);
+
+export enum BackgroundType {
+  Color = 'Color',
+  Image = 'Image',
+}

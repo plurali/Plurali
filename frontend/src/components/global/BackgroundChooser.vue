@@ -57,14 +57,14 @@ import { PropType, computed, defineComponent, ref } from 'vue';
 import { PhotoIcon, SwatchIcon } from '@heroicons/vue/24/outline';
 import { wrapRequest } from '../../api';
 import { updateMember, updateSystem } from '../../api/system';
-import { flash } from '../../store';
+import { flash } from '../../store'; 
 import Button from '../Button.vue';
 import Modal from './Modal.vue';
 import Uploader from './Uploader.vue';
 import Palette from './Palette.vue';
 import Spinner from '../Spinner.vue';
 import { updateMemberBackgroundImage, updateSystemBackgroundImage } from '../../api/system';
-import { BackgroundType } from '@prisma/client';
+import { BackgroundType } from '@domain/common';
 import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
 
