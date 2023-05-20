@@ -27,7 +27,7 @@ plurali.icu:443 {
     }
 
 	handle {
-		root * /home/plurali/packages/frontend/dist
+		root * /home/plurali/frontend/dist
 		templates {path} {
 			mime text/html
 		}
