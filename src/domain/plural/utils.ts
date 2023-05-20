@@ -1,5 +1,3 @@
-// TODO: proxy external (non-apparyllis as AR is a trusted source) URLs
-
 import { AvatarAttrs, VisibilityAttributes } from './types/rest';
 
 export enum SocketOperationType {

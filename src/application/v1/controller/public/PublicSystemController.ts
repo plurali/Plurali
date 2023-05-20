@@ -21,7 +21,7 @@ export class PublicSystemController {
       throw new ResourceNotFoundException();
     }
 
-    const plural = await this.plural.findUser(system, true);
+    const plural = await this.plural.findUserForId(system.pluralId, system.user.pluralAccessToken);
 
     if (!plural) {
       throw new InvalidRequestException();

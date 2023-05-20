@@ -1,4 +1,5 @@
-import { UnauthorizedException } from '@app/v1/exception/UnauthorizedException';
+import { jwtConfig } from '@app/misc/jwt';
+import { NotAuthenticatedException } from '@app/v1/exception/NotAuthenticatedException';
 import { JwtDataInterface } from '@domain/security/JwtData';
 import { UserRepository } from '@domain/user/UserRepository';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
@@ -14,11 +15,13 @@ export class AuthGuard implements CanActivate {
 
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new NotAuthenticatedException();
     }
 
     try {
-      const payload = await this.signer.verifyAsync<JwtDataInterface>(token);
+      const payload = await this.signer.verifyAsync<JwtDataInterface>(token, {
+        secret: jwtConfig.secret,
+      });
 
       const user = await this.users.findUnique({
         where: {
@@ -27,12 +30,12 @@ export class AuthGuard implements CanActivate {
       });
 
       if (!user) {
-        throw new UnauthorizedException();
+        throw new NotAuthenticatedException();
       }
 
       request['user'] = user;
     } catch {
-      throw new UnauthorizedException();
+      throw new NotAuthenticatedException();
     }
 
     return true;

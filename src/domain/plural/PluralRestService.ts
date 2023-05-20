@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { PluralMemberEntry } from './types/rest/members';
-import { UserRole } from '@prisma/client';
 import { MemberWithSystem, SystemWithUser } from '@domain/common/types';
 import { PluralUserEntry } from './types/rest/user';
 
@@ -27,7 +26,7 @@ export class PluralRestService {
     try {
       return (
         await this.httpClient.request<PluralMemberEntry[]>({
-          url: `/v1/members/${systemId}`,
+          url: `/members/${systemId}`,
           method: 'GET',
           headers: {
             Authorization,
@@ -47,7 +46,7 @@ export class PluralRestService {
     try {
       return (
         await this.httpClient.request<PluralMemberEntry>({
-          url: `/v1/member/${systemId}/${memberId}`,
+          url: `/member/${systemId}/${memberId}`,
           method: 'GET',
           headers: {
             Authorization,
@@ -59,29 +58,23 @@ export class PluralRestService {
     }
   }
 
-  async findUser(system: SystemWithUser, enableOverride = false): Promise<PluralUserEntry | null> {
-    return await this.findUserForId(
-      system.pluralId,
-      system.user.pluralAccessToken,
-      (enableOverride && system.user.role === UserRole.Admin && system.user.pluralOverride) ?? undefined
-    );
-  }
-
   async findUserForId(
     userId: string | 'me',
     Authorization: string,
     override?: string
   ): Promise<PluralUserEntry | null> {
     try {
-      return (
+      const data = (
         await this.httpClient.request<PluralUserEntry>({
-          url: !override && userId === 'me' ? `/v1/me` : `/v1/user/${override ?? userId}`,
+          url: !override && userId === 'me' ? `/me` : `/user/${override ?? userId}`,
           method: 'GET',
           headers: {
             Authorization,
           },
         })
       ).data;
+
+      return data;
     } catch {
       return null;
     }

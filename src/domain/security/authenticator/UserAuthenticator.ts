@@ -3,7 +3,9 @@ import { User } from '@prisma/client';
 import { Authenticator } from './Authenticator';
 import { UserRepository } from '@domain/user/UserRepository';
 import { Hasher } from '../hasher/Hasher';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserAuthenticator extends Authenticator<AuthRequestBody, User> {
   constructor(private users: UserRepository, private hasher: Hasher) {
     super();

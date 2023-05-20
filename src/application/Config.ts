@@ -71,8 +71,7 @@ export class Config implements ConfigInterface {
   protected REDIS_HOST: string;
 
   @IsNumber()
-  @IsOptional()
-  protected REDIS_PORT = 6379;
+  protected REDIS_PORT: number;
 
   @IsString()
   @IsOptional()
@@ -110,16 +109,13 @@ export class Config implements ConfigInterface {
   protected PLURAL_WS = 'wss://v2.apparyllis.com/v1/socket';
 
   @IsBoolean()
-  @IsOptional()
-  protected PLURAL_OBSERVER_FORK = false;
+  protected PLURAL_OBSERVER_FORK: boolean;
 
   @IsString()
-  @IsOptional()
-  protected PLURAL_OBSERVER_HOST = '127.0.0.1';
+  protected PLURAL_OBSERVER_HOST: string;
 
   @IsNumber()
-  @IsOptional()
-  protected PLURAL_OBSERVER_PORT = 4444;
+  protected PLURAL_OBSERVER_PORT: number;
 
   @IsString()
   protected JWT_SECRET: string;

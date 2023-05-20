@@ -10,8 +10,8 @@ export class SystemRepository extends PrismaRepository<'system'> {
     super('system', prisma);
   }
 
-  public findPublic(slug: string): Promise<SystemWithUser & { fields: Field[] }> {
-    return this.findFirst({
+  public async findPublic(slug: string): Promise<SystemWithUser & { fields: Field[] }> {
+    const data = await this.findFirst({
       where: {
         slug,
         visibility: Visibility.Public,
@@ -21,5 +21,13 @@ export class SystemRepository extends PrismaRepository<'system'> {
         fields: true,
       },
     });
+
+    if (!data) {
+      return null;
+    }
+
+    data.fields = data.fields.filter(f => f.visibility === Visibility.Public); // TODO: include in query
+
+    return data;
   }
 }

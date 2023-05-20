@@ -1,0 +1,10 @@
+{
+  "name": "@pluraliapp/deprecated",
+  "description": "deprecated yarn workspace",
+  "workspaces": [
+    "backend",
+    "common",
+    "frontend"
+  ],
+  "private": true
+}

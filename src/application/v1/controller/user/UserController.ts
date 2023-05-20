@@ -2,7 +2,7 @@ import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { AuthGuard } from '@app/context/auth/AuthGuard';
 import { Error, Ok, Status } from '@app/v1/dto/Status';
 import { UserResponse } from '@app/v1/dto/user/response/UserResponse';
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { Prisma, User, UserRole } from '@prisma/client';
 import { UpdateUserRequest } from '@app/v1/dto/user/request/UpdateUserRequest';
 import { PluralRestService } from '@domain/plural/PluralRestService';
@@ -17,7 +17,7 @@ import { UserDto } from '@app/v1/dto/user/UserDto';
 })
 export class UserController {
   constructor(
-    private readonly rest: PluralRestService,
+    @Inject('PluralResetServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly users: UserRepository
   ) {}
@@ -30,12 +30,13 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Post('/')
-  async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<Ok<UserResponse> | Error> {
+  async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<Ok<UserResponse>> {
     const update: Prisma.UserUpdateInput = {};
     let rebuild = false;
 
     if (notEmpty(data.pluralKey)) {
-      update.pluralAccessToken = !!(await this.rest.findUserForId('me', data.pluralKey)) ? data.pluralKey : null;
+      const plural = await this.rest.findUserForId('me', data.pluralKey);
+      update.pluralAccessToken = !!plural ? data.pluralKey : null;
       rebuild = true;
     }
 

@@ -1,6 +1,6 @@
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
-import { notEmpty } from '@app/misc/request';
+import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { Error, Ok, Status } from '@app/v1/dto/Status';
 import { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import { UpdateSystemFieldRequest } from '@app/v1/dto/user/system/request/UpdateSystemFieldRequest';
@@ -20,10 +20,10 @@ export class SystemFieldController {
 
   @UseGuards(SystemGuard)
   @Get('/')
-  async list(@CurrentSystem() system: System): Promise<Ok<SystemFieldsResponse> | Error> {
+  async list(@CurrentSystem() system: System): Promise<Ok<SystemFieldsResponse>> {
     const fields = await this.fields.findMany({
       where: {
-        system,
+        systemId: system.id,
       },
     });
 
@@ -36,12 +36,21 @@ export class SystemFieldController {
     @CurrentSystem() system: System,
     @Param('fieldId') id: string,
     @Body() data: UpdateSystemFieldRequest
-  ): Promise<Ok<SystemFieldResponse> | Error> {
-    const field = await this.findOrThrow(system, id);
+  ): Promise<Ok<SystemFieldResponse>> {
+    let field = await this.findOrThrow(system, id);
     const update: Prisma.FieldUpdateInput = {};
 
     if (notEmpty(data.visible)) {
       update.visibility = data.visible ? Visibility.Public : Visibility.Private;
+    }
+
+    if (shouldUpdate(update)) {
+      field = await this.fields.update({
+        where: {
+          id: field.id,
+        },
+        data: update,
+      });
     }
 
     return Status.ok(new SystemFieldResponse(UserFieldDto.from(field)));
@@ -50,8 +59,8 @@ export class SystemFieldController {
   protected async findOrThrow(system: System, id: string): Promise<Field> {
     const field = await this.fields.findFirst({
       where: {
-        system,
-        id,
+        systemId: system.id,
+        pluralId: id,
       },
     });
 

@@ -24,14 +24,7 @@ export class SystemDto {
       system.pluralId,
       new Date(plural.content.lastOperationTime),
       plural.content.username,
-      Object.keys(system.fields)
-        .map(id => {
-          const field = system.fields.find(f => f.pluralId === id);
-          if (!field) return null;
-
-          return UserFieldDto.from(field);
-        })
-        .filter(v => !!v),
+      system.fields.map(UserFieldDto.from),
       plural.content.color,
       plural.content.desc,
       parseAvatar(plural.content),

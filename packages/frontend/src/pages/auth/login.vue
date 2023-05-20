@@ -61,7 +61,7 @@ import Label from '../../components/Label.vue'
 import { login } from '../../api/auth'
 import InputError from '../../components/InputError.vue'
 import Spinner from '../../components/Spinner.vue'
-import { wrapRequest } from '../../api'
+import { setAuth, wrapRequest } from '../../api'
 
 export default defineComponent({
   components: {
@@ -109,6 +109,7 @@ export default defineComponent({
       loading.value = false
 
       if (ok) {
+        setAuth(ok.auth);
         await router.push('/dashboard')
       }
     }

@@ -28,11 +28,14 @@ export type Ok<D = SuccessData> = Status<D, undefined>;
 export type Error<E extends StatusMapKey = StatusMapKey> = Status<undefined, E>;
 
 export class Status<D = SuccessData, E extends StatusMapKey = StatusMapKey> {
+  public success: boolean;
+
   public data: D;
 
   public error: E;
 
   constructor(data?: D, error?: typeof data extends undefined ? E : undefined) {
+    this.success = !error;
     this.data = data;
     this.error = error;
   }

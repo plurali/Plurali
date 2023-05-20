@@ -11,7 +11,7 @@ import { InvalidRequestException } from '@app/v1/exception/InvalidRequestExcepti
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { assignFields, assignSystem, assignUser } from '@domain/common';
 import { SystemWithFields, SystemWithUser } from '@domain/common/types';
-import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
+import { PluralRestService } from '@domain/plural/PluralRestService';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
@@ -26,7 +26,7 @@ export class SystemMemberController {
   constructor(
     private readonly members: MemberRepository,
     private readonly fields: FieldRepository,
-    private readonly rest: PluralCachedRestService
+    private readonly rest: PluralRestService
   ) {}
 
   @UseGuards(SystemGuard)
@@ -34,10 +34,10 @@ export class SystemMemberController {
   public async list(
     @CurrentSystem() system: System,
     @CurrentUser() user: User
-  ): Promise<Ok<SystemMembersResponse> | Error> {
+  ): Promise<Ok<SystemMembersResponse>> {
     const members = await this.members.findMany({
       where: {
-        system,
+        systemId: system.id,
       },
     });
 
@@ -45,9 +45,15 @@ export class SystemMemberController {
 
     const plural = await this.rest.findMembers(extendedSystem);
 
-    return Status.ok(
-      new SystemMembersResponse(await Promise.all(members.map(member => this.makeDto(member, extendedSystem, plural))))
-    );
+    const dtoMembers: UserMemberDto[] = [];
+
+    for (const member of members) {
+      const dto = await this.makeDto(member, extendedSystem, plural);
+
+      dtoMembers.push(dto);
+    }
+
+    return Status.ok(new SystemMembersResponse(dtoMembers));
   }
 
   @UseGuards(SystemGuard)
@@ -56,7 +62,7 @@ export class SystemMemberController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('id') id: string
-  ): Promise<Ok<SystemMemberResponse> | Error> {
+  ): Promise<Ok<SystemMemberResponse>> {
     return Status.ok(
       new SystemMemberResponse(
         await this.makeDto(await this.findOrFail(system, id), await this.makeExtendedSystem(system, user))
@@ -71,7 +77,7 @@ export class SystemMemberController {
     @CurrentUser() user: User,
     @Param('id') id: string,
     @Body() data: UpdateSystemMemberRequest
-  ): Promise<Ok<SystemMemberResponse> | Error> {
+  ): Promise<Ok<SystemMemberResponse>> {
     let member = await this.findOrFail(system, id);
 
     const update: Prisma.MemberUpdateInput = {};
@@ -105,7 +111,7 @@ export class SystemMemberController {
     const member = await this.members.findFirst({
       where: {
         systemId: system.id,
-        id,
+        pluralId: id,
       },
     });
 
@@ -121,7 +127,7 @@ export class SystemMemberController {
       assignUser(system, user),
       await this.fields.findMany({
         where: {
-          system,
+          systemId: system.id,
         },
       })
     );

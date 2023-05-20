@@ -22,7 +22,7 @@ export class CacheRepository {
     namespace: CacheNamespace,
     key: string,
     value: T,
-    expiry: number | null = 300
+    expiry: number | null = 30000
   ): Promise<void> {
     await this.cache.set(CacheRepository.createKey(namespace, key), JSON.stringify(value), expiry);
   }
@@ -35,7 +35,7 @@ export class CacheRepository {
     namespace: CacheNamespace,
     key: string,
     hotData: () => Promise<T>,
-    expiry = 300,
+    expiry = 30000,
     storeHotData: (
       this: CacheRepository,
       data: T,

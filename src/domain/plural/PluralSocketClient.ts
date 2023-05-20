@@ -213,7 +213,7 @@ export class PluralSocketClient extends EventEmitter2 {
 
       return JSON.parse(data) as D;
     } catch {
-      console.log(`Got invalid response from socket`);
+      this.logger.log(`Got invalid response from socket`);
       return null;
     }
   }

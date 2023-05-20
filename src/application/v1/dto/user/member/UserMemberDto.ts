@@ -33,11 +33,11 @@ export class UserMemberDto {
       plural.content.color,
       plural.content.desc,
       Object.keys(plural.content.info)
-        .map((id, _, fields) => {
+        .map(id => {
           const field = member.system.fields.find(f => f.pluralId === id);
           if (!field) return null;
 
-          return UserValueFieldDto.from(field, fields[id]);
+          return UserValueFieldDto.from(field, plural.content.info[id]);
         })
         .filter(v => !!v),
       UserMemberDataDto.from(member),

@@ -69,7 +69,7 @@ export class CacheService {
       create: {
         ...data,
         systemId: system.id,
-        slug: createSlug(plural.content.uid),
+        slug: createSlug(plural.content.name),
         visibility: visible ? Visibility.Public : Visibility.Private,
       },
     });
@@ -119,25 +119,25 @@ export class CacheService {
   }
 
   async rebuildFor(user: User & { system?: System }): Promise<void> {
-    await this.clearSystem(user.system);
-
-    let pluralUser: PluralUserEntry | null = null;
-    try {
-      pluralUser = await this.plural.findUserForId(
-        'me',
-        user.pluralAccessToken,
-        user.role === UserRole.Admin && user.pluralOverride
-      );
-    } catch (error) {
-      this.logger.error(`Failed to get data for ${user.id}`, error);
+    if (user.system) {
+      await this.clearSystem(user.system);
     }
 
-    if (!pluralUser.content.isAsystem) {
+    let pluralUser: PluralUserEntry | null = null;
+    if (user.pluralAccessToken) {
+      try {
+        pluralUser = await this.plural.findUserForId('me', user.pluralAccessToken);
+      } catch (error) {
+        this.logger.error(`Failed to get data for ${user.id}`, error);
+      }
+    }
+
+    if (!pluralUser?.content?.isAsystem) {
       pluralUser = null;
     }
 
     if (!pluralUser) {
-      await this.system.delete({
+      await this.system.deleteMany({
         where: {
           userId: user.id,
         },

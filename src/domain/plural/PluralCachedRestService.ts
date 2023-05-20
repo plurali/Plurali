@@ -20,7 +20,7 @@ export class PluralCachedRestService extends PluralRestService {
         CacheNamespace.MemberList,
         `PluraliUser${system.user.id}_OwnerSID${system.pluralId}`,
         () => super.findMembers(system),
-        3000,
+        30000,
         async function (members, ns, k, e) {
           await this.store(ns, k, members, e);
           for (const member of members) {

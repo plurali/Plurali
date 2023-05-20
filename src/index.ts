@@ -5,11 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import compression from '@fastify/compress';
 import helmet from '@fastify/helmet';
-import { ConfigInterface, PluralConfig, ServerConfig } from '@app/Config';
+import { ConfigInterface, ServerConfig } from '@app/Config';
 import { ServerKernel } from '@app/Kernel';
 import { swagger } from '@app/misc/swagger';
 import { csp } from '@app/misc/csp';
-import { ChildProcess, fork } from 'child_process';
+// import { ChildProcess, fork } from 'child_process';
 import { overrideLoggerPrefix } from './domain/common';
 import { CacheService } from '@domain/cache/CacheService';
 
@@ -20,13 +20,14 @@ async function bootstrap() {
     logger,
   });
   const config = app.get<ConfigService<ConfigInterface>>(ConfigService);
+  const server = config.get<ServerConfig>('server');
 
   const isDev = config.get<boolean>('dev');
-  const plural = config.get<PluralConfig>('plural');
+  // const plural = config.get<PluralConfig>('plural');
 
   app.enableCors({
     credentials: true,
-    origin: config.get<ServerConfig>('server').cors.origin,
+    origin: server.cors.origin,
   });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
@@ -52,22 +53,22 @@ async function bootstrap() {
 
   await cacheService.rebuild();
 
-  const observerProcess: ChildProcess | null = plural.observer.fork
-    ? fork(require.resolve('./application/observer/entry'), {
-        env: process.env,
-        detached: !isDev,
-      })
-    : null;
+  // const observerProcess: ChildProcess | null = plural.observer.fork
+  //   ? fork(require.resolve('./application/observer/entry'), {
+  //       env: process.env,
+  //       detached: !isDev,
+  //     })
+  //   : null;
 
-  if (observerProcess) {
-    observerProcess.addListener('close', code => {
-      throw new Error(`Observer process exited with code ${code}`);
-    });
-    process.on('beforeExit', () => observerProcess?.kill());
-  }
+  // if (observerProcess) {
+  //   observerProcess.addListener('close', code => {
+  //     throw new Error(`Observer process exited with code ${code}`);
+  //   });
+  //   process.on('beforeExit', () => observerProcess?.kill());
+  // }
 
   app.enableShutdownHooks();
 
-  await app.listen(3000);
+  await app.listen(server as any);
 }
 bootstrap();

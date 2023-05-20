@@ -18,6 +18,7 @@ import { ApiV2Module } from './v2/ApiV2Module';
 import { PluralModule } from '@domain/plural/PluralModule';
 import { SecurityModule } from '@domain/security/SecurityModule';
 import { JwtModule } from '@nestjs/jwt';
+import { jwtConfig } from './misc/jwt';
 
 @Global()
 @Module({
@@ -76,15 +77,7 @@ import { JwtModule } from '@nestjs/jwt';
       inject: [ConfigService],
     }),
 
-    JwtModule.registerAsync({
-      useFactory: (config: ConfigService<Config>) => ({
-        secret: config.getOrThrow('jwt'),
-        global: true,
-        signOptions: {
-          expiresIn: '24h',
-        },
-      }),
-    }),
+    JwtModule.register(jwtConfig),
 
     SystemModule,
     UserModule,

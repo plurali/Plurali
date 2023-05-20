@@ -6,7 +6,7 @@ import { SystemRepository } from '@domain/system/SystemRepository';
 import { RequestWithUser } from '@app/v1/http/RequestWithUser';
 import { StatusException } from '@app/v1/exception/StatusException';
 import { StatusMap } from '@app/v1/dto/Status';
-import { UnauthorizedException } from '@app/v1/exception/UnauthorizedException';
+import { NotAuthenticatedException } from '@app/v1/exception/NotAuthenticatedException';
 
 @Injectable()
 export class SystemGuard extends AuthGuard {
@@ -35,6 +35,6 @@ export class SystemGuard extends AuthGuard {
       return true;
     }
 
-    throw new UnauthorizedException();
+    throw new NotAuthenticatedException();
   }
 }
