@@ -1,7 +1,7 @@
 <template>
   <!-- temporarily use the cloud hosted editor, because selfhost is beyond fucked up -->
   <UserContent :class="['relative mb-5', !editor && 'pb-20']">
-    <Editor :id="id" :api-key="API_KEY" :inline="true" :init="init" v-model="value" @init="onInit" />
+    <Editor :inline="true" :init="init" v-model="value" @init="onInit" />
     <div
       class="h-20 w-full bg-gray-100 rounded-2xl absolute inset-0 bg-opacity-50 flex justify-center items-center gap-1"
       v-if="!editor"
@@ -16,29 +16,27 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineComponent, ref, watch } from 'vue';
+import { PropType, defineComponent, ref } from 'vue';
 import Editor from '@tinymce/tinymce-vue';
 import Button from '../Button.vue';
 import type { EditorOptions, Editor as EditorType } from 'tinymce';
 import Spinner from '../Spinner.vue';
 import UserContent from '../global/UserContent.vue';
 
-const API_KEY = '210brdf09bky43uxbpshk31z7phreaxgz07muohww05k6sra';
-
 export default defineComponent({
   components: {
     Editor,
     Button,
     Spinner,
-    UserContent
-},
+    UserContent,
+  },
   props: {
     placeholder: {
       type: String,
       default: 'Start writing...',
     },
     initialValue: {
-      type: [String, null] as PropType<string|null>,
+      type: [String, null] as PropType<string | null>,
       required: true,
     },
     id: {
@@ -64,15 +62,15 @@ export default defineComponent({
       if (!editor.value) return;
 
       await editor.value.uploadImages();
-      emit('save', editor.value)
-    }
+      emit('save', editor.value);
+    };
 
     return {
-      API_KEY,
       value,
       initialValue,
       editor,
       init: {
+        id: props.id,
         placeholder: props.placeholder,
         plugins: [
           'advlist',
@@ -104,6 +102,7 @@ export default defineComponent({
         object_resizing: 'img',
         removed_menuitems: 'image',
         font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 18pt 24pt 30pt 36pt 48pt 60pt 72pt 96pt',
+        promotion: false,
         ...({
           autosave_ask_before_unload: false,
           autosave_prefix: '_plurali_{path}{query}-{id}',
@@ -117,3 +116,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+@import 'tinymce/skins/ui/oxide/content.css';
+@import 'tinymce/skins/ui/oxide/skin.css';
+@import 'tinymce/skins/content/default/content.css';
+
+body {
+  margin: 0 !important;
+}
+</style>

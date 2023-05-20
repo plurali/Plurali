@@ -53,7 +53,7 @@
       />
 
       <Editor
-        :id="`${data.member.id}-customDescription`"
+        :id="`${data.member.id}_customDescription`"
         :initial-value="data.member.data.customDescription"
         :placeholder="`Add custom description for ${data.member.name}...`"
         @save="updateCustomDescription"

@@ -45,7 +45,7 @@
 
   <Editor
     v-if="isDashboard"
-    :id="`${system.id}-customDescription`"
+    :id="`${system.id}_customDescription`"
     :initial-value="system.data.customDescription"
     :placeholder="`Add custom description for ${system.username}...`"
     @save="updateCustomDescription"
