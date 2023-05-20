@@ -1,5 +1,6 @@
+import { BackgroundType } from '@domain/common';
 import { HasBackground } from '@domain/common/types';
-import { Member, Visibility, BackgroundType } from '@prisma/client';
+import { Member, Visibility } from '@prisma/client';
 
 /**
  * @deprecated
@@ -18,7 +19,7 @@ export class UserMemberDataDto implements HasBackground {
   public static from(systemMember: Member): UserMemberDataDto {
     return new this(
       systemMember.slug,
-      BackgroundType[systemMember.backgroundType],
+      systemMember.backgroundType as BackgroundType,
       systemMember.backgroundColor,
       systemMember.backgroundImage,
       systemMember.description,

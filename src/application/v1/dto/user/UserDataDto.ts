@@ -1,5 +1,6 @@
+import { BackgroundType } from '@domain/common';
 import { HasBackground } from '@domain/common/types';
-import { System, Visibility, BackgroundType } from '@prisma/client';
+import { System, Visibility } from '@prisma/client';
 
 /**
  * @deprecated v2 - UserData->System
@@ -19,7 +20,7 @@ export class UserDataDto implements HasBackground {
     return new this(
       system.slug,
       system.description,
-      BackgroundType[system.backgroundType],
+      system.backgroundType as BackgroundType,
       system.backgroundColor,
       system.backgroundImage,
       system.assetsUpdatedAt,

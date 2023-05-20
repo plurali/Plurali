@@ -23,7 +23,7 @@
                 />
                 <a
                   v-if="isDashboard && data.member.data.visible"
-                  :href="`/${data.system.data.slug}/${data.member.data.slug}`"
+                  :href="`/${data.system.data.slug}/m/${data.member.data.slug}`"
                   class="text-sm text-gray-700 font-normal"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -40,10 +40,24 @@
           </div>
         </div>
 
-        <div>
-          <BackgroundChooser v-model:entity="data.member" type="member"/>
+        <div class="flex items-center gap-2">
+          <BackgroundChooser v-model:entity="data.member" type="member" />
+          <ButtonLink
+            :to="{ name: 'dashboard:member:page:create', params: $route.params }"
+            class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
+          >
+            <DocumentIcon class="w-8 h-8 -ml-1" />
+            <span>New Page</span>
+          </ButtonLink>
         </div>
       </div>
+
+      <Editor
+        :id="`${data.member.id}_customDescription`"
+        :initial-value="data.member.data.customDescription"
+        :placeholder="`Add custom description for ${data.member.name}...`"
+        @save="updateCustomDescription"
+      />
 
       <CustomFields
         :fields="data.member.fields"
@@ -52,12 +66,9 @@
         title="System-wide Custom Fields"
       />
 
-      <Editor
-        :id="`${data.member.id}_customDescription`"
-        :initial-value="data.member.data.customDescription"
-        :placeholder="`Add custom description for ${data.member.name}...`"
-        @save="updateCustomDescription"
-      />
+      <Fetchable :result="data.pages" :retry="fetchAll">
+        <PageFields v-if="data.pages" :pages="data.pages" :modifiable="true" />
+      </Fetchable>
     </div>
   </Fetchable>
 </template>
@@ -71,6 +82,7 @@ import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { getRouteParam } from '../../utils';
 import { wrapRequest } from '../../api';
 import { getMember, getSystem, updateMember } from '../../api/system';
+import { getMemberPages } from '../../api/page';
 import { useGoBack } from '../../composables/goBack';
 import { withBackground } from '../../composables/background';
 import PageTitle from '../../components/Title.vue';
@@ -84,6 +96,10 @@ import ColorCircle from '../../components/global/color/ColorCircle.vue';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
 import Editor from '../../components/dashboard/Editor.vue';
 import BackgroundChooser from '../../components/global/BackgroundChooser.vue';
+import type { PageDto } from '@app/v2/dto/page/PageDto';
+import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
+import PageFields from '../../components/global/page/PageFields.vue';
+import { DocumentIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
   components: {
@@ -97,13 +113,16 @@ export default defineComponent({
     Button,
     Color,
     Editor,
-    BackgroundChooser
-},
+    BackgroundChooser,
+    PageFields,
+    DocumentIcon,
+  },
   setup() {
     // TODO
     const data = reactive({
       system: false as SystemDto | null | false,
       member: false as UserMemberDto | null | false,
+      pages: false as PageDto[] | null | false,
     });
 
     const route = useRoute();
@@ -113,15 +132,21 @@ export default defineComponent({
     useGoBack('/dashboard/system');
 
     const fetchAll = async () => {
-      if (data.system === null || data.member === null) return;
+      if (data.system === null || data.member === null || data.pages === null) return;
       data.system = data.member = null;
 
       let sys = await wrapRequest(getSystem);
       data.system = sys ? sys.system : sys;
 
-      if (sys) {
+      if (data.system) {
         let mem = await wrapRequest(() => getMember(getRouteParam(route.params.id)));
         data.member = mem ? mem.member : mem;
+
+        if (data.member) {
+          const id = data.member.id; // stupid ts
+          const res = await wrapRequest<PagesResponse>(() => getMemberPages(id));
+          data.pages = res ? res.pages : res;
+        }
       }
     };
 

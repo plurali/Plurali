@@ -3,14 +3,14 @@
     <div v-if="member">
       <MemberSummary :member="member" />
 
-      <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
-
       <UserContent class="mb-5 p-6" v-if="member.data.customDescription">
         <Sanitized :value="member.data.customDescription" />
       </UserContent>
 
+      <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
+      
       <Fetchable :result="pages" :retry="fetchPages">
-        <PageFields :pages="pages" :modifiable="false"/>
+        <PageFields v-if="pages" :pages="pages" :modifiable="false"/>
       </Fetchable>
     </div>
   </Fetchable>

@@ -36,12 +36,17 @@
       </div>
     </div>
 
-    <div v-if="isDashboard">
+    <div v-if="isDashboard" class="flex items-center gap-2">
       <BackgroundChooser v-model:entity="system" type="system" />
+      <ButtonLink
+        :to="{ name: 'dashboard:system:page:create', params: $route.params }"
+        class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
+      >
+        <DocumentIcon class="w-8 h-8 -ml-1" />
+        <span>New Page</span>
+      </ButtonLink>
     </div>
   </div>
-
-  <CustomFields :fields="system.fields" :modifiable="isDashboard" />
 
   <Editor
     v-if="isDashboard"
@@ -53,6 +58,8 @@
   <UserContent class="mb-5 p-6" v-else-if="system.data.customDescription">
     <Sanitized :value="system.data.customDescription" />
   </UserContent>
+
+  <CustomFields :fields="system.fields" :modifiable="isDashboard" />
 </template>
 <script lang="ts">
 import PageTitle from '../../Title.vue';
@@ -60,7 +67,7 @@ import Color from '../color/ColorCircle.vue';
 import Subtitle from '../../Subtitle.vue';
 import ColorCircle from '../color/ColorCircle.vue';
 import { computed, defineComponent, PropType, ref } from 'vue';
-import type {SystemDto} from "@app/v1/dto/user/system/SystemDto";
+import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 import { useRoute } from 'vue-router';
 import VisibilityTag from '../visibility/VisibilityTag.vue';
 import { wrapRequest } from '../../../api';
@@ -71,6 +78,9 @@ import UserContent from '../UserContent.vue';
 import Sanitized from '../Sanitized.vue';
 import Editor from '../../dashboard/Editor.vue';
 import BackgroundChooser from '../BackgroundChooser.vue';
+import Fetchable from '../Fetchable.vue';
+import ButtonLink from '../../ButtonLink.vue';
+import { DocumentIcon } from '@heroicons/vue/24/outline';
 
 export default defineComponent({
   components: {
@@ -84,7 +94,10 @@ export default defineComponent({
     UserContent,
     Sanitized,
     BackgroundChooser,
-  },
+    Fetchable,
+    ButtonLink,
+    DocumentIcon
+},
   props: {
     entity: {
       type: Object as PropType<SystemDto>,

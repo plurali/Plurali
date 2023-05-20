@@ -1,10 +1,12 @@
 <template>
   <Fetchable :retry="fetchSystem" :result="system">
     <SystemSummary v-if="system" v-model:entity="system" />
-    <Members />
+
     <Fetchable :result="pages" :retry="fetchPages">
-      <PageFields :pages="pages" :modifiable="false" />
+      <PageFields v-if="pages" :pages="pages" :modifiable="false" />
     </Fetchable>
+
+    <Members />
   </Fetchable>
 </template>
 
@@ -26,7 +28,7 @@ import SystemSummary from '../components/global/system/SystemSummary.vue';
 import PageFields from '../components/global/page/PageFields.vue';
 import { getRouteParam } from '../utils';
 import { withBackground } from '../composables/background';
-import { getSystem, getSystemPages, } from '../api/public';
+import { getSystem, getSystemPages } from '../api/public';
 import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import type { PageDto } from '@app/v2/dto/page/PageDto';
 

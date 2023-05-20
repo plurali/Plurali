@@ -3,6 +3,10 @@
     <div v-if="system">
       <SystemSummary v-model:entity="system" />
 
+      <Fetchable :result="pages" :retry="fetchPages">
+        <PageFields v-if="pages" :pages="pages" :modifiable="true" />
+      </Fetchable>
+
       <Members />
     </div>
   </Fetchable>
@@ -15,6 +19,7 @@ import Subtitle from '../../components/Subtitle.vue';
 import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 import { wrapRequest } from '../../api';
 import { getSystem } from '../../api/system';
+import { getSystemPages } from '../../api/page';
 import ColorCircle from '../../components/global/color/ColorCircle.vue';
 import CustomFields from '../../components/global/fields/CustomFields.vue';
 import Members from '../../components/dashboard/members/Members.vue';
@@ -23,6 +28,9 @@ import { useGoBack } from '../../composables/goBack';
 import Color from '../../components/global/color/ColorCircle.vue';
 import SystemSummary from '../../components/global/system/SystemSummary.vue';
 import { withBackground } from '../../composables/background';
+import type { PageDto } from '@app/v2/dto/page/PageDto';
+import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
+import PageFields from '../../components/global/page/PageFields.vue';
 
 export default defineComponent({
   components: {
@@ -34,9 +42,11 @@ export default defineComponent({
     Title,
     Subtitle,
     ColorCircle,
-  },
+    PageFields
+},
   setup() {
     const system = ref<SystemDto | null | false>(false);
+    const pages = ref<PageDto[] | null | false>(false);
 
     useGoBack('/dashboard');
 
@@ -46,6 +56,18 @@ export default defineComponent({
 
       const res = await wrapRequest(getSystem);
       system.value = res ? res.system : res;
+
+      if (system.value) {
+        fetchPages();
+      }
+    };
+
+    const fetchPages = async () => {
+      if (pages.value === null) return;
+      pages.value = null;
+
+      const res = await wrapRequest<PagesResponse>(() => getSystemPages());
+      pages.value = res ? res.pages : res;
     };
 
     withBackground(system);
@@ -54,6 +76,8 @@ export default defineComponent({
 
     return {
       fetchSystem,
+      fetchPages,
+      pages,
       system,
     };
   },

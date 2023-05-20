@@ -1,4 +1,5 @@
-import { User, System, Member, Field, BackgroundType } from '@prisma/client';
+import { User, System, Member, Field } from '@prisma/client';
+import { BackgroundType } from '..';
 
 export interface SystemWithUser<U extends User = User> extends System {
   user: U;
