@@ -43,7 +43,8 @@ export default defineComponent({
     useGoBack(null)
 
     const logout = async () => {
-      await wrapRequest(apiLogout)
+      //await wrapRequest(apiLogout)
+      localStorage.removeItem("_plurali_auth")
       await router.push('/auth/login')
     }
 

@@ -1,7 +1,7 @@
-import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
-import { flash, FlashType, nextRedirect, user } from './store'
-import { getUser } from './api/user'
-import { StatusMap, formatError } from './api'
+import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
+import { flash, FlashType, nextRedirect, user } from './store';
+import { getUser } from './api/user';
+import { StatusMap, formatError } from './api';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -91,55 +91,57 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
 export const isAuth = (route: string | RouteLocationNormalized) =>
-  (typeof route === 'string' ? route : route.path).startsWith('/auth')
+  (typeof route === 'string' ? route : route.path).startsWith('/auth');
 
 export const isDashboard = (route: string | { path: string }) =>
-  (typeof route === 'string' ? route : route.path).startsWith('/dashboard')
+  (typeof route === 'string' ? route : route.path).startsWith('/dashboard');
 
-export const isFront = (route: string | RouteLocationNormalized) => !isAuth(route) && !isDashboard(route)
+export const isFront = (route: string | RouteLocationNormalized) => !isAuth(route) && !isDashboard(route);
 
 router.beforeEach(async to => {
   nextRedirect();
 
   const promise = (async () => {
     try {
-      const data = (await getUser()).data
-      if (!data.success) throw new Error()
+      const data = (await getUser()).data;
+      if (!data.success) throw new Error();
 
-      user.value = data.data.user
-      if (isAuth(to)) return '/dashboard'
+      user.value = data.data.user;
+      if (isAuth(to)) return '/dashboard';
 
       if (isDashboard(to) && !user.value.pluralKey) {
-        flash('You must setup your Simply Plural API key!', FlashType.Danger)
+        flash('You must setup your Simply Plural API key!', FlashType.Danger);
         if (to.path !== '/dashboard/user') {
-          return '/dashboard/user'
+          return '/dashboard/user';
         }
       }
     } catch (error) {
-      user.value = null
-      const status = formatError(error)
+      user.value = null;
+      const status = formatError(error);
       if (status !== StatusMap.NotAuthenticated) {
-        flash(status, FlashType.Danger, true)
+        flash(status, FlashType.Danger, true);
       } else if (isDashboard(to)) {
-        flash('You need to be logged in to access the dashboard!', FlashType.Warning, true, false)
+        flash('You need to be logged in to access the dashboard!', FlashType.Warning, true, false);
       }
-      return '/auth/login'
+      if (!isAuth(to)) {
+        return '/auth/login';
+      }
     }
-  })()
+  })();
 
   if (isFront(to)) {
-    return
+    return;
   }
 
-  return await promise
-})
+  return await promise;
+});
 
-export { router }
+export { router };

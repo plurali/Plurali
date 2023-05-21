@@ -107,7 +107,6 @@ export default defineComponent({
 
       const ok = await wrapRequest(() => login(form))
       loading.value = false
-
       if (ok) {
         setAuth(ok.auth);
         await router.push('/dashboard')
