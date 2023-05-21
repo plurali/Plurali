@@ -1,18 +1,17 @@
 import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
-import { System, Member, UserRole, Visibility, User } from '@prisma/client';
+import { System, Member, Visibility, User } from '@prisma/client';
 import { CacheRepository } from '@infra/cache/CacheRepository';
 import { CacheNamespace } from '@infra/cache/utils';
 import { createSlug } from '@domain/common';
 import { UserRepository } from '@domain/user/UserRepository';
 import { PluralRestService } from '@domain/plural/PluralRestService';
-import { SystemWithUser, UserWithSystem } from '@domain/common/types';
+import { SystemWithUser } from '@domain/common/types';
 import { SystemRepository } from '@domain/system/SystemRepository';
 import { PluralUserEntry } from '@domain/plural/types/rest/user';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { PluralVisibility, parseFieldType, parseVisibility } from '@domain/plural/utils';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { PrismaTx } from '@infra/prisma/types';
 
 @Injectable()
 export class CacheService {
@@ -31,29 +30,25 @@ export class CacheService {
   async rebuildMembers(system: SystemWithUser) {
     const pluralMembers = await this.plural.findMembers(system);
 
-    return await this.member.prisma.$transaction(async client => {
-      // Delete all members that are not listed by SP anymore
-      await client.member.deleteMany({
-        where: {
-          pluralId: {
-            notIn: pluralMembers.map(member => member.id),
-          },
+    // Delete all members that are not listed by SP anymore
+    await this.member.deleteMany({
+      where: {
+        pluralId: {
+          notIn: pluralMembers.map(member => member.id),
         },
-      });
-
-      const members = [];
-
-      for (const plural of pluralMembers) {
-        members.push(await this.rebuildMember(system, plural, client));
-      }
-
-      return members;
+      },
     });
+
+    const members = [];
+
+    for (const plural of pluralMembers) {
+      members.push(await this.rebuildMember(system, plural));
+    }
+
+    return members;
   }
 
-  async rebuildMember(system: System, plural: PluralMemberEntry, prisma?: PrismaTx) {
-    prisma = prisma ?? this.member.prisma;
-
+  async rebuildMember(system: System, plural: PluralMemberEntry) {
     const visible = parseVisibility(plural.content) === PluralVisibility.Public;
 
     const data = {
@@ -61,7 +56,7 @@ export class CacheService {
       pluralParentId: plural.content.uid,
     };
 
-    return await prisma.member.upsert({
+    return await this.member.upsert({
       where: {
         pluralId: plural.id,
       },
@@ -76,46 +71,44 @@ export class CacheService {
   }
 
   async rebuildFields(system: System, plural: PluralUserEntry) {
-    return await this.field.prisma.$transaction(async client => {
-      // Delete all fields that are not listed by SP anymore
-      await client.field.deleteMany({
-        where: {
-          pluralId: {
-            notIn: Object.keys(plural.content.fields),
-          },
+    // Delete all fields that are not listed by SP anymore
+    await client.field.deleteMany({
+      where: {
+        pluralId: {
+          notIn: Object.keys(plural.content.fields),
         },
-      });
-
-      const fields = [];
-
-      for (const pluralId in plural.content.fields) {
-        const field = plural.content.fields[pluralId];
-        const visible = parseVisibility(field) === PluralVisibility.Public;
-
-        const data = {
-          name: field.name,
-          type: parseFieldType(field),
-          pluralId: pluralId,
-          pluralParentId: plural.id,
-          systemId: system.id,
-        };
-
-        fields.push(
-          await client.field.upsert({
-            where: {
-              pluralId,
-            },
-            create: {
-              ...data,
-              visibility: visible ? Visibility.Public : Visibility.Private,
-            },
-            update: data,
-          })
-        );
-      }
-
-      return fields;
+      },
     });
+
+    const fields = [];
+
+    for (const pluralId in plural.content.fields) {
+      const field = plural.content.fields[pluralId];
+      const visible = parseVisibility(field) === PluralVisibility.Public;
+
+      const data = {
+        name: field.name,
+        type: parseFieldType(field),
+        pluralId: pluralId,
+        pluralParentId: plural.id,
+        systemId: system.id,
+      };
+
+      fields.push(
+        await client.field.upsert({
+          where: {
+            pluralId,
+          },
+          create: {
+            ...data,
+            visibility: visible ? Visibility.Public : Visibility.Private,
+          },
+          update: data,
+        })
+      );
+    }
+
+    return fields;
   }
 
   async rebuildFor(user: User & { system?: System }): Promise<void> {
