@@ -21,6 +21,7 @@
     "dropzone": "^6.0.0-beta.2",
     "markdown-it": "^13.0.1",
     "sass": "^1.62.0",
+    "swagger-ui-dist": "^4.18.3",
     "tinymce": "^6.4.1",
     "topbar": "^2.0.1",
     "vite": "^4.3.1",

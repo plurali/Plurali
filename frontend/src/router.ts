@@ -15,6 +15,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('./pages/index.vue' as string),
       },
       {
+        name: 'swagger',
+        path: '/swagger',
+        component: () => import('./pages/swagger.vue' as string),
+      },
+      {
         name: 'auth:login',
         path: '/auth/login',
         component: () => import('./pages/auth/login.vue' as string),
