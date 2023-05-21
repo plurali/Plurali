@@ -11,6 +11,8 @@ export class SystemRepository extends PrismaRepository<'system'> {
   }
 
   public async findPublic(slug: string): Promise<SystemWithUser & { fields: Field[] }> {
+    if (!slug) return null;
+
     const data = await this.findFirst({
       where: {
         slug,

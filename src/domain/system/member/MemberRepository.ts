@@ -1,7 +1,7 @@
 import { MemberWithSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { PrismaRepository } from '@infra/prisma/PrismaRepository';
 import { Injectable } from '@nestjs/common';
-import { Member, Visibility } from '@prisma/client';
+import { Member, System, Visibility } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
@@ -10,17 +10,14 @@ export class MemberRepository extends PrismaRepository<'member'> {
     super('member', prisma);
   }
 
-  public async findPublic(
-    slug: string,
-    systemSlug: string
-  ): Promise<MemberWithSystem<SystemWithUser & SystemWithFields>> {
+  public async findPublic(slug: string, system: System): Promise<MemberWithSystem<SystemWithUser & SystemWithFields>> {
+    if (!slug || !system) return null;
+
     const data = await this.findFirst({
       where: {
         slug,
         visibility: Visibility.Public,
-        system: {
-          slug: systemSlug,
-        },
+        systemId: system.id,
       },
       include: {
         system: {
@@ -41,13 +38,13 @@ export class MemberRepository extends PrismaRepository<'member'> {
     return data;
   }
 
-  public findManyPublic(systemSlug: string): Promise<Member[]> {
-    return this.findMany({
+  public async findManyPublic(system: System): Promise<Member[]> {
+    if (!system) return [];
+
+    return await this.findMany({
       where: {
         visibility: Visibility.Public,
-        system: {
-          slug: systemSlug,
-        },
+        systemId: system.id,
       },
       include: {
         system: {

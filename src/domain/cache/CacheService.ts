@@ -221,6 +221,7 @@ export class CacheService {
 
   async rebuild(): Promise<void> {
     this.logger.log('Starting a cache rebuild job');
+    return;
     await Promise.all(
       (
         await this.user.findMany({

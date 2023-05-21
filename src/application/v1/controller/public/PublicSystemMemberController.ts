@@ -24,12 +24,12 @@ export class PublicSystemMemberController {
   @Get('/')
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  public async list(@Param('id') systemId: string): Promise<Ok<SystemMembersResponse>> {
+  public async list(@Param('systemId') systemId: string): Promise<Ok<SystemMembersResponse>> {
     // Query system once instead of multiple times for each member
     const system = await this.system.findPublic(systemId);
     if (!system) throw new ResourceNotFoundException();
 
-    const members = (await this.member.findManyPublic(systemId)).map(m => assignSystem(m, system));
+    const members = (await this.member.findManyPublic(system)).map(m => assignSystem(m, system));
     const plurals = await Promise.all(members.map(m => this.plural.findMember(m)));
 
     return Status.ok(
@@ -54,7 +54,10 @@ export class PublicSystemMemberController {
     @Param('systemId') systemId: string,
     @Param('memberId') memberId: string
   ): Promise<Ok<SystemMemberResponse>> {
-    const member = await this.member.findPublic(memberId, systemId);
+    const system = await this.system.findPublic(systemId);
+    if (!system) throw new ResourceNotFoundException();
+
+    const member = await this.member.findPublic(memberId, system);
 
     if (!member) {
       throw new ResourceNotFoundException();
