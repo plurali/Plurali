@@ -12,7 +12,7 @@
       <svg
         v-if="typeof bg !== 'string'"
         id="visual"
-        class="absolute w-screen min-h-screen h-full top-0 object-cover object-center -z-10 transition-all"
+        class="absolute w-screen h-screen h-full top-0 object-cover object-center -z-10 transition-all"
         viewBox="0 0 900 600"
         xmlns="http://www.w3.org/2000/svg"
         @load="onLoad"
@@ -125,14 +125,18 @@ import { isUrl, generateShades } from '../utils';
 export default defineComponent({
   setup() {
     const bg = computed(() => {
-      if (!background.value)
-        return ['#3b0764', '#4b1876', '#5b2788', '#6b369a', '#7c45ad', '#8d54c0', '#9e64d4', '#af74e8', '#c084fc'];
+      let val: string[] | string | null = background.value;
 
-      if (background.value && !isUrl(background.value)) {
-        return generateShades(background.value);
+      if (!val) {
+        val = ['#3b0764', '#4b1876', '#5b2788', '#6b369a', '#7c45ad', '#8d54c0', '#9e64d4', '#af74e8', '#c084fc'];
+      } else if (!isUrl(val)) {
+        val = generateShades(val);
       }
 
-      return background.value;
+      const bodyColor = Array.isArray(val) ? val[val.length - 1] : "#fff";
+      document.body.style.backgroundColor = `${bodyColor} !important`;
+
+      return val;
     });
 
     const imageLoaded = ref(false);

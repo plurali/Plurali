@@ -11,10 +11,10 @@ export const isUrl = (url: string): boolean => {
 
 const ShadeCount = 9
 
-export function generateShades(baseHex: string) {
+export function generateShades(baseHex: string, shadeCount = ShadeCount) {
   const shades = []
-  for (let i = 0; i < ShadeCount; i++) {
-    const shadeHex = generateShade(baseHex, i, ShadeCount)
+  for (let i = 0; i < shadeCount; i++) {
+    const shadeHex = generateShade(baseHex, i, shadeCount)
     shades.push(shadeHex)
   }
   return shades
