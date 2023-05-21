@@ -21,7 +21,7 @@
     "importsNotUsedAsValues": "remove",
     "paths": {
       "@domain/*": ["./src/domain/*"],
-      "@infra/*": ["src/infrastructure/*"],
+      "@infra/*": ["./src/infrastructure/*"],
       "@app/*": ["./src/application/*"],
       "@observer/*": ["./src/observer/*"],
     }

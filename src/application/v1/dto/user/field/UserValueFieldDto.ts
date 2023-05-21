@@ -13,6 +13,9 @@ export class UserValueFieldDto {
   public name: string;
 
   @ApiProperty()
+  public value: string;
+
+  @ApiProperty()
   public position: number;
 
   @ApiProperty()
@@ -35,6 +38,7 @@ export class UserValueFieldDto {
   ) {
     this.fieldId = fieldId;
     this.name = name;
+    this.value = value;
     this.position = position;
     this.type = type;
     this.pluralVisibility = pluralVisibility;
