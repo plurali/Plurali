@@ -1,4 +1,4 @@
-plurali.icu:443 {
+dev.plurali.icu:443 {
 	encode {
 		gzip 6
 		zstd
@@ -16,7 +16,7 @@ plurali.icu:443 {
 
 	handle_path /api/* {
 		reverse_proxy {
-			to localhost:3000
+			to localhost:3300
 			transport http {
 				read_buffer 4096
 			}
@@ -27,7 +27,7 @@ plurali.icu:443 {
     }
 
 	handle {
-		root * /home/plurali/frontend/dist
+		root * /home/plurali2/frontend/dist
 		templates {path} {
 			mime text/html
 		}
@@ -36,6 +36,6 @@ plurali.icu:443 {
 	}
 }
 
-www.plurali.icu:443, www.plurali.icu:80, plurali.icu:80 {
-	redir https://plurali.icu{uri} 301
+dev.plurali.icu:80 {
+	redir https://dev.plurali.icu{uri} 301
 }
