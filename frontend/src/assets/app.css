@@ -5,3 +5,7 @@
 #plurali > #visual > path {
   @apply transition;
 }
+
+.min-w-screen {
+  min-width: 100vw;
+}
