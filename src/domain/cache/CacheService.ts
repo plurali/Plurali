@@ -72,7 +72,7 @@ export class CacheService {
 
   async rebuildFields(system: System, plural: PluralUserEntry) {
     // Delete all fields that are not listed by SP anymore
-    await client.field.deleteMany({
+    await this.field.deleteMany({
       where: {
         pluralId: {
           notIn: Object.keys(plural.content.fields),
@@ -95,7 +95,7 @@ export class CacheService {
       };
 
       fields.push(
-        await client.field.upsert({
+        await this.field.upsert({
           where: {
             pluralId,
           },

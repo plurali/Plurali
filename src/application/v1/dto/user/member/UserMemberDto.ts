@@ -77,7 +77,7 @@ export class UserMemberDto {
       new Date(plural.content.lastOperationTime),
       plural.content.color,
       plural.content.desc,
-      Object.keys(plural.content.info)
+      Object.keys(plural.content.info ?? {})
         .map(id => {
           const field = member.system.fields.find(f => f.pluralId === id);
           if (!field) return null;
