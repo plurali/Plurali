@@ -36,6 +36,7 @@ export class CacheService {
         pluralId: {
           notIn: pluralMembers.map(member => member.id),
         },
+        systemId: system.id,
       },
     });
 
@@ -51,23 +52,26 @@ export class CacheService {
   async rebuildMember(system: System, plural: PluralMemberEntry) {
     const visible = parseVisibility(plural.content) === PluralVisibility.Public;
 
-    const data = {
-      pluralId: plural.id,
-      pluralParentId: plural.content.uid,
-    };
-
-    return await this.member.upsert({
+    let member = await this.member.findFirst({
       where: {
         pluralId: plural.id,
-      },
-      update: data,
-      create: {
-        ...data,
         systemId: system.id,
-        slug: createSlug(plural.content.name),
-        visibility: visible ? Visibility.Public : Visibility.Private,
       },
     });
+
+    if (!member) {
+      member = await this.member.create({
+        data: {
+          pluralId: plural.id,
+          pluralParentId: system.pluralId,
+          systemId: system.id,
+          slug: createSlug(plural.content.name),
+          visibility: visible ? Visibility.Public : Visibility.Private,
+        },
+      });
+    }
+
+    return member;
   }
 
   async rebuildFields(system: System, plural: PluralUserEntry) {
@@ -77,6 +81,7 @@ export class CacheService {
         pluralId: {
           notIn: Object.keys(plural.content.fields),
         },
+        systemId: system.id,
       },
     });
 
@@ -84,38 +89,45 @@ export class CacheService {
 
     for (const pluralId in plural.content.fields) {
       const field = plural.content.fields[pluralId];
-      const visible = parseVisibility(field) === PluralVisibility.Public;
 
       const data = {
         name: field.name,
         type: parseFieldType(field),
-        pluralId: pluralId,
-        pluralParentId: plural.id,
-        systemId: system.id,
       };
 
-      fields.push(
-        await this.field.upsert({
-          where: {
-            pluralId,
-          },
-          create: {
+      let dbField = await this.field.findFirst({
+        where: {
+          systemId: system.id,
+          pluralId,
+        },
+      });
+
+      if (!dbField) {
+        dbField = await this.field.create({
+          data: {
             ...data,
-            visibility: visible ? Visibility.Public : Visibility.Private,
+            pluralId,
+            pluralParentId: plural.id,
+            systemId: system.id,
+            visibility: parseVisibility(field) === PluralVisibility.Public ? Visibility.Public : Visibility.Private,
           },
-          update: data,
-        })
-      );
+        });
+      } else {
+        dbField = await this.field.update({
+          where: {
+            id: dbField.id,
+          },
+          data,
+        });
+      }
+
+      fields.push(dbField);
     }
 
     return fields;
   }
 
   async rebuildFor(user: User & { system?: System }): Promise<void> {
-    if (user.system) {
-      await this.clearSystem(user.system);
-    }
-
     let pluralUser: PluralUserEntry | null = null;
     if (user.pluralAccessToken) {
       try {
@@ -158,12 +170,28 @@ export class CacheService {
       });
     }
 
-    if (user.system && user.system.pluralId !== pluralUser.id) {
-      await this.system.delete({
-        where: {
-          id: user.system.id,
-        },
-      });
+    if (user.system) {
+      await this.clearSystem(user.system);
+
+      if (user.system.pluralId !== pluralUser.id) {
+        await this.system.delete({
+          where: {
+            id: user.system.id,
+          },
+        });
+
+        await this.member.deleteMany({
+          where: {
+            systemId: user.system.id,
+          },
+        });
+
+        await this.field.deleteMany({
+          where: {
+            systemId: user.system.id,
+          },
+        });
+      }
     }
 
     user = await this.user.update({
