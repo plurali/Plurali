@@ -134,7 +134,7 @@ export default defineComponent({
       }
 
       const bodyColor = Array.isArray(val) ? val[val.length - 1] : "#fff";
-      document.body.style.backgroundColor = `${bodyColor} !important`;
+      document.body.style.backgroundColor = bodyColor;
 
       return val;
     });
