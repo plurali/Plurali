@@ -2,8 +2,9 @@ import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
+import { error, ok } from '@app/misc/swagger';
 import { OkResponse } from '@app/v1/dto/OkResponse';
-import { Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
@@ -12,17 +13,25 @@ import { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import { PageRepository } from '@domain/page/PageRepository';
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Page, Prisma, System, User, Visibility } from '@prisma/client';
 
 @Controller({
   path: '/system/page',
   version: '2',
 })
+@ApiTags('SystemPage')
+@ApiSecurity('bearer')
+@ApiExtraModels(PageResponse, PagesResponse, OkResponse)
 export class SystemPageController {
   constructor(private readonly pages: PageRepository) {}
 
   @UseGuards(SystemGuard)
   @Get('/')
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async list(@CurrentSystem() system: System): Promise<Ok<PagesResponse>> {
     const pages = await this.pages.findMany({
       where: {
@@ -36,6 +45,9 @@ export class SystemPageController {
 
   @UseGuards(SystemGuard)
   @Get('/:id')
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
@@ -46,6 +58,10 @@ export class SystemPageController {
 
   @UseGuards(SystemGuard)
   @Post('/:id')
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
@@ -82,6 +98,10 @@ export class SystemPageController {
 
   @UseGuards(SystemGuard)
   @Delete('/:id')
+  @ApiResponse(ok(200, OkResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,

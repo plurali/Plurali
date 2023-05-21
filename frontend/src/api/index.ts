@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { clearFlashes, flash, FlashType } from '../store';
-import type { Status, SuccessData } from '@app/v1/dto/Status';
+import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
 export const $axios = axios.create({
@@ -43,3 +43,21 @@ export const wrapRequest = async <T extends object = SuccessData>(
     return false;
   }
 };
+
+// copied so it's values can be used
+export const StatusMap = {
+  InvalidRequest: 'Invalid request',
+  InvalidPluralKey: 'Invalid plural key',
+  NotAuthenticated: 'Not authenticated',
+  PluralKeyNotSpecified: 'Plural key not specified',
+  InvalidCredentials: 'Invalid credentials',
+  UsernameAlreadyUsed: 'Username is already used',
+  InvalidOverride: 'Invalid Override Plural ID',
+  ResourceNotFound: 'Resource not found',
+  Unauthorized: 'Unauthorized',
+  UnsupportedFile: 'Unsupported or invalid file given',
+  FileProcessingFailed: 'Failed to process the given file',
+  MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form',
+  CacheDemand:
+    'Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.',
+} as StatusMapType;

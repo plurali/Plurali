@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+
 export interface SuccessData extends Record<string, unknown> {
   warning?: string;
 }
@@ -28,10 +30,13 @@ export type Ok<D = SuccessData> = Status<D, undefined>;
 export type Error<E extends StatusMapKey = StatusMapKey> = Status<undefined, E>;
 
 export class Status<D = SuccessData, E extends StatusMapKey = StatusMapKey> {
+  @ApiProperty()
   public success: boolean;
 
+  @ApiProperty()
   public data: D;
 
+  @ApiProperty()
   public error: E;
 
   constructor(data?: D, error?: typeof data extends undefined ? E : undefined) {

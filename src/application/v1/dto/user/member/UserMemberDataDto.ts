@@ -1,20 +1,50 @@
 import { BackgroundType } from '@domain/common';
 import { HasBackground } from '@domain/common/types';
+import { ApiProperty } from '@nestjs/swagger';
 import { Member, Visibility } from '@prisma/client';
 
 /**
  * @deprecated
  */
 export class UserMemberDataDto implements HasBackground {
+  @ApiProperty()
+  public slug: string | null;
+
+  @ApiProperty()
+  public backgroundType: BackgroundType;
+
+  @ApiProperty()
+  public backgroundColor: string | null;
+
+  @ApiProperty()
+  public backgroundImage: string | null;
+
+  @ApiProperty()
+  public customDescription: string | null;
+
+  @ApiProperty()
+  public lastTimeAssetChanged: Date;
+
+  @ApiProperty()
+  public visible: boolean;
+
   constructor(
-    public slug: string | null,
-    public backgroundType: BackgroundType,
-    public backgroundColor: string | null,
-    public backgroundImage: string | null,
-    public customDescription: string | null,
-    public lastTimeAssetChanged: Date,
-    public visible: boolean
-  ) {}
+    slug: string | null,
+    backgroundType: BackgroundType,
+    backgroundColor: string | null,
+    backgroundImage: string | null,
+    customDescription: string | null,
+    lastTimeAssetChanged: Date,
+    visible: boolean
+  ) {
+    this.slug = slug;
+    this.backgroundType = backgroundType;
+    this.backgroundColor = backgroundColor;
+    this.backgroundImage = backgroundImage;
+    this.customDescription = customDescription;
+    this.lastTimeAssetChanged = lastTimeAssetChanged;
+    this.visible = visible;
+  }
 
   public static from(systemMember: Member): UserMemberDataDto {
     return new this(

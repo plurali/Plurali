@@ -4,8 +4,8 @@ import type { Status } from '@app/v1/dto/Status';
 import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
 import type { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMembersResponse';
-import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
-import { PageResponse } from '@app/v2/dto/page/response/PageResponse';
+import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
+import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 
 export const getSystem = (systemId: string): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.request<Status<SystemResponse>>({

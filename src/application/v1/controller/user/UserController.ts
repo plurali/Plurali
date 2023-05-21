@@ -1,6 +1,6 @@
 import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { AuthGuard } from '@app/context/auth/AuthGuard';
-import { Error, Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserResponse } from '@app/v1/dto/user/response/UserResponse';
 import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { Prisma, User, UserRole } from '@prisma/client';
@@ -10,11 +10,16 @@ import { UserRepository } from '@domain/user/UserRepository';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { CacheService } from '@domain/cache/CacheService';
 import { UserDto } from '@app/v1/dto/user/UserDto';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/user',
   version: '1',
 })
+@ApiTags('User')
+@ApiSecurity('bearer')
+@ApiExtraModels(UserResponse)
 export class UserController {
   constructor(
     @Inject('PluralResetServiceBase') private readonly rest: PluralRestService,
@@ -24,12 +29,16 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('/')
+  @ApiResponse(ok(200, UserResponse))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async me(@CurrentUser() user: User): Promise<Ok<UserResponse>> {
     return Status.ok(new UserResponse(UserDto.from(user)));
   }
 
   @UseGuards(AuthGuard)
   @Post('/')
+  @ApiResponse(ok(200, UserResponse))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<Ok<UserResponse>> {
     const update: Prisma.UserUpdateInput = {};
     let rebuild = false;

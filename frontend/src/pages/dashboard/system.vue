@@ -29,7 +29,6 @@ import Color from '../../components/global/color/ColorCircle.vue';
 import SystemSummary from '../../components/global/system/SystemSummary.vue';
 import { withBackground } from '../../composables/background';
 import type { PageDto } from '@app/v2/dto/page/PageDto';
-import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import PageFields from '../../components/global/page/PageFields.vue';
 
 export default defineComponent({
@@ -66,7 +65,7 @@ export default defineComponent({
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest<PagesResponse>(() => getSystemPages());
+      const res = await wrapRequest(() => getSystemPages());
       pages.value = res ? res.pages : res;
     };
 

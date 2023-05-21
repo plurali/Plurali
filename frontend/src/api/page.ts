@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { $axios } from '.';
-import { Status } from '@app/v1/dto/Status';
+import type { Status } from '@app/v1/dto/Status';
 import type { OkResponse } from '@app/v1/dto/OkResponse';
 import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
@@ -21,7 +21,7 @@ export const getSystemPage = (pageId: string): Promise<AxiosResponse<Status<Page
 
 export const updateSystemPage = (
   pageId: string,
-  data: UpdatePageRequest
+  data: Partial<UpdatePageRequest>
 ): Promise<AxiosResponse<Status<PageResponse>>> =>
   $axios.request<Status<PageResponse>>({
     url: `/v2/system/page/${pageId}`,
@@ -57,7 +57,7 @@ export const getMemberPage = (memberId: string, pageId: string): Promise<AxiosRe
 export const updateMemberPage = (
   memberId: string,
   pageId: string,
-  data: UpdatePageRequest
+  data: Partial<UpdatePageRequest>
 ): Promise<AxiosResponse<Status<PageResponse>>> =>
   $axios.request<Status<PageResponse>>({
     url: `/v2/member/${memberId}/page/${pageId}`,

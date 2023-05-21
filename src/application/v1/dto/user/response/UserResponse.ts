@@ -1,5 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from '../UserDto';
 
 export class UserResponse {
-  constructor(public readonly user: UserDto) {}
+  @ApiProperty()
+  public user: UserDto;
+
+  constructor(user: UserDto) {
+    this.user = user;
+  }
 }

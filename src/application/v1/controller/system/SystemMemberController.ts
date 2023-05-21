@@ -23,11 +23,16 @@ import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileExcep
 import { StoragePrefix } from '@infra/storage/StoragePrefix';
 import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
 import * as mime from 'mime-types';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/system/members',
   version: '1',
 })
+@ApiTags('SystemMember')
+@ApiSecurity('bearer')
+@ApiExtraModels(SystemMemberResponse, SystemMembersResponse)
 export class SystemMemberController {
   constructor(
     private readonly members: MemberRepository,
@@ -38,6 +43,9 @@ export class SystemMemberController {
 
   @UseGuards(SystemGuard)
   @Get('/')
+  @ApiResponse(ok(200, SystemMembersResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   public async list(@CurrentSystem() system: System, @CurrentUser() user: User): Promise<Ok<SystemMembersResponse>> {
     const members = await this.members.findMany({
       where: {
@@ -62,6 +70,9 @@ export class SystemMemberController {
 
   @UseGuards(SystemGuard)
   @Get('/:id')
+  @ApiResponse(ok(200, SystemMemberResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   public async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
@@ -76,6 +87,9 @@ export class SystemMemberController {
 
   @UseGuards(SystemGuard)
   @Post('/:id')
+  @ApiResponse(ok(200, SystemMemberResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   public async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
@@ -114,6 +128,9 @@ export class SystemMemberController {
   @Post('/:id/background')
   @UseGuards(SystemGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @ApiResponse(ok(200, SystemMemberResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,

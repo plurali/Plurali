@@ -34,7 +34,6 @@
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PageResponse } from '@app/v1/dto/user/field/UserValueFieldDto';
 import { wrapRequest } from '../../../api/';
 import { updateSystemPage, updateMemberPage } from '../../../api/page';
 import ColorCircle from '../color/ColorCircle.vue';
@@ -75,11 +74,11 @@ export default defineComponent({
       if (!modifiable || loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<PageResponse>(() => {
+      const res = await wrapRequest(() => {
         if (!page.value) return null;
 
         return isMember.value
-          ? updateMemberPage(memberId.value, page.value.id, page.value.visible)
+          ? updateMemberPage(memberId.value ?? '', page.value.id, { visible: page.value.visible })
           : updateSystemPage(page.value.id, { visible: page.value.visible });
       });
 

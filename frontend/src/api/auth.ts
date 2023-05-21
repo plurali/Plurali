@@ -1,19 +1,19 @@
 import { AxiosResponse } from 'axios';
 import { $axios } from '.';
 import type { Status } from '@app/v1/dto/Status';
-import type { LoginResponse } from '@app/v1/dto/auth/response/LoginResponse';
-import type { AuthRequestBody } from '@app/v1/dto/auth/request/AuthRequestBody';
+import type { AuthResponse } from '@app/v1/dto/auth/response/AuthResponse';
+import type { AuthRequest } from '@app/v1/dto/auth/request/AuthRequest';
 import type { OkResponse } from '@app/v1/dto/OkResponse';
 
-export const register = (data: AuthRequestBody): Promise<AxiosResponse<Status<LoginResponse>>> =>
-  $axios.request<Status<LoginResponse>>({
+export const register = (data: AuthRequest): Promise<AxiosResponse<Status<AuthResponse>>> =>
+  $axios.request<Status<AuthResponse>>({
     url: '/v1/auth/register',
     method: 'PUT',
     data,
   });
 
-export const login = (data: AuthRequestBody): Promise<AxiosResponse<Status<LoginResponse>>> =>
-  $axios.request<Status<LoginResponse>>({
+export const login = (data: AuthRequest): Promise<AxiosResponse<Status<AuthResponse>>> =>
+  $axios.request<Status<AuthResponse>>({
     url: '/v1/auth/login',
     method: 'POST',
     data,

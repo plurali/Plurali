@@ -1,7 +1,8 @@
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Ok, Status } from '@app/v1/dto/Status';
+import { error, ok } from '@app/misc/swagger';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import { UpdateSystemFieldRequest } from '@app/v1/dto/user/system/request/UpdateSystemFieldRequest';
 import { SystemFieldResponse } from '@app/v1/dto/user/system/response/SystemFieldResponse';
@@ -9,17 +10,24 @@ import { SystemFieldsResponse } from '@app/v1/dto/user/system/response/SystemFie
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Field, Prisma, System, Visibility } from '@prisma/client';
 
 @Controller({
   path: '/system/fields',
   version: '1',
 })
+@ApiTags('SystemField')
+@ApiSecurity('bearer')
+@ApiExtraModels(SystemFieldResponse, SystemFieldsResponse)
 export class SystemFieldController {
   constructor(private readonly fields: FieldRepository) {}
 
   @UseGuards(SystemGuard)
   @Get('/')
+  @ApiResponse(ok(200, SystemFieldsResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async list(@CurrentSystem() system: System): Promise<Ok<SystemFieldsResponse>> {
     const fields = await this.fields.findMany({
       where: {
@@ -32,6 +40,9 @@ export class SystemFieldController {
 
   @UseGuards(SystemGuard)
   @Post('/:fieldId')
+  @ApiResponse(ok(200, SystemFieldResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async update(
     @CurrentSystem() system: System,
     @Param('fieldId') id: string,

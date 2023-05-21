@@ -45,7 +45,7 @@
 <script lang="ts">
 import Color from '../color/ColorCircle.vue'
 import { computed, defineComponent, PropType, ref } from 'vue'
-import { Member } from '@plurali/common/src/system'
+import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto'
 import { useRoute } from 'vue-router'
 import { updateMember } from '../../../api/system'
 import { flash, FlashType } from '../../../store'
@@ -57,7 +57,7 @@ export default defineComponent({
   },
   props: {
     member: {
-      type: Object as PropType<Member>,
+      type: Object as PropType<UserMemberDto>,
       required: true,
     },
     modifiable: {
@@ -66,7 +66,7 @@ export default defineComponent({
     },
   },
   setup({ member: _member, modifiable }) {
-    const systemMember = ref<Member>(_member)
+    const systemMember = ref<UserMemberDto>(_member)
 
     const loading = ref(false)
 

@@ -55,7 +55,7 @@ import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 import type { Editor as EditorType } from 'tinymce';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
 import { TrashIcon } from '@heroicons/vue/24/outline';
-import { OkResponse } from '@app/v1/dto/OkResponse';
+import type { OkResponse } from '@app/v1/dto/OkResponse';
 
 export default defineComponent({
   components: {
@@ -112,7 +112,7 @@ export default defineComponent({
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<PageResponse>(() => {
+      const res = await wrapRequest(() => {
         if (!page.value) return null;
 
         const data = {
@@ -120,7 +120,7 @@ export default defineComponent({
         };
 
         return isMember.value
-          ? updateMemberPage(memberId.value, pageId.value, data)
+          ? updateMemberPage(memberId.value ?? '', pageId.value, data)
           : updateSystemPage(pageId.value, data);
       });
 
@@ -135,7 +135,7 @@ export default defineComponent({
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<PageResponse>(() => {
+      const res = await wrapRequest(() => {
         if (!page.value) return null;
 
         editor.readonly = true;
@@ -148,7 +148,7 @@ export default defineComponent({
         };
 
         return isMember.value
-          ? updateMemberPage(memberId.value, pageId.value, data)
+          ? updateMemberPage(memberId.value ?? '', pageId.value, data)
           : updateSystemPage(pageId.value, data);
       });
 

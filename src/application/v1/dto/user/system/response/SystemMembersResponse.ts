@@ -1,5 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserMemberDto } from '../../member/UserMemberDto';
 
 export class SystemMembersResponse {
-  constructor(public readonly members: UserMemberDto[]) {}
+  @ApiProperty({ type: [UserMemberDto] })
+  public members: UserMemberDto[];
+
+  constructor(members: UserMemberDto[]) {
+    this.members = members;
+  }
 }

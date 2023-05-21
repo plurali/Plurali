@@ -50,7 +50,7 @@ async function bootstrap() {
   }
 
   // Development
-  SwaggerModule.setup('api', app, SwaggerModule.createDocument(app, swagger));
+  SwaggerModule.setup('oa', app, SwaggerModule.createDocument(app, swagger, { deepScanRoutes: true }));
 
   const cacheService = app.get(CacheService);
 

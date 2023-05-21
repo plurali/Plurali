@@ -1,20 +1,28 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { SystemRepository } from '@domain/system/SystemRepository';
 import { PluralRestService } from '@domain/plural/PluralRestService';
-import { Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/public/system',
   version: '1',
 })
+@ApiTags('SystemPublic')
+@ApiExtraModels(SystemResponse)
 export class PublicSystemController {
   constructor(private system: SystemRepository, private plural: PluralRestService) {}
 
   @Get('/:systemId')
-  public async view(@Param('systemId') id: string): Promise<Ok<Record<'system', SystemDto>>> {
+  @ApiResponse(ok(200, SystemResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidRequest))
+  public async view(@Param('systemId') id: string): Promise<Ok<SystemResponse>> {
     const system = await this.system.findPublic(id);
 
     if (!system) {
@@ -27,8 +35,6 @@ export class PublicSystemController {
       throw new InvalidRequestException();
     }
 
-    return Status.ok({
-      system: SystemDto.from(system, plural),
-    });
+    return Status.ok(new SystemResponse(SystemDto.from(system, plural)));
   }
 }

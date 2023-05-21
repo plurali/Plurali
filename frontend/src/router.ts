@@ -1,8 +1,7 @@
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 import { flash, FlashType, nextRedirect, user } from './store'
 import { getUser } from './api/user'
-import { formatError } from './api'
-import { StatusMap } from '@app/v1/dto/Status'
+import { StatusMap, formatError } from './api'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -126,8 +125,8 @@ router.beforeEach(async to => {
         flash(status, FlashType.Danger, true)
       } else if (isDashboard(to)) {
         flash('You need to be logged in to access the dashboard!', FlashType.Warning, true, false)
-        return '/auth/login'
       }
+      return '/auth/login'
     }
   })()
 

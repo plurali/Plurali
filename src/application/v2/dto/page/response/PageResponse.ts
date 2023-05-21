@@ -1,5 +1,11 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PageDto } from '../PageDto';
 
 export class PageResponse {
-  constructor(public readonly page: PageDto) {}
+  @ApiProperty()
+  public readonly page: PageDto;
+
+  constructor(page: PageDto) {
+    this.page = page;
+  }
 }

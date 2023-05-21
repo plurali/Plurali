@@ -19,11 +19,16 @@ import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileExcep
 import { StoragePrefix } from '@infra/storage/StoragePrefix';
 import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
 import * as mime from 'mime-types';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/system',
   version: '1',
 })
+@ApiTags('System')
+@ApiSecurity('bearer')
+@ApiExtraModels(SystemResponse)
 export class SystemController {
   constructor(
     private readonly systems: SystemRepository,
@@ -34,12 +39,18 @@ export class SystemController {
 
   @UseGuards(SystemGuard)
   @Get('/')
+  @ApiResponse(ok(200, SystemResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async view(@CurrentSystem() system: System, @CurrentUser() user: User): Promise<Ok<SystemResponse>> {
     return Status.ok(new SystemResponse(await this.makeDto(system, user)));
   }
 
   @UseGuards(SystemGuard)
   @Post('/')
+  @ApiResponse(ok(200, SystemResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
@@ -91,6 +102,9 @@ export class SystemController {
   @Post('/background')
   @UseGuards(SystemGuard)
   @UseInterceptors(FileInterceptor('file'))
+  @ApiResponse(ok(200, SystemResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.UnsupportedFile, StatusMap.FileProcessingFailed))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,

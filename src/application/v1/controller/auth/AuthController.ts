@@ -1,6 +1,6 @@
-import { Error, Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { AuthRequestBody } from '@app/v1/dto/auth/request/AuthRequestBody';
-import { LoginResponse } from '@app/v1/dto/auth/response/LoginResponse';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
+import { AuthRequest } from '@app/v1/dto/auth/request/AuthRequest';
+import { AuthResponse } from '@app/v1/dto/auth/response/AuthResponse';
 import { UserDto } from '@app/v1/dto/user/UserDto';
 import { UserAuthenticator } from '@domain/security/authenticator/UserAuthenticator';
 import { Body, Controller, Inject, Post, Put } from '@nestjs/common';
@@ -13,11 +13,15 @@ import { JwtData } from '@domain/security/JwtData';
 import { Authenticator } from '@domain/security/authenticator/Authenticator';
 import { StatusException } from '@app/v1/exception/StatusException';
 import { jwtConfig } from '@app/misc/jwt';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/auth',
   version: '1',
 })
+@ApiTags('Auth')
+@ApiExtraModels(AuthResponse, OkResponse)
 export class AuthController {
   constructor(
     @Inject(Authenticator) private readonly authenticator: UserAuthenticator,
@@ -28,7 +32,9 @@ export class AuthController {
   ) {}
 
   @Post('/login')
-  public async login(@Body() credentials: AuthRequestBody): Promise<Ok<LoginResponse>> {
+  @ApiResponse(ok(200, AuthResponse))
+  @ApiResponse(error(400, StatusMap.InvalidCredentials))
+  public async login(@Body() credentials: AuthRequest): Promise<Ok<AuthResponse>> {
     const user = await this.authenticator.attempt(credentials);
 
     if (!user) {
@@ -38,7 +44,7 @@ export class AuthController {
     await this.cache.rebuildFor(user);
 
     return Status.ok(
-      new LoginResponse(
+      new AuthResponse(
         UserDto.from(user),
         await this.signer.signAsync({ ...new JwtData(user.id) }, { secret: jwtConfig.secret })
       )
@@ -46,7 +52,9 @@ export class AuthController {
   }
 
   @Put('/register')
-  public async register(@Body() credentials: AuthRequestBody): Promise<Ok<LoginResponse>> {
+  @ApiResponse(ok(200, AuthResponse))
+  @ApiResponse(error(400, StatusMap.UsernameAlreadyUsed))
+  public async register(@Body() credentials: AuthRequest): Promise<Ok<AuthResponse>> {
     if (!!(await this.users.findUnique({ where: { username: credentials.username } }))) {
       throw new StatusException(StatusMap.UsernameAlreadyUsed);
     }
@@ -61,7 +69,10 @@ export class AuthController {
     return await this.login(credentials);
   }
 
+  // just a fallback endpoint that actually doesn't do anything,
+  // used to be a part of original backend
   @Post('/logout')
+  @ApiResponse(ok(200, OkResponse))
   public async logout(): Promise<Ok<OkResponse>> {
     return Status.ok(new OkResponse());
   }

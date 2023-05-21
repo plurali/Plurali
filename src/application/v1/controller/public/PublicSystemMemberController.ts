@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { PluralRestService } from '@domain/plural/PluralRestService';
-import { Ok, Status } from '@app/v1/dto/Status';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { SystemRepository } from '@domain/system/SystemRepository';
@@ -9,15 +9,21 @@ import { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMe
 import { assignSystem } from '@domain/common';
 import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
 import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { error, ok } from '@app/misc/swagger';
 
 @Controller({
   path: '/public/system/:systemId/members',
   version: '1',
 })
+@ApiTags('SystemMemberPublic')
+@ApiExtraModels(SystemMembersResponse, SystemMemberResponse)
 export class PublicSystemMemberController {
   constructor(private system: SystemRepository, private member: MemberRepository, private plural: PluralRestService) {}
 
   @Get('/')
+  @ApiResponse(ok(200, SystemMembersResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
   public async list(@Param('id') systemId: string): Promise<Ok<SystemMembersResponse>> {
     // Query system once instead of multiple times for each member
     const system = await this.system.findPublic(systemId);
@@ -41,6 +47,9 @@ export class PublicSystemMemberController {
   }
 
   @Get('/:memberId')
+  @ApiResponse(ok(200, SystemMemberResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidRequest))
   public async view(
     @Param('systemId') systemId: string,
     @Param('memberId') memberId: string

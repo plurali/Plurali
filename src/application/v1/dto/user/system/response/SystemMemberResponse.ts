@@ -1,5 +1,15 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserMemberDto } from '../../member/UserMemberDto';
 
 export class SystemMemberResponse {
-  constructor(public readonly member: UserMemberDto, public readonly warning?: string) {}
+  @ApiProperty()
+  public readonly member: UserMemberDto;
+
+  @ApiProperty()
+  public readonly warning?: string;
+
+  constructor(member: UserMemberDto, warning?: string) {
+    this.member = member;
+    this.warning = warning;
+  }
 }
