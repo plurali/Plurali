@@ -14,8 +14,12 @@ export const $axios = axios.create({
   withCredentials: true,
 });
 
-export const setAuth = (auth: string) => {
-  localStorage.setItem('_plurali_auth', auth);
+export const setAuth = (auth: string | null) => {
+  if (auth) {
+    localStorage.setItem('_plurali_auth', auth);
+  } else {
+    localStorage.removeItem("_plurali_auth");
+  }
   $axios.defaults.headers.common.Authorization = `Bearer ${auth}`;
 };
 

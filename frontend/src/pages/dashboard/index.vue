@@ -25,10 +25,9 @@ import Title from '../../components/Title.vue'
 import Subtitle from '../../components/Subtitle.vue'
 import ButtonLink from '../../components/ButtonLink.vue'
 import Button from '../../components/Button.vue'
-import { logout as apiLogout } from '../../api/auth'
 import { useRouter } from 'vue-router'
 import { useGoBack } from '../../composables/goBack'
-import { wrapRequest } from '../../api'
+import { setAuth } from '../../api'
 
 export default defineComponent({
   components: {
@@ -43,8 +42,7 @@ export default defineComponent({
     useGoBack(null)
 
     const logout = async () => {
-      //await wrapRequest(apiLogout)
-      localStorage.removeItem("_plurali_auth")
+      setAuth(null);
       await router.push('/auth/login')
     }
 
