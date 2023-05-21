@@ -1,5 +1,5 @@
 <template>
-  <div id="plurali" class="relative min-w-screen min-h-screen bg-cover bg-no-repeat bg-center flex">
+  <div id="plurali" class="relative w-screen min-h-screen bg-cover bg-no-repeat bg-center flex">
     <Transition
       enter-active-class="duration-300 ease-in-out"
       enter-from-class="transition opacity-0"
@@ -12,7 +12,7 @@
       <svg
         v-if="typeof bg !== 'string'"
         id="visual"
-        class="absolute min-w-screen min-h-screen h-full top-0 object-cover object-center -z-10 transition-all"
+        class="absolute w-screen min-h-screen h-full top-0 object-cover object-center -z-10 transition-all"
         viewBox="0 0 900 600"
         xmlns="http://www.w3.org/2000/svg"
         @load="onLoad"
