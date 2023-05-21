@@ -23,7 +23,7 @@ export const updateSystem = (data: Partial<UpdateSystemRequest>): Promise<AxiosR
   });
 
 export const updateSystemBackgroundImage = (file: Blob): Promise<AxiosResponse<Status<SystemResponse>>> =>
-  $axios.postForm<Status<SystemResponse>>('/system/background', { file });
+  $axios.postForm<Status<SystemResponse>>('/v1/system/background', { file });
 
 export const getMembers = (): Promise<AxiosResponse<Status<SystemMembersResponse>>> =>
   $axios.request<Status<SystemMembersResponse>>({
@@ -51,7 +51,7 @@ export const updateMemberBackgroundImage = (
   id: string,
   file: Blob
 ): Promise<AxiosResponse<Status<SystemMemberResponse>>> =>
-  $axios.postForm<Status<SystemMemberResponse>>(`/system/members/${id}/background`, { file });
+  $axios.postForm<Status<SystemMemberResponse>>(`/v1/system/members/${id}/background`, { file });
 
 export const updateField = (
   id: string,
