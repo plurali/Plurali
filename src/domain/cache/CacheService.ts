@@ -12,7 +12,6 @@ import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { PluralVisibility, parseFieldType, parseVisibility } from '@domain/plural/utils';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { PrismaTx } from '@infra/prisma/types';
 
 @Injectable()
 export class CacheService {
@@ -41,21 +40,19 @@ export class CacheService {
       },
     });
 
-    return await this.member.prisma.$transaction(async tx => {
-      const members = [];
+    const members = [];
 
-      for (const plural of pluralMembers) {
-        members.push(await this.rebuildMember(system, plural, tx));
-      }
+    for (const plural of pluralMembers) {
+      members.push(await this.rebuildMember(system, plural));
+    }
 
-      return members;
-    });
+    return members;
   }
 
-  async rebuildMember(system: System, plural: PluralMemberEntry, tx: PrismaTx = this.member.prisma) {
+  async rebuildMember(system: System, plural: PluralMemberEntry) {
     const visible = parseVisibility(plural.content) === PluralVisibility.Public;
 
-    let member = await tx.member.findFirst({
+    let member = await this.member.findFirst({
       where: {
         pluralId: plural.id,
         systemId: system.id,
@@ -63,7 +60,7 @@ export class CacheService {
     });
 
     if (!member) {
-      member = await tx.member.create({
+      member = await this.member.create({
         data: {
           pluralId: plural.id,
           pluralParentId: system.pluralId,
@@ -88,48 +85,46 @@ export class CacheService {
       },
     });
 
-    return await this.field.prisma.$transaction(async tx => {
-      const fields = [];
+    const fields = [];
 
-      for (const pluralId in plural.content.fields) {
-        const field = plural.content.fields[pluralId];
+    for (const pluralId in plural.content.fields) {
+      const field = plural.content.fields[pluralId];
 
-        const data = {
-          name: field.name,
-          type: parseFieldType(field),
-        };
+      const data = {
+        name: field.name,
+        type: parseFieldType(field),
+      };
 
-        let dbField = await tx.field.findFirst({
-          where: {
-            systemId: system.id,
+      let dbField = await this.field.findFirst({
+        where: {
+          systemId: system.id,
+          pluralId,
+        },
+      });
+
+      if (!dbField) {
+        dbField = await this.field.create({
+          data: {
+            ...data,
             pluralId,
+            pluralParentId: plural.id,
+            systemId: system.id,
+            visibility: parseVisibility(field) === PluralVisibility.Public ? Visibility.Public : Visibility.Private,
           },
         });
-
-        if (!dbField) {
-          dbField = await tx.field.create({
-            data: {
-              ...data,
-              pluralId,
-              pluralParentId: plural.id,
-              systemId: system.id,
-              visibility: parseVisibility(field) === PluralVisibility.Public ? Visibility.Public : Visibility.Private,
-            },
-          });
-        } else {
-          dbField = await tx.field.update({
-            where: {
-              id: dbField.id,
-            },
-            data,
-          });
-        }
-
-        fields.push(dbField);
+      } else {
+        dbField = await this.field.update({
+          where: {
+            id: dbField.id,
+          },
+          data,
+        });
       }
 
-      return fields;
-    });
+      fields.push(dbField);
+    }
+
+    return fields;
   }
 
   async rebuildFor(user: User & { system?: System }): Promise<void> {
@@ -226,6 +221,7 @@ export class CacheService {
 
   async rebuild(): Promise<void> {
     this.logger.log('Starting a cache rebuild job');
+    return;
     await Promise.all(
       (
         await this.user.findMany({
