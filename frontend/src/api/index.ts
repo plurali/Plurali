@@ -3,17 +3,23 @@ import { clearFlashes, flash, FlashType } from '../store';
 import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
+const baseURL = window.location.href.includes('.local')
+  ? 'http://rayliliannotraychel.local:3000'
+  : window.location.href.includes('dev.')
+  ? 'https://dev.plurali.icu/api'
+  : 'https://plurali.icu/api';
+
 export const $axios = axios.create({
-  baseURL: (import.meta as any).env?.DEV ? 'http://rayliliannotraychel.local:3000' : 'https://plurali.icu/api',
+  baseURL,
   withCredentials: true,
 });
 
 export const setAuth = (auth: string) => {
-  localStorage.setItem("_plurali_auth", auth);
+  localStorage.setItem('_plurali_auth', auth);
   $axios.defaults.headers.common.Authorization = `Bearer ${auth}`;
-}
+};
 
-const auth = localStorage.getItem("_plurali_auth");
+const auth = localStorage.getItem('_plurali_auth');
 if (auth) {
   setAuth(auth);
 }
