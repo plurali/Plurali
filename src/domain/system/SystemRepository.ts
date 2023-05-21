@@ -20,8 +20,16 @@ export class SystemRepository extends PrismaRepository<'system'> {
       },
       include: {
         user: true,
-        fields: true,
-        members: true,
+        fields: {
+          where: {
+            visibility: Visibility.Public,
+          },
+        },
+        members: {
+          where: {
+            visibility: Visibility.Public,
+          },
+        },
       },
     });
 

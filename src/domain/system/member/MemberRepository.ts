@@ -23,7 +23,11 @@ export class MemberRepository extends PrismaRepository<'member'> {
         system: {
           include: {
             user: true,
-            fields: true,
+            fields: {
+              where: {
+                visibility: Visibility.Public,
+              },
+            },
           },
         },
       },
@@ -32,8 +36,6 @@ export class MemberRepository extends PrismaRepository<'member'> {
     if (!data) {
       return null;
     }
-
-    data.system.fields = data.system.fields.filter(f => f.visibility === Visibility.Public); // TODO: include in query
 
     return data;
   }
