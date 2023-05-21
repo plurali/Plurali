@@ -28,7 +28,9 @@
             <u>Open public view</u>
           </a>
         </PageTitle>
-        <Subtitle class="mb-3">{{ system.description ?? 'No description' }}</Subtitle>
+        <Subtitle class="mb-3" v-if="system.description">
+          <Sanitized :value="string(system.description, true)"/>
+        </Subtitle>
         <span v-if="system.color" class="inline-flex text-gray-700 items-center gap-1">
           Color: {{ system.color }}
           <ColorCircle :color="system.color" />
@@ -81,6 +83,7 @@ import BackgroundChooser from '../BackgroundChooser.vue';
 import Fetchable from '../Fetchable.vue';
 import ButtonLink from '../../ButtonLink.vue';
 import { DocumentIcon } from '@heroicons/vue/24/outline';
+import { string } from '../../../api/fields';
 
 export default defineComponent({
   components: {
@@ -167,6 +170,7 @@ export default defineComponent({
       updateCustomDescription,
       loading,
       system,
+      string,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
     };
   },

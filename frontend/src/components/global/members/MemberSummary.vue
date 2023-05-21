@@ -12,7 +12,9 @@
       <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
         {{ member.name }}
       </PageTitle>
-      <Subtitle class="mb-3">{{ member.description ?? 'No description' }}</Subtitle>
+      <Subtitle class="mb-3" v-if="member.description">
+          <Sanitized :value="string(member.description, true)"/>
+        </Subtitle>
       <span v-if="member.color" class="inline-flex text-gray-700 items-center gap-1">
         Color: {{ member.color }} <ColorCircle :color="member.color" />
       </span>
@@ -26,6 +28,7 @@ import Subtitle from '../../Subtitle.vue';
 import { computed, defineComponent, PropType } from 'vue';
 import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { useRoute } from 'vue-router';
+import { string } from '../../../api/fields';
 
 export default defineComponent({
   components: {
@@ -43,6 +46,7 @@ export default defineComponent({
     const route = useRoute();
     return {
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      string,
     };
   },
 });

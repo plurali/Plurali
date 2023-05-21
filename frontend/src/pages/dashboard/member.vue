@@ -32,7 +32,9 @@
                 </a>
               </span>
             </PageTitle>
-            <Subtitle class="mb-3">{{ data.member.description ?? 'No description' }}</Subtitle>
+            <Subtitle class="mb-3" v-if="data.member.description">
+              <Sanitized :value="string(data.member.description, true)" />
+            </Subtitle>
             <span v-if="data.member.color" class="inline-flex text-gray-700 items-center gap-1">
               Color: {{ data.member.color }}
               <ColorCircle :color="data.member.color" />
@@ -100,6 +102,7 @@ import type { PageDto } from '@app/v2/dto/page/PageDto';
 import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import PageFields from '../../components/global/page/PageFields.vue';
 import { DocumentIcon } from '@heroicons/vue/24/outline';
+import { string } from '../../api/fields';
 
 export default defineComponent({
   components: {
@@ -206,6 +209,7 @@ export default defineComponent({
       toggleVisibility,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
       updateCustomDescription,
+      string,
     };
   },
 });
