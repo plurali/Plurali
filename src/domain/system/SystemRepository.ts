@@ -1,4 +1,4 @@
-import { SystemWithUser } from '@domain/common/types';
+import { SystemWithCollections, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { Field, Visibility } from '@prisma/client';
 import { PrismaRepository } from '@infra/prisma/PrismaRepository';
 import { Injectable } from '@nestjs/common';
@@ -10,7 +10,7 @@ export class SystemRepository extends PrismaRepository<'system'> {
     super('system', prisma);
   }
 
-  public async findPublic(slug: string): Promise<SystemWithUser & { fields: Field[] }> {
+  public async findPublic(slug: string): Promise<SystemWithUser & SystemWithCollections> {
     if (!slug) return null;
 
     const data = await this.findFirst({
@@ -21,6 +21,7 @@ export class SystemRepository extends PrismaRepository<'system'> {
       include: {
         user: true,
         fields: true,
+        members: true,
       },
     });
 

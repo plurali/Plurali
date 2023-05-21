@@ -11,6 +11,9 @@ import { InvalidRequestException } from '@app/v1/exception/InvalidRequestExcepti
 import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
+import { Member } from '@prisma/client';
+import { SystemWithFields, SystemWithUser } from '@domain/common/types';
+import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 
 @Controller({
   path: '/public/system/:systemId/members',
@@ -29,21 +32,17 @@ export class PublicSystemMemberController {
     const system = await this.system.findPublic(systemId);
     if (!system) throw new ResourceNotFoundException();
 
-    const members = (await this.member.findManyPublic(system)).map(m => assignSystem(m, system));
-    const plurals = await Promise.all(members.map(m => this.plural.findMember(m)));
+    const plural = await this.plural.findMembers(system);
 
-    return Status.ok(
-      new SystemMembersResponse(
-        members
-          .map(member =>
-            UserMemberDto.from(
-              member,
-              plurals.find(p => p.id === member.pluralId)
-            )
-          )
-          .filter(v => !!v)
-      )
-    );
+    const dtoMembers: UserMemberDto[] = [];
+
+    for (const member of system.members) {
+      const dto = await this.makeDto(member, system, plural);
+
+      dtoMembers.push(dto);
+    }
+
+    return Status.ok(new SystemMembersResponse(dtoMembers));
   }
 
   @Get('/:memberId')
@@ -72,5 +71,25 @@ export class PublicSystemMemberController {
     return Status.ok({
       member: UserMemberDto.from(member, plural),
     });
+  }
+
+  protected async makeDto(
+    member: Member,
+    system: SystemWithFields & SystemWithUser,
+    plural?: PluralMemberEntry[]
+  ): Promise<UserMemberDto> {
+    const extendedMember = assignSystem(member, system);
+
+    let pluralMember = plural ? plural.find(m => m.id === member.pluralId) : null;
+    if (!pluralMember) {
+      // Attempt to fetch alone
+      pluralMember = await this.plural.findMember(extendedMember);
+
+      if (!pluralMember) {
+        throw new InvalidRequestException();
+      }
+    }
+
+    return UserMemberDto.from(extendedMember, pluralMember);
   }
 }
