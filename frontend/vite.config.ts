@@ -13,9 +13,10 @@ export default defineConfig({
   plugins: [
     vue(),
     tsconfigPaths(),
-    {
-      name: '@plurali/frontend-csp',
-      transformIndexHtml: (html, context) => (context.server ? html : `${caddyHead}\n${html}`),
-    },
+    // csp is a mess atm, let's disable it for now
+    // {
+    //   name: '@plurali/frontend-csp',
+    //   transformIndexHtml: (html, context) => (context.server ? html : `${caddyHead}\n${html}`),
+    // },
   ],
 });
