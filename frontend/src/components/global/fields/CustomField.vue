@@ -12,7 +12,7 @@
     ]"
   >
     <p class="font-medium">{{ customField.name }}</p>
-    <p v-if="(value?.length ?? 0) >= 1" class="text-gray-500">
+    <p v-if="value && value.length" class="text-gray-500">
       <span
         v-if="customField.type === 'Color'"
         class="inline-flex justify-center items-center gap-2"
@@ -20,9 +20,9 @@
         <ColorCircle :color="value!" />
         <span class="text-sm">{{ value }}</span>
       </span>
-      <Subtitle class="mb-3 max-h-20 overflow-x-hidden overflow-y-scroll" v-else>
+      <span class="max-h-20 overflow-x-hidden overflow-y-scroll" v-else>
         <Sanitized :value="value" />
-      </Subtitle>
+      </span>
     </p>
   </div>
 </template>
@@ -36,9 +36,10 @@ import { formatError } from '../../../api'
 import { updateField } from '../../../api/system'
 import { formatField, string } from '../../../api/fields'
 import ColorCircle from '../color/ColorCircle.vue'
+import Sanitized from '../Sanitized.vue'
 
 export default defineComponent({
-  components: { ColorCircle },
+  components: { ColorCircle, Sanitized },
   model: {
     prop: 'field',
     event: 'change',
