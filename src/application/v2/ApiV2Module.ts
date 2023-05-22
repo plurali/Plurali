@@ -9,15 +9,21 @@ import { SystemPageController } from './controller/system/page/SystemPageControl
 import { PublicMemberPageController } from './controller/member/page/PublicMemberPageController';
 import { PublicSystemPageController } from './controller/system/page/PublicSystemPageController';
 import { PublicMemberController } from './controller/member/PublicMemberController';
+import { PublicSystemController } from './controller/system/PublicSystemController';
+import { PublicSystemFieldController } from './controller/system/field/PublicSystemFieldController';
+import { PublicMemberFieldController } from './controller/member/field/PublicMemberFieldController';
 
 @Module({
   imports: [PageModule, SystemModule, UserModule, JwtModule, PluralModule],
   controllers: [
     MemberPageController,
     SystemPageController,
-    PublicMemberController,
-    PublicMemberPageController,
+    PublicSystemController,
+    PublicSystemFieldController,
     PublicSystemPageController,
+    PublicMemberController,
+    PublicMemberFieldController,
+    PublicMemberPageController,
   ],
 })
 export class ApiV2Module {}

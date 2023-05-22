@@ -11,7 +11,7 @@ import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundExc
 import { BaseController } from '../../BaseController';
 
 @Controller({
-  path: '/public/system/:systemId/page',
+  path: '/public/system/:system/page',
   version: '2',
 })
 @ApiTags('SystemPagePublic')
@@ -24,7 +24,7 @@ export class PublicSystemPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async list(@Param('systemId') systemId: string): Promise<ApiDataResponse<PageDto[]>> {
+  async list(@Param('system') systemId: string): Promise<ApiDataResponse<PageDto[]>> {
     const system = await this.findSystemOrFail(systemId);
 
     const pages = await this.pages.findMany({
@@ -38,12 +38,12 @@ export class PublicSystemPageController extends BaseController {
     return this.data(pages.map(PageDto.from));
   }
 
-  @Get('/:id')
+  @Get('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async view(@Param('systemId') systemId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), id)));
+  async view(@Param('system') systemId: string, @Param('page') pageId: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), pageId)));
   }
 
   protected async findSystemOrFail(systemId: string): Promise<System> {

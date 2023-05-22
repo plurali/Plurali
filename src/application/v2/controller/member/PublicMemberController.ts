@@ -62,14 +62,14 @@ export class PublicMemberController extends BaseController {
     );
   }
 
-  @Get('/:memberId')
+  @Get('/:member')
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async view(
-    @Param('systemId') systemId: string,
-    @Param('memberId') memberId: string
+    @Param('system') systemId: string,
+    @Param('member') memberId: string
   ): Promise<ApiDataResponse<MemberDto>> {
     const system = await this.system.findPublicBase(systemId, {
       user: true,

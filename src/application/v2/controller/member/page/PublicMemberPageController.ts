@@ -11,7 +11,7 @@ import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundExc
 import { BaseController } from '../../BaseController';
 
 @Controller({
-  path: '/public/member/:memberId/page',
+  path: '/public/member/:member/page',
   version: '2',
 })
 @ApiTags('MemberPagePublic')
@@ -24,7 +24,7 @@ export class PublicMemberPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async list(@Param('memberId') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
+  async list(@Param('member') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
     const member = await this.findMemberOrFail(memberId);
 
     const pages = await this.pages.findMany({
@@ -38,18 +38,19 @@ export class PublicMemberPageController extends BaseController {
     return this.data(pages.map(PageDto.from));
   }
 
-  @Get('/:id')
+  @Get('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async view(@Param('memberId') memberId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), id)));
+  async view(@Param('member') memberId: string, @Param('page') pageId: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), pageId)));
   }
 
   protected async findMemberOrFail(memberId: string): Promise<Member> {
     const member = await this.members.findFirst({
       where: {
         slug: memberId,
+        visibility: Visibility.Public,
       },
     });
 

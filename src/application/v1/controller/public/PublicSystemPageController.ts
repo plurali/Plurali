@@ -47,6 +47,7 @@ export class PublicSystemPageController {
     const system = await this.systems.findFirst({
       where: {
         slug: systemId,
+        visibility: Visibility.Public,
       },
     });
 

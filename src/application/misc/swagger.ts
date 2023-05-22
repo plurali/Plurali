@@ -27,10 +27,12 @@ export const swagger = new DocumentBuilder()
   // V2
   .addTag('System')
   .addTag('SystemPage')
+  .addTag('SystemFieldPublic')
   .addTag('SystemPagePublic')
 
   .addTag('Member')
   .addTag('MemberPage')
+  .addTag('MemberFieldPublic')
   .addTag('MemberPagePublic')
 
   .addBearerAuth()

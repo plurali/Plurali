@@ -18,7 +18,7 @@ import { BaseController } from '../../BaseController';
 import { Ok } from '@app/v2/dto/response/Ok';
 
 @Controller({
-  path: '/member/:memberId/page',
+  path: '/member/:member/page',
   version: '2',
 })
 @ApiTags('MemberPage')
@@ -34,10 +34,7 @@ export class MemberPageController extends BaseController {
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(400, ApiError.InvalidPluralKey))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
-  async list(
-    @CurrentSystem() system: System,
-    @Param('memberId') memberId: string
-  ): Promise<ApiDataResponse<PageDto[]>> {
+  async list(@CurrentSystem() system: System, @Param('member') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     const pages = await this.pages.findMany({
@@ -51,7 +48,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:id')
+  @Get('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -60,14 +57,14 @@ export class MemberPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
-    @Param('id') id: string
+    @Param('member') memberId: string,
+    @Param('page') pageId: string
   ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id)));
+    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, pageId)));
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:id')
+  @Post('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -76,13 +73,13 @@ export class MemberPageController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
-    @Param('memberId') memberId: string,
+    @Param('page') pageId: string,
+    @Param('member') memberId: string,
     @Body() data: UpdatePageRequest
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
 
-    let page = await this.findOrFail(member, user, id);
+    let page = await this.findOrFail(member, user, pageId);
 
     const update: Prisma.PageUpdateInput = {};
 
@@ -111,7 +108,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Delete('/:id')
+  @Delete('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -120,14 +117,14 @@ export class MemberPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
-    @Param('id') id: string
+    @Param('member') memberId: string,
+    @Param('page') pageId: string
   ): Promise<ApiDataResponse<Ok>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     await this.pages.delete({
       where: {
-        id: (await this.findOrFail(member, user, id)).id,
+        id: (await this.findOrFail(member, user, pageId)).id,
       },
     });
 
@@ -144,7 +141,7 @@ export class MemberPageController extends BaseController {
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
+    @Param('member') memberId: string,
     @Body() data: CreatePageRequest
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);

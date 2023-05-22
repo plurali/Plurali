@@ -3,6 +3,9 @@ import { OwnerType } from '@domain/common';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PageDto {
+  @ApiProperty({ default: 'page' })
+  public type = 'page';
+
   @ApiProperty()
   public id: string;
 

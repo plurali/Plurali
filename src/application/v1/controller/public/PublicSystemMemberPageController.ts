@@ -47,6 +47,7 @@ export class PublicSystemMemberPageController {
     const member = await this.members.findFirst({
       where: {
         slug: memberId,
+        visibility: Visibility.Public,
       },
     });
 

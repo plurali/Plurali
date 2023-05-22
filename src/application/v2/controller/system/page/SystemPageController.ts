@@ -46,7 +46,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:id')
+  @Get('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -55,13 +55,13 @@ export class SystemPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('page') pageId: string
   ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(system, user, id)));
+    return this.data(PageDto.from(await this.findOrFail(system, user, pageId)));
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:id')
+  @Post('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -70,10 +70,10 @@ export class SystemPageController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
+    @Param('page') pageId: string,
     @Body() data: UpdatePageRequest
   ): Promise<ApiDataResponse<PageDto>> {
-    let page = await this.findOrFail(system, user, id);
+    let page = await this.findOrFail(system, user, pageId);
 
     const update: Prisma.PageUpdateInput = {};
 
@@ -102,7 +102,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Delete('/:id')
+  @Delete('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -111,11 +111,11 @@ export class SystemPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('page') pageId: string
   ): Promise<ApiDataResponse<Ok>> {
     await this.pages.delete({
       where: {
-        id: (await this.findOrFail(system, user, id)).id,
+        id: (await this.findOrFail(system, user, pageId)).id,
       },
     });
 
