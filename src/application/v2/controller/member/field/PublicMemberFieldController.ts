@@ -12,7 +12,7 @@ import { Visibility } from '@prisma/client';
 import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
 
 @Controller({
-  path: '/public/member/:member/fields',
+  path: '/public/member/:member/field',
   version: '2',
 })
 @ApiTags('MemberFieldPublic')

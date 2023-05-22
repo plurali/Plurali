@@ -10,7 +10,7 @@ import { BaseController } from '../../BaseController';
 import { FieldDto } from '@app/v2/dto/field/FieldDto';
 
 @Controller({
-  path: '/public/system/:system/fields',
+  path: '/public/system/:system/field',
   version: '2',
 })
 @ApiTags('SystemFieldPublic')

@@ -18,7 +18,7 @@ import { InvalidRequestException } from '@app/v2/exception/InvalidRequestExcepti
 import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
 
 @Controller({
-  path: '/public/system/:system/members',
+  path: '/public/system/:system/member',
   version: '2',
 })
 @ApiTags('MemberPublic')
