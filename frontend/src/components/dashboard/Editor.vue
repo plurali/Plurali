@@ -3,7 +3,7 @@
   <UserContent :class="['relative mb-5', !editor && 'pb-20']">
     <Editor :inline="true" :init="init" v-model="value" @init="onInit" />
     <div
-      class="h-20 w-full bg-gray-100 rounded-2xl absolute inset-0 bg-opacity-50 flex justify-center items-center gap-1"
+      class="h-full w-full bg-gray-100 rounded-2xl absolute inset-0 bg-opacity-50 flex justify-center items-center gap-1"
       v-if="!editor"
     >
       <Spinner class="w-6 h-6 !text-violet-700" />
@@ -73,7 +73,7 @@ export default defineComponent({
     forceSave: {
       type: Boolean,
       default: () => false,
-    }
+    },
   },
   emits: ['save', 'update:modelValue'],
   setup(props, { emit }) {
@@ -134,6 +134,10 @@ export default defineComponent({
         removed_menuitems: 'image',
         font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 18pt 24pt 30pt 36pt 48pt 60pt 72pt 96pt',
         promotion: false,
+        image_class_list: [
+          { title: 'Default', value: '' },
+          { title: 'Inline', value: 'inline' },
+        ],
         ...({
           autosave_ask_before_unload: false,
           autosave_prefix: '_plurali_{path}{query}-{id}',
