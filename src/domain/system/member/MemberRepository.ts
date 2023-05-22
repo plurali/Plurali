@@ -1,3 +1,4 @@
+import { PaginationQuery } from '@app/v2/controller/BaseController';
 import { MemberWithSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { PrismaRepository } from '@infra/prisma/PrismaRepository';
 import { Injectable } from '@nestjs/common';
@@ -40,14 +41,15 @@ export class MemberRepository extends PrismaRepository<'member'> {
     return data;
   }
 
-  public async findManyPublic(system: System): Promise<Member[]> {
+  public async findManyPublic(system: System | string, query?: PaginationQuery): Promise<Member[]> {
     if (!system) return [];
 
     return await this.findMany({
       where: {
         visibility: Visibility.Public,
-        systemId: system.id,
+        ...(typeof system === 'string' ? { system: { slug: system } } : { systemId: system.id }),
       },
+      ...(query ? query : {}),
       include: {
         system: {
           include: {
@@ -55,6 +57,15 @@ export class MemberRepository extends PrismaRepository<'member'> {
             fields: true,
           },
         },
+      },
+    });
+  }
+
+  public async countPublic(system: System | string): Promise<number> {
+    return await this.count({
+      where: {
+        visibility: Visibility.Public,
+        ...(typeof system === 'string' ? { system: { slug: system } } : { systemId: system.id }),
       },
     });
   }

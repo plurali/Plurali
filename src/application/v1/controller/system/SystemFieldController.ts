@@ -17,7 +17,7 @@ import { Field, Prisma, System, Visibility } from '@prisma/client';
   path: '/system/fields',
   version: '1',
 })
-@ApiTags('SystemField')
+@ApiTags('SystemFieldV1')
 @ApiSecurity('bearer')
 @ApiExtraModels(SystemFieldResponse, SystemFieldsResponse)
 export class SystemFieldController {

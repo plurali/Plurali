@@ -14,7 +14,7 @@ import { ApiDataResponse } from '@app/v2/types/response';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { Ok } from '@app/v2/dto/response/Ok';
 import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { BaseController } from '../BaseController';
+import { BaseController } from '../../BaseController';
 
 @Controller({
   path: '/system/page',

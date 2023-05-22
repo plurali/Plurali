@@ -14,7 +14,7 @@ import { error, ok } from '@app/v2/misc/swagger';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { PageRepository } from '@domain/page/PageRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { BaseController } from '../BaseController';
+import { BaseController } from '../../BaseController';
 import { Ok } from '@app/v2/dto/response/Ok';
 
 @Controller({

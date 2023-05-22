@@ -1,6 +1,7 @@
 import type { Logger } from '@nestjs/common';
 import { Field, System, User } from '@prisma/client';
 import slugify from 'slugify';
+import { BackgroundType as PrismaBackgroundType } from '@prisma/client';
 
 export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
@@ -77,3 +78,5 @@ export enum OwnerType {
   Member = 'member',
   System = 'system',
 }
+
+export const convertBackgroundType = (type: PrismaBackgroundType): BackgroundType => BackgroundType[type];

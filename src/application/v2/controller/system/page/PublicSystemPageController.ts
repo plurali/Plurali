@@ -1,22 +1,22 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Visibility } from '@prisma/client';
+import { System, Page, Visibility } from '@prisma/client';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { PageRepository } from '@domain/page/PageRepository';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
+import { SystemRepository } from '@domain/system/SystemRepository';
 import { error, ok } from '@app/v2/misc/swagger';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { BaseController } from '../BaseController';
+import { BaseController } from '../../BaseController';
 
 @Controller({
-  path: '/public/member/:memberId/page',
+  path: '/public/system/:systemId/page',
   version: '2',
 })
-@ApiTags('MemberPagePublic')
-export class PublicMemberPageController extends BaseController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {
+@ApiTags('SystemPagePublic')
+export class PublicSystemPageController extends BaseController {
+  constructor(private readonly pages: PageRepository, private readonly systems: SystemRepository) {
     super();
   }
 
@@ -24,13 +24,13 @@ export class PublicMemberPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async list(@Param('memberId') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
-    const member = await this.findMemberOrFail(memberId);
+  async list(@Param('systemId') systemId: string): Promise<ApiDataResponse<PageDto[]>> {
+    const system = await this.findSystemOrFail(systemId);
 
     const pages = await this.pages.findMany({
       where: {
-        ownerId: member.pluralId,
-        ownerType: 'Member',
+        ownerId: system.pluralId,
+        ownerType: 'System',
         visibility: Visibility.Public,
       },
     });
@@ -42,30 +42,30 @@ export class PublicMemberPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async view(@Param('memberId') memberId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), id)));
+  async view(@Param('systemId') systemId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), id)));
   }
 
-  protected async findMemberOrFail(memberId: string): Promise<Member> {
-    const member = await this.members.findFirst({
+  protected async findSystemOrFail(systemId: string): Promise<System> {
+    const system = await this.systems.findFirst({
       where: {
-        slug: memberId,
+        slug: systemId,
       },
     });
 
-    if (!member) {
+    if (!system) {
       throw new ResourceNotFoundException();
     }
 
-    return member;
+    return system;
   }
 
-  protected async findOrFail(member: Member, id: string): Promise<Page> {
+  protected async findOrFail(system: System, id: string): Promise<Page> {
     const page = await this.pages.findFirst({
       where: {
         id,
-        ownerId: member.pluralId,
-        ownerType: 'Member',
+        ownerId: system.pluralId,
+        ownerType: 'System',
         visibility: Visibility.Public,
       },
     });

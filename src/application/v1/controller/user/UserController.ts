@@ -17,7 +17,7 @@ import { error, ok } from '@app/misc/swagger';
   path: '/user',
   version: '1',
 })
-@ApiTags('User')
+@ApiTags('UserV1')
 @ApiSecurity('bearer')
 @ApiExtraModels(UserResponse)
 export class UserController {

@@ -30,7 +30,7 @@ import { error, ok } from '@app/misc/swagger';
   path: '/system/members',
   version: '1',
 })
-@ApiTags('SystemMember')
+@ApiTags('SystemMemberV1')
 @ApiSecurity('bearer')
 @ApiExtraModels(SystemMemberResponse, SystemMembersResponse)
 export class SystemMemberController {

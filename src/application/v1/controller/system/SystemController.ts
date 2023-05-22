@@ -26,7 +26,7 @@ import { error, ok } from '@app/misc/swagger';
   path: '/system',
   version: '1',
 })
-@ApiTags('System')
+@ApiTags('SystemV1')
 @ApiSecurity('bearer')
 @ApiExtraModels(SystemResponse)
 export class SystemController {

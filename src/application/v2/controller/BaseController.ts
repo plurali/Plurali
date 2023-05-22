@@ -65,7 +65,7 @@ export abstract class BaseController {
   protected createPagination(query: PaginationQuery, count: number): ApiResponsePagination {
     return {
       current: query.skip / query.take + 1,
-      total: Math.floor(count / query.take),
+      total: Math.ceil(count / query.take),
       max: query.take,
     };
   }

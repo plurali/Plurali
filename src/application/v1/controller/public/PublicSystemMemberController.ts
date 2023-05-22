@@ -19,7 +19,7 @@ import { PluralMemberEntry } from '@domain/plural/types/rest/members';
   path: '/public/system/:systemId/members',
   version: '1',
 })
-@ApiTags('SystemMemberPublic')
+@ApiTags('SystemMemberPublicV1')
 @ApiExtraModels(SystemMembersResponse, SystemMemberResponse)
 export class PublicSystemMemberController {
   constructor(private system: SystemRepository, private member: MemberRepository, private plural: PluralRestService) {}

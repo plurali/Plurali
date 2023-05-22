@@ -20,7 +20,7 @@ import { error, ok } from '@app/misc/swagger';
   path: '/auth',
   version: '1',
 })
-@ApiTags('Auth')
+@ApiTags('AuthV1')
 @ApiExtraModels(AuthResponse, OkResponse)
 export class AuthController {
   constructor(

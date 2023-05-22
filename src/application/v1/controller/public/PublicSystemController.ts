@@ -13,7 +13,7 @@ import { error, ok } from '@app/misc/swagger';
   path: '/public/system',
   version: '1',
 })
-@ApiTags('SystemPublic')
+@ApiTags('SystemPublicV1')
 @ApiExtraModels(SystemResponse)
 export class PublicSystemController {
   constructor(private system: SystemRepository, private plural: PluralRestService) {}

@@ -1,7 +1,6 @@
 import { StatusMap } from '@app/v1/dto/Status';
 import { Type } from '@nestjs/common';
 import { DocumentBuilder } from '@nestjs/swagger';
-import { ReferenceObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { SchemaObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
 export const swagger = new DocumentBuilder()
@@ -9,15 +8,15 @@ export const swagger = new DocumentBuilder()
   .setVersion('2.0')
 
   // V1
-  .addTag('Auth')
-  .addTag('User')
+  .addTag('AuthV1')
+  .addTag('UserV1')
 
-  .addTag('System')
-  .addTag('SystemPublic')
-  .addTag('SystemField')
+  .addTag('SystemV1')
+  .addTag('SystemPublicV1')
+  .addTag('SystemFieldV1')
 
-  .addTag('SystemMember')
-  .addTag('SystemMemberPublic')
+  .addTag('SystemMemberV1')
+  .addTag('SystemMemberPublicV1')
 
   .addTag('SystemPageV1')
   .addTag('SystemPagePublicV1')
@@ -26,9 +25,11 @@ export const swagger = new DocumentBuilder()
   .addTag('SystemMemberPagePublicV1')
 
   // V2
+  .addTag('System')
   .addTag('SystemPage')
   .addTag('SystemPagePublic')
 
+  .addTag('Member')
   .addTag('MemberPage')
   .addTag('MemberPagePublic')
 
