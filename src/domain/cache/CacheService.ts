@@ -3,35 +3,35 @@ import { System, Member, Visibility, User } from '@prisma/client';
 import { CacheRepository } from '@infra/cache/CacheRepository';
 import { CacheNamespace } from '@infra/cache/utils';
 import { createSlug } from '@domain/common';
-import { UserRepository } from '@domain/user/UserRepository';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { SystemWithUser } from '@domain/common/types';
-import { SystemRepository } from '@domain/system/SystemRepository';
 import { PluralUserEntry } from '@domain/plural/types/rest/user';
-import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { PluralVisibility, parseFieldType, parseVisibility } from '@domain/plural/utils';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
+import { PrismaService } from 'nestjs-prisma';
+import { PrismaTx } from '@infra/prisma/types';
+
+const txConfig = {
+  maxWait: 50000000,
+  timeout: 50000000,
+};
 
 @Injectable()
 export class CacheService {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly repository: CacheRepository,
-    private readonly user: UserRepository,
-    private readonly field: FieldRepository,
-    private readonly system: SystemRepository,
-    private readonly member: MemberRepository,
     private readonly logger: ConsoleLogger,
     @Inject('PluralResetServiceBase') private readonly plural: PluralRestService
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
-  async rebuildMembers(system: SystemWithUser) {
+  async rebuildMembers(system: SystemWithUser, tx: PrismaTx = this.prisma) {
     const pluralMembers = await this.plural.findMembers(system);
 
     // Delete all members that are not listed by SP anymore
-    await this.member.deleteMany({
+    await tx.member.deleteMany({
       where: {
         pluralId: {
           notIn: pluralMembers.map(member => member.id),
@@ -43,16 +43,18 @@ export class CacheService {
     const members = [];
 
     for (const plural of pluralMembers) {
-      members.push(await this.rebuildMember(system, plural));
+      members.push(await this.rebuildMember(system, plural, tx));
     }
 
     return members;
   }
 
-  async rebuildMember(system: System, plural: PluralMemberEntry) {
+  async rebuildMember(system: System, plural: PluralMemberEntry, tx: PrismaTx = this.prisma) {
     const visible = parseVisibility(plural.content) === PluralVisibility.Public;
 
-    let member = await this.member.findFirst({
+    this.logger.log(`Rebuilding (s:${system.id}) ${system.pluralId}/m/${plural.id}`);
+
+    let member = await tx.member.findFirst({
       where: {
         pluralId: plural.id,
         systemId: system.id,
@@ -60,7 +62,7 @@ export class CacheService {
     });
 
     if (!member) {
-      member = await this.member.create({
+      member = await tx.member.create({
         data: {
           pluralId: plural.id,
           pluralParentId: system.pluralId,
@@ -69,14 +71,23 @@ export class CacheService {
           visibility: visible ? Visibility.Public : Visibility.Private,
         },
       });
+    } else {
+      member = await tx.member.update({
+        where: {
+          id: member.id,
+        },
+        data: {
+          pluralParentId: system.pluralId,
+        },
+      });
     }
 
     return member;
   }
 
-  async rebuildFields(system: System, plural: PluralUserEntry) {
+  async rebuildFields(system: System, plural: PluralUserEntry, tx: PrismaTx = this.prisma) {
     // Delete all fields that are not listed by SP anymore
-    await this.field.deleteMany({
+    await tx.field.deleteMany({
       where: {
         pluralId: {
           notIn: Object.keys(plural.content.fields),
@@ -90,12 +101,14 @@ export class CacheService {
     for (const pluralId in plural.content.fields) {
       const field = plural.content.fields[pluralId];
 
+      this.logger.log(`Rebuilding (s:${system.id}) ${system.pluralId}/f/${plural.id}`);
+
       const data = {
         name: field.name,
         type: parseFieldType(field),
       };
 
-      let dbField = await this.field.findFirst({
+      let dbField = await tx.field.findFirst({
         where: {
           systemId: system.id,
           pluralId,
@@ -103,7 +116,7 @@ export class CacheService {
       });
 
       if (!dbField) {
-        dbField = await this.field.create({
+        dbField = await tx.field.create({
           data: {
             ...data,
             pluralId,
@@ -113,7 +126,7 @@ export class CacheService {
           },
         });
       } else {
-        dbField = await this.field.update({
+        dbField = await tx.field.update({
           where: {
             id: dbField.id,
           },
@@ -127,7 +140,8 @@ export class CacheService {
     return fields;
   }
 
-  async rebuildFor(user: User & { system?: System }): Promise<void> {
+  async rebuildFor(user: User & { system?: System }, useTransacction = false): Promise<void> {
+    this.logger.log(`Rebuilding cache for ${user.id}`);
     let pluralUser: PluralUserEntry | null = null;
     if (user.pluralAccessToken) {
       try {
@@ -142,13 +156,13 @@ export class CacheService {
     }
 
     if (!pluralUser) {
-      await this.system.deleteMany({
+      await this.prisma.system.deleteMany({
         where: {
           userId: user.id,
         },
       });
 
-      await this.user.update({
+      await this.prisma.user.update({
         where: {
           id: user.id,
         },
@@ -163,7 +177,7 @@ export class CacheService {
 
     if (!user.system) {
       // Attempt to fetch system if not passed
-      user.system = await this.system.findUnique({
+      user.system = await this.prisma.system.findUnique({
         where: {
           userId: user.id,
         },
@@ -174,19 +188,19 @@ export class CacheService {
       await this.clearSystem(user.system);
 
       if (user.system.pluralId !== pluralUser.id) {
-        await this.system.delete({
+        await this.prisma.system.delete({
           where: {
             id: user.system.id,
           },
         });
 
-        await this.member.deleteMany({
+        await this.prisma.member.deleteMany({
           where: {
             systemId: user.system.id,
           },
         });
 
-        await this.field.deleteMany({
+        await this.prisma.field.deleteMany({
           where: {
             systemId: user.system.id,
           },
@@ -194,7 +208,7 @@ export class CacheService {
       }
     }
 
-    user = await this.user.update({
+    user = await this.prisma.user.update({
       where: {
         id: user.id,
       },
@@ -215,30 +229,36 @@ export class CacheService {
       },
     });
 
-    await this.rebuildMembers(Object.assign(user.system, { user }));
-    await this.rebuildFields(user.system, pluralUser);
+    if (useTransacction) {
+      await this.prisma.$transaction(
+        async tx => await this.rebuildMembers(Object.assign(user.system, { user }), tx),
+        txConfig
+      );
+      await this.prisma.$transaction(async tx => await this.rebuildFields(user.system, pluralUser, tx), txConfig);
+    } else {
+      await this.rebuildMembers(Object.assign(user.system, { user }));
+      await this.rebuildFields(user.system, pluralUser);
+    }
   }
 
   async rebuild(): Promise<void> {
     this.logger.log('Starting a cache rebuild job');
-    return;
-    await Promise.all(
-      (
-        await this.user.findMany({
+    const users = await this.prisma.user.findMany({
+      include: {
+        system: {
           include: {
-            system: {
-              include: {
-                members: true,
-                fields: true,
-                user: true,
-              },
-            },
+            members: true,
+            fields: true,
+            user: true,
           },
-        })
-      ).map(async user => {
-        await this.rebuildFor(user);
-      })
-    );
+        },
+      },
+    });
+
+    for (const user of users) {
+      await this.rebuildFor(user, true);
+    }
+    this.logger.log('Cache rebuild job complete');
   }
 
   static createSystemKey(system: System) {

@@ -52,9 +52,11 @@ async function bootstrap() {
   // Development
   SwaggerModule.setup('oa', app, SwaggerModule.createDocument(app, swagger, { deepScanRoutes: true }));
 
-  const cacheService = app.get(CacheService);
+  if (process.argv.includes('--rebuild')) {
+    const cacheService = app.get(CacheService);
 
-  await cacheService.rebuild();
+    await cacheService.rebuild();
+  }
 
   // const observerProcess: ChildProcess | null = plural.observer.fork
   //   ? fork(require.resolve('./application/observer/entry'), {

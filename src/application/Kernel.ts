@@ -56,7 +56,7 @@ import { jwtConfig } from './misc/jwt';
       useFactory: (config: ConfigService<Config>) => ({
         explicitConnect: true,
         prismaOptions: {
-          log: config.get<boolean>('dev') ? ['query', 'warn', 'error'] : [],
+          log: config.get<boolean>('dev') ? ['warn', 'error'] : [],
           datasources: {
             db: {
               url: config.get<string>('db'),
