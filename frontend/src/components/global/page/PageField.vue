@@ -33,7 +33,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
+import type { PageDto } from '@app/v1/dto/page/PageDto';
 import { wrapRequest } from '../../../api/';
 import { updateSystemPage, updateMemberPage } from '../../../api/page';
 import ColorCircle from '../color/ColorCircle.vue';

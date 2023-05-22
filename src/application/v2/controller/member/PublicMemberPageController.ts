@@ -1,28 +1,30 @@
-import { error, ok } from '@app/misc/swagger';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
+import { Controller, Get, HttpCode, Param } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Member, Page, Visibility } from '@prisma/client';
 import { PageDto } from '@app/v2/dto/page/PageDto';
-import { PageResponse } from '@app/v2/dto/page/response/PageResponse';
-import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import { PageRepository } from '@domain/page/PageRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Visibility } from '@prisma/client';
+import { error, ok } from '@app/v2/misc/swagger';
+import { ApiError } from '@app/v2/dto/response/errors';
+import { ApiDataResponse } from '@app/v2/types/response';
+import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
+import { BaseController } from '../BaseController';
 
 @Controller({
   path: '/public/member/:memberId/page',
   version: '2',
 })
 @ApiTags('MemberPagePublic')
-@ApiExtraModels(PageResponse, PagesResponse)
-export class PublicMemberPageController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {}
+export class PublicMemberPageController extends BaseController {
+  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {
+    super();
+  }
 
   @Get('/')
-  @ApiResponse(ok(200, PagesResponse))
-  @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async list(@Param('memberId') memberId: string): Promise<Ok<PagesResponse>> {
+  @HttpCode(200)
+  @ApiResponse(ok(200, [PageDto]))
+  @ApiResponse(error(404, ApiError.ResourceNotFound))
+  async list(@Param('memberId') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
     const member = await this.findMemberOrFail(memberId);
 
     const pages = await this.pages.findMany({
@@ -33,14 +35,15 @@ export class PublicMemberPageController {
       },
     });
 
-    return Status.ok(new PagesResponse(pages.map(PageDto.from)));
+    return this.data(pages.map(PageDto.from));
   }
 
   @Get('/:id')
-  @ApiResponse(ok(200, PageResponse))
-  @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async view(@Param('memberId') memberId: string, @Param('id') id: string): Promise<Ok<PageResponse>> {
-    return Status.ok(new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), id))));
+  @HttpCode(200)
+  @ApiResponse(ok(200, PageDto))
+  @ApiResponse(error(404, ApiError.ResourceNotFound))
+  async view(@Param('memberId') memberId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), id)));
   }
 
   protected async findMemberOrFail(memberId: string): Promise<Member> {

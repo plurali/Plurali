@@ -1,28 +1,30 @@
-import { error, ok } from '@app/misc/swagger';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
+import { Controller, Get, HttpCode, Param } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { System, Page, Visibility } from '@prisma/client';
 import { PageDto } from '@app/v2/dto/page/PageDto';
-import { PageResponse } from '@app/v2/dto/page/response/PageResponse';
-import { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import { PageRepository } from '@domain/page/PageRepository';
 import { SystemRepository } from '@domain/system/SystemRepository';
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { System, Page, Visibility } from '@prisma/client';
+import { error, ok } from '@app/v2/misc/swagger';
+import { ApiError } from '@app/v2/dto/response/errors';
+import { ApiDataResponse } from '@app/v2/types/response';
+import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
+import { BaseController } from '../BaseController';
 
 @Controller({
   path: '/public/system/:systemId/page',
   version: '2',
 })
 @ApiTags('SystemPagePublic')
-@ApiExtraModels(PagesResponse, PageResponse)
-export class PublicSystemPageController {
-  constructor(private readonly pages: PageRepository, private readonly systems: SystemRepository) {}
+export class PublicSystemPageController extends BaseController {
+  constructor(private readonly pages: PageRepository, private readonly systems: SystemRepository) {
+    super();
+  }
 
   @Get('/')
-  @ApiResponse(ok(200, PagesResponse))
-  @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async list(@Param('systemId') systemId: string): Promise<Ok<PagesResponse>> {
+  @HttpCode(200)
+  @ApiResponse(ok(200, [PageDto]))
+  @ApiResponse(error(404, ApiError.ResourceNotFound))
+  async list(@Param('systemId') systemId: string): Promise<ApiDataResponse<PageDto[]>> {
     const system = await this.findSystemOrFail(systemId);
 
     const pages = await this.pages.findMany({
@@ -33,14 +35,15 @@ export class PublicSystemPageController {
       },
     });
 
-    return Status.ok(new PagesResponse(pages.map(PageDto.from)));
+    return this.data(pages.map(PageDto.from));
   }
 
   @Get('/:id')
-  @ApiResponse(ok(200, PageResponse))
-  @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async view(@Param('systemId') systemId: string, @Param('id') id: string): Promise<Ok<PageResponse>> {
-    return Status.ok(new PageResponse(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), id))));
+  @HttpCode(200)
+  @ApiResponse(ok(200, PageDto))
+  @ApiResponse(error(404, ApiError.ResourceNotFound))
+  async view(@Param('systemId') systemId: string, @Param('id') id: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), id)));
   }
 
   protected async findSystemOrFail(systemId: string): Promise<System> {

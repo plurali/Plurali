@@ -4,8 +4,8 @@ import type { Status } from '@app/v1/dto/Status';
 import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
 import type { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMembersResponse';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
+import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
+import type { PageResponse } from '@app/v1/dto/page/response/PageResponse';
 
 export const getSystem = (systemId: string): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.request<Status<SystemResponse>>({
@@ -15,13 +15,13 @@ export const getSystem = (systemId: string): Promise<AxiosResponse<Status<System
 
 export const getSystemPages = (systemId: string): Promise<AxiosResponse<Status<PagesResponse>>> =>
   $axios.request<Status<PagesResponse>>({
-    url: `/v2/public/system/${systemId}/page`,
+    url: `/v1/public/system/${systemId}/page`,
     method: 'GET',
   });
 
 export const getSystemPage = (systemId: string, pageId: string): Promise<AxiosResponse<Status<PageResponse>>> =>
   $axios.request<Status<PageResponse>>({
-    url: `/v2/public/system/${systemId}/page/${pageId}`,
+    url: `/v1/public/system/${systemId}/page/${pageId}`,
     method: 'GET',
   });
 
@@ -39,12 +39,12 @@ export const getMembers = (systemId: string): Promise<AxiosResponse<Status<Syste
 
 export const getMemberPages = (memberId: string): Promise<AxiosResponse<Status<PagesResponse>>> =>
   $axios.request<Status<PagesResponse>>({
-    url: `/v2/public/member/${memberId}/page`,
+    url: `/v1/public/member/${memberId}/page`,
     method: 'GET',
   });
 
 export const getMemberPage = (memberId: string, pageId: string): Promise<AxiosResponse<Status<PageResponse>>> =>
   $axios.request<Status<PageResponse>>({
-    url: `/v2/public/member/${memberId}/page/${pageId}`,
+    url: `/v1/public/member/${memberId}/page/${pageId}`,
     method: 'GET',
   });

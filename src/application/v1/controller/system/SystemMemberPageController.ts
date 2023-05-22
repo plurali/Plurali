@@ -1,43 +1,38 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
 import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { PageDto } from '@app/v2/dto/page/PageDto';
-import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
-import { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiDataResponse } from '@app/v2/types/response';
+import { error, ok } from '@app/misc/swagger';
+import { OkResponse } from '@app/v1/dto/OkResponse';
+import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
+import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
+import { PageDto } from '@app/v1/dto/page/PageDto';
+import { CreatePageRequest } from '@app/v1/dto/page/request/CreatePageRequest';
+import { UpdatePageRequest } from '@app/v1/dto/page/request/UpdatePageRequest';
+import { PageResponse } from '@app/v1/dto/page/response/PageResponse';
+import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
 import { PageRepository } from '@domain/page/PageRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { BaseController } from '../BaseController';
-import { Ok } from '@app/v2/dto/response/Ok';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
 
 @Controller({
   path: '/member/:memberId/page',
-  version: '2',
+  version: '1',
 })
-@ApiTags('MemberPage')
+@ApiTags('SystemMemberPageV1')
 @ApiSecurity('bearer')
-export class MemberPageController extends BaseController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {
-    super();
-  }
+@ApiExtraModels(PageResponse, PagesResponse, OkResponse)
+export class SystemMemberPageController {
+  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {}
 
   @UseGuards(SystemGuard)
   @Get('/')
-  @HttpCode(200)
-  @ApiResponse(ok(200, [PageDto]))
-  @ApiResponse(error(400, ApiError.InvalidPluralKey))
-  @ApiResponse(error(401, ApiError.NotAuthenticated))
-  async list(
-    @CurrentSystem() system: System,
-    @Param('memberId') memberId: string
-  ): Promise<ApiDataResponse<PageDto[]>> {
+  @ApiResponse(ok(200, PagesResponse))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
+  async list(@CurrentSystem() system: System, @Param('memberId') memberId: string): Promise<Ok<PagesResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     const pages = await this.pages.findMany({
@@ -47,39 +42,39 @@ export class MemberPageController extends BaseController {
       },
     });
 
-    return this.data(pages.map(PageDto.from));
+    return Status.ok(new PagesResponse(pages.map(PageDto.from)));
   }
 
   @UseGuards(SystemGuard)
   @Get('/:id')
-  @HttpCode(200)
-  @ApiResponse(ok(200, PageDto))
-  @ApiResponse(error(404, ApiError.ResourceNotFound))
-  @ApiResponse(error(400, ApiError.InvalidPluralKey))
-  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
     @Param('id') id: string
-  ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id)));
+  ): Promise<Ok<PageResponse>> {
+    return Status.ok(
+      new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id)))
+    );
   }
 
   @UseGuards(SystemGuard)
   @Post('/:id')
-  @HttpCode(200)
-  @ApiResponse(ok(200, PageDto))
-  @ApiResponse(error(404, ApiError.ResourceNotFound))
-  @ApiResponse(error(400, ApiError.InvalidPluralKey))
-  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('id') id: string,
     @Param('memberId') memberId: string,
     @Body() data: UpdatePageRequest
-  ): Promise<ApiDataResponse<PageDto>> {
+  ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     let page = await this.findOrFail(member, user, id);
@@ -107,22 +102,21 @@ export class MemberPageController extends BaseController {
       });
     }
 
-    return this.data(PageDto.from(page));
+    return Status.ok(new PageResponse(PageDto.from(page)));
   }
 
   @UseGuards(SystemGuard)
   @Delete('/:id')
-  @HttpCode(200)
-  @ApiResponse(ok(200, Ok))
-  @ApiResponse(error(404, ApiError.ResourceNotFound))
-  @ApiResponse(error(400, ApiError.InvalidPluralKey))
-  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(ok(200, OkResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
     @Param('id') id: string
-  ): Promise<ApiDataResponse<Ok>> {
+  ): Promise<Ok<OkResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     await this.pages.delete({
@@ -131,22 +125,21 @@ export class MemberPageController extends BaseController {
       },
     });
 
-    return this.ok();
+    return Status.ok(new OkResponse());
   }
 
   @UseGuards(SystemGuard)
   @Put('/')
-  @HttpCode(200)
-  @ApiResponse(ok(200, PageDto))
-  @ApiResponse(error(404, ApiError.ResourceNotFound))
-  @ApiResponse(error(400, ApiError.InvalidPluralKey))
-  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(ok(200, PageResponse))
+  @ApiResponse(error(404, StatusMap.ResourceNotFound))
+  @ApiResponse(error(400, StatusMap.InvalidPluralKey))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
     @Body() data: CreatePageRequest
-  ): Promise<ApiDataResponse<PageDto>> {
+  ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     const page = await this.pages.create({
@@ -160,7 +153,7 @@ export class MemberPageController extends BaseController {
       },
     });
 
-    return this.data(PageDto.from(page));
+    return Status.ok(new PageResponse(PageDto.from(page)));
   }
 
   protected async findMemberOrFail(system: System, memberId: string): Promise<Member> {

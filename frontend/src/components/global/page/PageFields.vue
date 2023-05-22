@@ -9,7 +9,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
+import type { PageDto } from '@app/v1/dto/page/PageDto';
 import PageField from './PageField.vue';
 
 export default defineComponent({

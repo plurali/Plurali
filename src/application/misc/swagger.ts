@@ -19,6 +19,12 @@ export const swagger = new DocumentBuilder()
   .addTag('SystemMember')
   .addTag('SystemMemberPublic')
 
+  .addTag('SystemPageV1')
+  .addTag('SystemPagePublicV1')
+
+  .addTag('SystemMemberPageV1')
+  .addTag('SystemMemberPagePublicV1')
+
   // V2
   .addTag('SystemPage')
   .addTag('SystemPagePublic')
