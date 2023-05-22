@@ -72,16 +72,12 @@ export class PublicSystemMemberController {
     system: SystemWithFields & SystemWithUser,
     plural?: PluralMemberEntry[]
   ): Promise<UserMemberDto> {
-    console.log({ member, system, plural });
     const extendedMember = assignSystem(member, system);
 
     let pluralMember = plural ? plural.find(m => m.id === member.pluralId) : null;
-    console.log('1', pluralMember);
     if (!pluralMember) {
       // Attempt to fetch alone
       pluralMember = await this.plural.findMember(extendedMember);
-
-      console.log('2', pluralMember);
 
       if (!pluralMember) {
         throw new InvalidRequestException();
