@@ -52,7 +52,7 @@ async function bootstrap() {
   // Development
   SwaggerModule.setup('oa', app, SwaggerModule.createDocument(app, swagger, { deepScanRoutes: true }));
 
-  if (process.argv.includes('--rebuild')) {
+  if (process.argv.includes('--rebuild') || process.argv.includes('--rebuild-only')) {
     const cacheService = app.get(CacheService);
 
     await cacheService.rebuild();
@@ -74,6 +74,10 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  await app.listen(server as any);
+  if (!process.argv.includes('--rebuild-only')) {
+    await app.listen(server as any);
+  } else {
+    process.exit(0);
+  }
 }
 bootstrap();
