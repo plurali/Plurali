@@ -4,7 +4,7 @@ import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto';
 import { MemberFieldType } from '../../../src/domain/plural/utils';
 
-export const string = (string: string, useMd: boolean): string =>
+export const string = (string: string, useMd = true): string =>
   useMd
     ? markdown({
         html: true,

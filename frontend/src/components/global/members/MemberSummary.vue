@@ -13,8 +13,8 @@
         {{ member.name }}
       </PageTitle>
       <Subtitle class="mb-3" v-if="member.description">
-          <Sanitized :value="string(member.description, true)"/>
-        </Subtitle>
+        <Sanitized :value="string(member.description, true)" />
+      </Subtitle>
       <span v-if="member.color" class="inline-flex text-gray-700 items-center gap-1">
         Color: {{ member.color }} <ColorCircle :color="member.color" />
       </span>

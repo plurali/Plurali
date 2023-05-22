@@ -20,7 +20,9 @@
         <ColorCircle :color="value!" />
         <span class="text-sm">{{ value }}</span>
       </span>
-      <span v-else v-html="value"></span>
+      <Subtitle class="mb-3 max-h-20 overflow-x-hidden overflow-y-scroll" v-else>
+        <Sanitized :value="value" />
+      </Subtitle>
     </p>
   </div>
 </template>
@@ -32,7 +34,7 @@ import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto
 import { flash, FlashType } from '../../../store'
 import { formatError } from '../../../api'
 import { updateField } from '../../../api/system'
-import { formatField } from '../../../api/fields'
+import { formatField, string } from '../../../api/fields'
 import ColorCircle from '../color/ColorCircle.vue'
 
 export default defineComponent({
