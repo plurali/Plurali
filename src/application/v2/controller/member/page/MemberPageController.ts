@@ -1,9 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/context/system/CurrentSystem';
-import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
@@ -16,6 +13,9 @@ import { PageRepository } from '@domain/page/PageRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { BaseController } from '../../BaseController';
 import { Ok } from '@app/v2/dto/response/Ok';
+import { SystemGuard } from '@app/v2/context/system/SystemGuard';
+import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
+import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 
 @Controller({
   path: '/member/:member/page',
@@ -64,7 +64,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:page')
+  @Patch('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))

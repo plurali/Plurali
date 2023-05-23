@@ -2,7 +2,7 @@ import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { AuthRequest } from '@app/v1/dto/auth/request/AuthRequest';
 import { AuthResponse } from '@app/v1/dto/auth/response/AuthResponse';
 import { UserDto } from '@app/v1/dto/user/UserDto';
-import { UserAuthenticator } from '@domain/security/authenticator/UserAuthenticator';
+import { UserAuthenticator } from '@domain/security/authenticator/user/UserAuthenticator';
 import { Body, Controller, Inject, Post, Put } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CacheService } from '@domain/cache/CacheService';

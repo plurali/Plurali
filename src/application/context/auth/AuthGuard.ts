@@ -6,6 +6,9 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { FastifyRequest } from 'fastify';
 
+/**
+ * @deprecated v2
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private readonly signer: JwtService, private readonly users: UserRepository) {}

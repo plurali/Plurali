@@ -1,6 +1,5 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { SystemRepository } from '@domain/system/SystemRepository';
-import { PluralRestService } from '@domain/plural/PluralRestService';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/v2/misc/swagger';
 import { ApiError } from '@app/v2/dto/response/errors';
@@ -16,7 +15,7 @@ import { FieldDto } from '@app/v2/dto/field/FieldDto';
 @ApiTags('SystemFieldPublic')
 @ApiExtraModels(FieldDto)
 export class PublicSystemFieldController extends BaseController {
-  constructor(private system: SystemRepository, private plural: PluralRestService) {
+  constructor(private system: SystemRepository) {
     super();
   }
 

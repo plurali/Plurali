@@ -1,8 +1,9 @@
 import { ApiErrorMessage } from '../dto/response/errors';
 import { ApiError } from '../dto/response/errors';
+import { ApiWarning } from '../dto/response/warning';
 
 export interface ApiResponseMeta {
-  warning?: string;
+  warning?: ApiWarning;
 }
 
 export interface ApiResponsePagination {

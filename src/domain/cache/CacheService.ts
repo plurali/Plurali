@@ -295,4 +295,18 @@ export class CacheService {
       `SystemSID${member.pluralParentId}_MemberSID${member.pluralId}`
     );
   }
+
+  async clearUser(user: User & { system?: System }): Promise<void> {
+    const system =
+      user.system ??
+      (await this.prisma.system.findFirst({
+        where: {
+          userId: user.id,
+        },
+      }));
+
+    if (system) {
+      await this.clearSystem(system);
+    }
+  }
 }

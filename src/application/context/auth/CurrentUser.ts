@@ -4,6 +4,7 @@ import { User } from '@prisma/client';
 
 /**
  * Returns the user for an authenticated request.
+ * @deprecated v2
  */
 export const CurrentUser = createParamDecorator((_: unknown, ctx: ExecutionContext): User => {
   const request: RequestWithUser = ctx.switchToHttp().getRequest();

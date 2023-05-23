@@ -1,15 +1,15 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
-import { PluralRestService } from '@domain/plural/PluralRestService';
+import { Visibility } from '@prisma/client';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { PluralRestService } from '@domain/plural/PluralRestService';
 import { error, ok } from '@app/v2/misc/swagger';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { BaseController } from '../../BaseController';
 import { FieldDto } from '@app/v2/dto/field/FieldDto';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Visibility } from '@prisma/client';
 import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
+import { BaseController } from '../../BaseController';
 
 @Controller({
   path: '/public/member/:member/field',

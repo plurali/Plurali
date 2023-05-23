@@ -8,6 +8,9 @@ import { StatusException } from '@app/v1/exception/StatusException';
 import { StatusMap } from '@app/v1/dto/Status';
 import { NotAuthenticatedException } from '@app/v1/exception/NotAuthenticatedException';
 
+/**
+ * @deprecated v2
+ */
 @Injectable()
 export class SystemGuard extends AuthGuard {
   constructor(signer: JwtService, users: UserRepository, private readonly systems: SystemRepository) {

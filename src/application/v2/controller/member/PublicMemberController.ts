@@ -46,8 +46,6 @@ export class PublicMemberController extends BaseController {
   ): Promise<ApiPaginatedDataResponse<MemberDto>> {
     const query = this.createPaginationQuery(page, take);
 
-    console.log(query);
-
     // Query system once instead of multiple times for each member
     const system = await this.system.findPublic(systemId, query);
     if (!system) {

@@ -1,9 +1,6 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Page, Prisma, System, User, Visibility } from '@prisma/client';
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/context/system/CurrentSystem';
-import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { error, ok } from '@app/v2/misc/swagger';
 import { PageDto } from '@app/v2/dto/page/PageDto';
@@ -14,6 +11,9 @@ import { ApiDataResponse } from '@app/v2/types/response';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { Ok } from '@app/v2/dto/response/Ok';
 import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
+import { SystemGuard } from '@app/v2/context/system/SystemGuard';
+import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
+import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 import { BaseController } from '../../BaseController';
 
 @Controller({
@@ -61,7 +61,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:page')
+  @Patch('/:page')
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))

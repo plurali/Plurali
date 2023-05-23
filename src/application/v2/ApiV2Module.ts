@@ -4,6 +4,7 @@ import { PageModule } from '@domain/page/PageModule';
 import { PluralModule } from '@domain/plural/PluralModule';
 import { SystemModule } from '@domain/system/SystemModule';
 import { UserModule } from '@domain/user/UserModule';
+import { StorageModule } from '@infra/storage/StorageModule';
 import { MemberPageController } from './controller/member/page/MemberPageController';
 import { SystemPageController } from './controller/system/page/SystemPageController';
 import { PublicMemberPageController } from './controller/member/page/PublicMemberPageController';
@@ -12,11 +13,19 @@ import { PublicMemberController } from './controller/member/PublicMemberControll
 import { PublicSystemController } from './controller/system/PublicSystemController';
 import { PublicSystemFieldController } from './controller/system/field/PublicSystemFieldController';
 import { PublicMemberFieldController } from './controller/member/field/PublicMemberFieldController';
+import { AuthController } from './controller/auth/AuthController';
+import { UserController } from './controller/user/UserController';
+import { MemberController } from './controller/member/MemberController';
+import { SystemController } from './controller/system/SystemController';
 
 @Module({
-  imports: [PageModule, SystemModule, UserModule, JwtModule, PluralModule],
+  imports: [PageModule, SystemModule, UserModule, JwtModule, PluralModule, StorageModule],
   controllers: [
+    AuthController,
+    UserController,
+    MemberController,
     MemberPageController,
+    SystemController,
     SystemPageController,
     PublicSystemController,
     PublicSystemFieldController,

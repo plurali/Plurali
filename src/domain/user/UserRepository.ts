@@ -7,4 +7,8 @@ export class UserRepository extends PrismaRepository<'user'> {
   constructor(prisma: PrismaService) {
     super('user', prisma);
   }
+
+  public async usernameExists(username: string): Promise<boolean> {
+    return (await this.count({ where: { username } })) >= 1;
+  }
 }

@@ -4,6 +4,7 @@ import { System } from '@prisma/client';
 
 /**
  * Returns the system for the current user.
+ * @deprecated v2
  */
 export const CurrentSystem = createParamDecorator((_: unknown, ctx: ExecutionContext): System => {
   const request: RequestWithSystem = ctx.switchToHttp().getRequest();
