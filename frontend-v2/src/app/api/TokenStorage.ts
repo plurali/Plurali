@@ -16,6 +16,10 @@ export class TokenStorage {
       localStorage.removeItem(this.storageKey);
     }
   }
+
+  clear() {
+    this.set(null);
+  }
 }
 
 export const $tokenStorage = new TokenStorage('_plurali_auth');

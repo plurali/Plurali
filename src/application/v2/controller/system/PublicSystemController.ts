@@ -26,7 +26,9 @@ export class PublicSystemController extends BaseController {
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async view(@Param('system') systemId: string): Promise<ApiDataResponse<SystemDto>> {
-    const system = await this.system.findPublicBase(systemId);
+    const system = await this.system.findPublicBase(systemId, {
+      user: true
+    });
 
     if (!system) {
       throw new ResourceNotFoundException();

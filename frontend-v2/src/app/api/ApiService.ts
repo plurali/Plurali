@@ -1,10 +1,9 @@
-import type { Error, Status, SuccessData } from '@app/v1/dto/Status';
-import type { AxiosResponse, AxiosInstance } from 'axios';
-import type { TokenStorage } from './TokenStorage';
+import type { AxiosInstance, AxiosError } from 'axios';
 import axios from 'axios';
-import { $topbar } from '../topbar';
-import { $tokenStorage } from './TokenStorage';
-import { ApiErrorResponse } from './types';
+import { TokenStorage, $tokenStorage } from './TokenStorage';
+import { ApiErrorResponse } from "@app/v2/types/response";
+import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utilts';
+
 
 export class ApiService {
   public readonly client: AxiosInstance;
@@ -15,44 +14,33 @@ export class ApiService {
     });
   }
 
-  public handleException(error: any): ApiErrorResponse {
+  public handleException(e: any): ApiErrorResponse {
     return {
       success: false,
-      error: this.formatError(error),
+      statusCode: e?.response?.data?.statusCode ?? e?.response?.statusCode ?? e?.statusCode ?? -1,
+      error: {
+        type: e?.response?.data?.error?.type ?? e?.error?.type ?? ApiErrorMap.UnknownError,
+        message: this.getErrorMessage(e),
+      },
+      meta: e?.response?.data?.meta ?? e?.meta ?? {},
     };
+  }
+
+  public getErrorMessage(e: any | ApiError | AxiosError | ApiErrorResponse): string {
+    if (!e || !["object", "string"].includes(typeof e)) return ApiErrorMessage[apiError(ApiErrorMap.UnknownError)];
+    if (typeof e === "object") e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type ?? ApiErrorMap.UnknownError);
+
+    if (e in ApiErrorMessage) {
+      return (ApiErrorMessage as any)[e];
+    }
+
+    return e;
   }
 
   public updateAuth() {
     const auth = this.token.get();
     if (auth) {
       this.client.defaults.headers.common.Authorization = `Bearer ${auth}`;
-    }
-  }
-
-  public formatError(e: any): string {
-    return e?.response?.data?.error ?? e?.message ?? 'Unknown error has occurred. Please try again.';
-  }
-
-  public async wrapRequest<T extends object = SuccessData>(
-    fn: () => Promise<AxiosResponse<Status<T>>> | null
-  ): Promise<T | false> {
-    // clearFlashes();
-
-    const promise = fn();
-    if (!promise) return false;
-
-    try {
-      const res = await $topbar.promised(promise);
-      if (!res.data.success) throw new Error(res.data.error);
-
-      if ('warning' in res.data.data) {
-        // flash(String(res.data.data.warning), FlashType.Warning, false, true);
-      }
-
-      return res.data.data;
-    } catch (e) {
-      //   flash(formatError(e), FlashType.Danger, true);
-      return false;
     }
   }
 }

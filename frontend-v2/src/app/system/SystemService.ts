@@ -1,22 +1,21 @@
-import type { UpdateSystemRequest } from '@app/v1/dto/user/system/request/UpdateSystemRequest';
-import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { ApiService } from '@/app/api/ApiService';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
-import type { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
-import type { OkResponse } from '@app/v1/dto/OkResponse';
-import type { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
-import type { ApiResponse } from '../api/types';
 import { $api } from '@/app/api/ApiService';
+import { ApiResponse } from '@app/v2/types/response';
+import {SystemDto} from '@app/v2/dto/system/SystemDto'
+import {UpdateSystemRequest} from '@app/v2/dto/system/request/UpdateSystemRequest';
+import { PageDto } from '@app/v2/dto/page/PageDto';
+import { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
+import { Ok } from '@app/v2/dto/response/Ok';
+import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
 
 export class SystemService {
   constructor(public readonly api: ApiService) {}
 
-  public async getSystem(): Promise<ApiResponse<SystemResponse>> {
+  public async getSystem(): Promise<ApiResponse<SystemDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemResponse>>({
-          url: '/v1/system',
+        await this.api.client.request<ApiResponse<SystemDto>>({
+          url: '/v2/system',
           method: 'GET',
         })
       ).data;
@@ -25,11 +24,11 @@ export class SystemService {
     }
   }
 
-  public async getPublicSystem(systemId: string): Promise<ApiResponse<SystemResponse>> {
+  public async getPublicSystem(systemId: string): Promise<ApiResponse<SystemDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemResponse>>({
-          url: `/v1/public/system/${systemId}`,
+        await this.api.client.request<ApiResponse<SystemDto>>({
+          url: `/v2/public/system/${systemId}`,
           method: 'GET',
         })
       ).data;
@@ -38,12 +37,12 @@ export class SystemService {
     }
   }
 
-  public async updateSystem(data: Partial<UpdateSystemRequest>): Promise<ApiResponse<SystemResponse>> {
+  public async updateSystem(data: Partial<UpdateSystemRequest>): Promise<ApiResponse<SystemDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemResponse>>({
-          url: `/v1/system`,
-          method: 'POST',
+        await this.api.client.request<ApiResponse<SystemDto>>({
+          url: `/v2/system`,
+          method: 'PATCH',
           data,
         })
       ).data;
@@ -52,18 +51,18 @@ export class SystemService {
     }
   }
 
-  public async updateSystemBackgroundImage(file: Blob): Promise<ApiResponse<SystemResponse>> {
+  public async updateSystemBackgroundImage(file: Blob): Promise<ApiResponse<SystemDto>> {
     try {
-      return (await this.api.client.postForm<ApiResponse<SystemResponse>>('/v1/system/background', { file })).data;
+      return (await this.api.client.postForm<ApiResponse<SystemDto>>('/v2/system/background', { file })).data;
     } catch (error) {
       return this.api.handleException(error);
     }
   }
 
-  public async getPublicSystemPages(systemId: string): Promise<ApiResponse<PagesResponse>> {
+  public async getPublicSystemPages(systemId: string): Promise<ApiResponse<PageDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PagesResponse>>({
+        await this.api.client.request<ApiResponse<PageDto[]>>({
           url: `/v2/public/system/${systemId}/page`,
           method: 'GET',
         })
@@ -73,10 +72,10 @@ export class SystemService {
     }
   }
 
-  public async getPublicSystemPage(systemId: string, pageId: string): Promise<ApiResponse<PageResponse>> {
+  public async getPublicSystemPage(systemId: string, pageId: string): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/public/system/${systemId}/page/${pageId}`,
           method: 'GET',
         })
@@ -86,10 +85,10 @@ export class SystemService {
     }
   }
 
-  public async getSystemPages(): Promise<ApiResponse<PagesResponse>> {
+  public async getSystemPages(): Promise<ApiResponse<PageDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PagesResponse>>({
+        await this.api.client.request<ApiResponse<PageDto[]>>({
           url: `/v2/system/page`,
           method: 'GET',
         })
@@ -99,10 +98,10 @@ export class SystemService {
     }
   }
 
-  public async getSystemPage(pageId: string): Promise<ApiResponse<PageResponse>> {
+  public async getSystemPage(pageId: string): Promise<ApiResponse<PageDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto[]>>({
           url: `/v2/system/page/${pageId}`,
           method: 'GET',
         })
@@ -112,12 +111,12 @@ export class SystemService {
     }
   }
 
-  public async updateSystemPage(pageId: string, data: Partial<UpdatePageRequest>): Promise<ApiResponse<PageResponse>> {
+  public async updateSystemPage(pageId: string, data: Partial<UpdatePageRequest>): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/system/page/${pageId}`,
-          method: 'POST',
+          method: 'PATCH',
           data,
         })
       ).data;
@@ -126,10 +125,10 @@ export class SystemService {
     }
   }
 
-  public async deleteSystemPage(pageId: string): Promise<ApiResponse<OkResponse>> {
+  public async deleteSystemPage(pageId: string): Promise<ApiResponse<Ok>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<OkResponse>>({
+        await this.api.client.request<ApiResponse<Ok>>({
           url: `/v2/system/page/${pageId}`,
           method: 'DELETE',
         })
@@ -139,10 +138,10 @@ export class SystemService {
     }
   }
 
-  public async createSystemPage(data: CreatePageRequest): Promise<ApiResponse<PageResponse>> {
+  public async createSystemPage(data: CreatePageRequest): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/system/page`,
           method: 'PUT',
           data,

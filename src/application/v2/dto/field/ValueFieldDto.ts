@@ -1,9 +1,13 @@
-import { Field, MemberFieldType } from '@prisma/client';
+import { Field } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { FieldDto } from './FieldDto';
 import { FieldDataDto } from './FieldDataDto';
+import { MemberFieldType } from '@domain/plural/utils';
+import { convertFieldType } from '@domain/common';
 
 export class ValueFieldDto extends FieldDto {
+  public type = "field_value";
+
   @ApiProperty()
   public value: string;
 
@@ -18,7 +22,7 @@ export class ValueFieldDto extends FieldDto {
       field.name,
       value,
       field.position,
-      field.type,
+      convertFieldType(field.type),
       new FieldDataDto(field.visibility)
     );
   }

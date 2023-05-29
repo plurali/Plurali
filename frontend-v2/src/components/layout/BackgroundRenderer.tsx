@@ -37,7 +37,7 @@ export const BackgroundRenderer = () => {
   return (
     <>
       <Transition
-        appear={true}
+        appear={false}
         show={true}
         className={'absolute'}
         enter="duration-300 ease-in-out"

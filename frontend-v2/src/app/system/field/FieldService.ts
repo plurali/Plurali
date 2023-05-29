@@ -1,21 +1,21 @@
-import type { UpdateSystemFieldRequest } from '@app/v1/dto/user/system/request/UpdateSystemFieldRequest';
-import type { SystemFieldResponse } from '@app/v1/dto/user/system/response/SystemFieldResponse';
 import type { ApiService } from '@/app/api/ApiService';
 import { $api } from '@/app/api/ApiService';
-import { ApiResponse } from '@/app/api/types';
+import { ApiResponse } from '@app/v2/types/response';
+import {UpdateFieldRequest} from '@app/v2/dto/field/request/UpdateFieldRequest'
+import { FieldDto } from '@app/v2/dto/field/FieldDto';
 
 export class FieldService {
   constructor(public readonly api: ApiService) {}
 
   public async updateField(
     id: string,
-    data: Partial<UpdateSystemFieldRequest>
-  ): Promise<ApiResponse<SystemFieldResponse>> {
+    data: Partial<UpdateFieldRequest>
+  ): Promise<ApiResponse<FieldDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemFieldResponse>>({
-          url: `/v1/system/fields/${id}`,
-          method: 'POST',
+        await this.api.client.request<ApiResponse<FieldDto>>({
+          url: `/v2/system/field/${id}`,
+          method: 'PATCH',
           data,
         })
       ).data;

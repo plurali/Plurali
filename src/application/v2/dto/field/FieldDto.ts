@@ -1,10 +1,11 @@
-import { Field, MemberFieldType } from '@prisma/client';
+import { Field } from '@prisma/client';
 import { FieldDataDto } from './FieldDataDto';
 import { ApiProperty } from '@nestjs/swagger';
+import { MemberFieldType } from '@domain/plural/utils';
+import { convertFieldType } from '@domain/common';
 
 export class FieldDto {
-  @ApiProperty({ default: 'field' })
-  public type = 'field';
+  public type = "field";
 
   @ApiProperty()
   public id: string;
@@ -15,7 +16,7 @@ export class FieldDto {
   @ApiProperty()
   public position: number;
 
-  @ApiProperty()
+  @ApiProperty({ default: MemberFieldType.String, enum: Object.keys(MemberFieldType) })
   public fieldType: MemberFieldType;
 
   @ApiProperty()
@@ -30,6 +31,6 @@ export class FieldDto {
   }
 
   public static from(field: Field): FieldDto {
-    return new FieldDto(field.pluralId, field.name, field.position, field.type, new FieldDataDto(field.visibility));
+    return new FieldDto(field.pluralId, field.name, field.position, convertFieldType(field.type), new FieldDataDto(field.visibility));
   }
 }

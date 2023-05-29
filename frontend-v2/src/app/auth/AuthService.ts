@@ -1,21 +1,21 @@
-import type { AuthRequest } from '@app/v1/dto/auth/request/AuthRequest';
-import type { AuthResponse } from '@app/v1/dto/auth/response/AuthResponse';
-import type { ApiResponse } from '@/app/api/types';
+import type { AuthRequest } from '@app/v2/dto/auth/request/AuthRequest';
+import type { AuthDto } from '@app/v2/dto/auth/AuthDto';
 import { $api, ApiService } from '@/app/api/ApiService';
+import { ApiResponse } from '@app/v2/types/response';
 
 export class AuthService {
-  constructor(private readonly api: ApiService) {}
+  constructor(private readonly api: ApiService) { }
 
-  public async register(data: AuthRequest): Promise<ApiResponse<AuthResponse>> {
+  public async register(data: AuthRequest): Promise<ApiResponse<AuthDto>> {
     try {
-      const res = await this.api.client.request<ApiResponse<AuthResponse>>({
-        url: '/v1/auth/register',
+      const res = await this.api.client.request<ApiResponse<AuthDto>>({
+        url: '/v2/auth/register',
         method: 'PUT',
         data,
       });
 
       if (res.data.success) {
-        this.api.token.set(res.data.data.auth);
+        this.api.token.set(res.data.data.token);
         this.api.updateAuth();
       }
 
@@ -25,16 +25,16 @@ export class AuthService {
     }
   }
 
-  public async login(data: AuthRequest): Promise<ApiResponse<AuthResponse>> {
+  public async login(data: AuthRequest): Promise<ApiResponse<AuthDto>> {
     try {
-      const res = await this.api.client.request<ApiResponse<AuthResponse>>({
-        url: '/v1/auth/register',
-        method: 'PUT',
+      const res = await this.api.client.request<ApiResponse<AuthDto>>({
+        url: '/v2/auth/login',
+        method: 'POST',
         data,
       });
 
       if (res.data.success) {
-        this.api.token.set(res.data.data.auth);
+        this.api.token.set(res.data.data.token);
         this.api.updateAuth();
       }
 
@@ -42,6 +42,11 @@ export class AuthService {
     } catch (error) {
       return this.api.handleException(error);
     }
+  }
+
+  protected updateAuth(token: string | null) {
+    this.api.token.set(token);
+    this.api.updateAuth();
   }
 }
 

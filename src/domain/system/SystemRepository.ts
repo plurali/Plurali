@@ -41,7 +41,7 @@ export class SystemRepository extends PrismaRepository<'system'> {
     return data as SystemWithUser & SystemWithCollections;
   }
 
-  public async findPublicBase(slug: string, include: Prisma.SystemInclude = {}) {
+  public async findPublicBase(slug: string, include: Prisma.SystemInclude = undefined) {
     if (!slug) return null;
 
     const data = await this.findFirst({

@@ -1,0 +1,36 @@
+@import "@simonwep/pickr/dist/themes/classic.min.css";
+
+.pcr-app[data-theme='classic'] {
+    @apply w-72 max-w-[18rem] !rounded-xl !important;
+}
+
+.pcr-app .pcr-palette {
+    @apply !rounded-t-lg;
+}
+
+.pcr-app .pcr-palette:before {
+    @apply !rounded-t-lg;
+}
+
+.pcr-interaction input[type='button'] {
+    @apply border-[2.5px] !bg-violet-700 hover: !bg-opacity-75 border-violet-300 !text-white font-medium inline-flex justify-center items-center gap-1 rounded-[0.35rem] px-4 py-2 text-base;
+}
+
+.pcr-interaction input[type='text'] {
+    @apply border-[2.5px] !bg-gray-200 bg-opacity-25 border-violet-300 !text-black font-medium inline-flex justify-center items-center gap-1 !rounded-md px-4 py-2 text-base;
+}
+
+.pcr-app .pcr-interaction .pcr-save:hover,
+.pcr-app .pcr-interaction .pcr-cancel:hover,
+.pcr-app .pcr-interaction .pcr-clear:hover {
+    @apply !filter-none;
+}
+
+.pickr .pcr-button {
+    @apply w-full min-h-[10rem] !rounded-2xl;
+}
+
+.pickr .pcr-button:before,
+.pickr .pcr-button:after {
+    @apply !rounded-2xl;
+}

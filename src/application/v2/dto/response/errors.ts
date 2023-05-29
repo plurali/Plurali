@@ -9,6 +9,7 @@ export enum ApiError {
   Unauthorized = 'unauthorized',
   UnsupportedFile = 'unsupported_file',
   UploadFailed = 'upload_failed',
+  UnknownError = 'unknown_error',
 }
 
 export const ApiErrorMessage: Record<ApiError, string> = {
@@ -22,4 +23,5 @@ export const ApiErrorMessage: Record<ApiError, string> = {
   [ApiError.Unauthorized]: 'You are not authorized for this action',
   [ApiError.UnsupportedFile]: 'This file is not supported',
   [ApiError.UploadFailed]: 'The file upload has failed, please try again',
+  [ApiError.UnknownError]: 'An unknown error has occurred, please try again'
 };

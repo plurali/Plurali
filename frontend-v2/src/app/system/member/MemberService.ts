@@ -1,23 +1,22 @@
-import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
-import type { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMembersResponse';
-import type { UpdateSystemMemberRequest } from '@app/v1/dto/user/system/request/UpdateSystemMemberRequest';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
+import type { UpdateMemberRequest } from '@app/v2/dto/member/request/UpdateMemberRequest';
 import type { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
-import type { OkResponse } from '@app/v1/dto/OkResponse';
 import type { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
-import type { ApiService } from '@/app/api/ApiService';
-import type { ApiResponse } from '@/app/api/types';
-import { $api } from '@/app/api/ApiService';
+import type { Ok } from '@app/v2/dto/response/Ok';
+import type { MemberDto } from '@app/v2/dto/member/MemberDto';
+import type { PageDto } from '@app/v2/dto/page/PageDto';
+import { $api, ApiService } from '@/app/api/ApiService';
+import type { PaginationRequestQuery } from '@app/v2/types/request';
+import type { ApiResponse } from '@app/v2/types/response';
 
 export class MemberService {
-  constructor(private readonly api: ApiService) {}
+  constructor(private readonly api: ApiService) {
+  }
 
-  public async getMembers(): Promise<ApiResponse<SystemMembersResponse>> {
+  public async getMembers(): Promise<ApiResponse<MemberDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemMembersResponse>>({
-          url: '/v1/system/members',
+        await this.api.client.request<ApiResponse<MemberDto[]>>({
+          url: '/v2/member',
           method: 'GET',
         })
       ).data;
@@ -26,11 +25,11 @@ export class MemberService {
     }
   }
 
-  public async getMember(id: string): Promise<ApiResponse<SystemMemberResponse>> {
+  public async getMember(id: string): Promise<ApiResponse<MemberDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemMemberResponse>>({
-          url: `/v1/system/members/${id}`,
+        await this.api.client.request<ApiResponse<MemberDto>>({
+          url: `/v2/member/${id}`,
           method: 'GET',
         })
       ).data;
@@ -39,11 +38,11 @@ export class MemberService {
     }
   }
 
-  public async getPublicMember(systemId: string, memberId: string): Promise<ApiResponse<SystemMemberResponse>> {
+  public async getPublicMember(systemId: string, memberId: string): Promise<ApiResponse<MemberDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemMemberResponse>>({
-          url: `/v1/public/system/${systemId}/members/${memberId}`,
+        await this.api.client.request<ApiResponse<MemberDto>>({
+          url: `/v2/public/system/${systemId}/member/${memberId}`,
           method: 'GET',
         })
       ).data;
@@ -52,12 +51,13 @@ export class MemberService {
     }
   }
 
-  public async getPublicMembers(systemId: string): Promise<ApiResponse<SystemMembersResponse>> {
+  public async getPublicMembers(systemId: string, query?: PaginationRequestQuery): Promise<ApiResponse<MemberDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemMembersResponse>>({
-          url: `/v1/public/system/${systemId}/members`,
+        await this.api.client.request<ApiResponse<MemberDto[]>>({
+          url: `/v2/public/system/${systemId}/member`,
           method: 'GET',
+          params: query,
         })
       ).data;
     } catch (error) {
@@ -67,13 +67,13 @@ export class MemberService {
 
   public async updateMember(
     id: string,
-    data: Partial<UpdateSystemMemberRequest>
-  ): Promise<ApiResponse<SystemMemberResponse>> {
+    data: Partial<UpdateMemberRequest>
+  ): Promise<ApiResponse<MemberDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<SystemMemberResponse>>({
-          url: `/v1/system/members/${id}`,
-          method: 'POST',
+        await this.api.client.request<ApiResponse<MemberDto>>({
+          url: `/v2/member/${id}`,
+          method: 'PATCH',
           data,
         })
       ).data;
@@ -82,10 +82,10 @@ export class MemberService {
     }
   }
 
-  public async updateMemberBackgroundImage(id: string, file: Blob): Promise<ApiResponse<SystemMemberResponse>> {
+  public async updateMemberBackgroundImage(id: string, file: Blob): Promise<ApiResponse<MemberDto>> {
     try {
       return (
-        await this.api.client.postForm<ApiResponse<SystemMemberResponse>>(`/v1/system/members/${id}/background`, {
+        await this.api.client.postForm<ApiResponse<MemberDto>>(`/v2/member/${id}/background`, {
           file,
         })
       ).data;
@@ -94,11 +94,11 @@ export class MemberService {
     }
   }
 
-  public async getPublicMemberPages(memberId: string): Promise<ApiResponse<PagesResponse>> {
+  public async getPublicMemberPages(systemId: string, memberId: string): Promise<ApiResponse<PageDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PagesResponse>>({
-          url: `/v2/public/member/${memberId}/page`,
+        await this.api.client.request<ApiResponse<PageDto[]>>({
+          url: `/v2/public/system/${systemId}/member/${memberId}/page`,
           method: 'GET',
         })
       ).data;
@@ -107,11 +107,11 @@ export class MemberService {
     }
   }
 
-  public async getPublicMemberPage(memberId: string, pageId: string): Promise<ApiResponse<PageResponse>> {
+  public async getPublicMemberPage(systemId: string, memberId: string, pageId: string): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
-          url: `/v2/public/member/${memberId}/page/${pageId}`,
+        await this.api.client.request<ApiResponse<PageDto>>({
+          url: `/v2/public/system/${systemId}/member/${memberId}/page/${pageId}`,
           method: 'GET',
         })
       ).data;
@@ -120,10 +120,10 @@ export class MemberService {
     }
   }
 
-  public async getMemberPages(memberId: string): Promise<ApiResponse<PagesResponse>> {
+  public async getMemberPages(memberId: string): Promise<ApiResponse<PageDto[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PagesResponse>>({
+        await this.api.client.request<ApiResponse<PageDto[]>>({
           url: `/v2/member/${memberId}/page`,
           method: 'GET',
         })
@@ -133,14 +133,13 @@ export class MemberService {
     }
   }
 
-  public async getMemberPage(memberId: string, pageId: string): Promise<ApiResponse<PageResponse>> {
+  public async getMemberPage(memberId: string, pageId: string): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/member/${memberId}/page/${pageId}`,
           method: 'GET',
-        })
-      ).data;
+        })).data;
     } catch (error) {
       return this.api.handleException(error);
     }
@@ -150,12 +149,12 @@ export class MemberService {
     memberId: string,
     pageId: string,
     data: Partial<UpdatePageRequest>
-  ): Promise<ApiResponse<PageResponse>> {
+  ): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/member/${memberId}/page/${pageId}`,
-          method: 'POST',
+          method: 'PATCH',
           data,
         })
       ).data;
@@ -164,10 +163,10 @@ export class MemberService {
     }
   }
 
-  public async deleteMemberPage(memberId: string, pageId: string): Promise<ApiResponse<OkResponse>> {
+  public async deleteMemberPage(memberId: string, pageId: string): Promise<ApiResponse<Ok>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<OkResponse>>({
+        await this.api.client.request<ApiResponse<Ok>>({
           url: `/v2/member/${memberId}/page/${pageId}`,
           method: 'DELETE',
         })
@@ -177,10 +176,10 @@ export class MemberService {
     }
   }
 
-  public async createMemberPage(memberId: string, data: CreatePageRequest): Promise<ApiResponse<PageResponse>> {
+  public async createMemberPage(memberId: string, data: CreatePageRequest): Promise<ApiResponse<PageDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<PageResponse>>({
+        await this.api.client.request<ApiResponse<PageDto>>({
           url: `/v2/member/${memberId}/page`,
           method: 'PUT',
           data,

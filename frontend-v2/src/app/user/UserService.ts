@@ -1,17 +1,17 @@
-import type { UpdateUserRequest } from '@app/v1/dto/user/request/UpdateUserRequest';
-import type { UserResponse } from '@app/v1/dto/user/response/UserResponse';
-import type { ApiResponse } from '@/app/api/types';
+import type { UpdateUserRequest } from '@app/v2/dto/user/request/UpdateUserRequest';
+import type {UserDto} from '@app/v2/dto/user/UserDto';
 import type { ApiService } from '@/app/api/ApiService';
 import { $api } from '@/app/api/ApiService';
+import { ApiResponse } from '@app/v2/types/response';
 
 export class UserService {
   constructor(private readonly api: ApiService) {}
 
-  public async getUser(): Promise<ApiResponse<UserResponse>> {
+  public async getUser(): Promise<ApiResponse<UserDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<UserResponse>>({
-          url: '/v1/user',
+        await this.api.client.request<ApiResponse<UserDto>>({
+          url: '/v2/user',
           method: 'GET',
         })
       ).data;
@@ -20,12 +20,12 @@ export class UserService {
     }
   }
 
-  public async updateUser(data: UpdateUserRequest): Promise<ApiResponse<UserResponse>> {
+  public async updateUser(data: UpdateUserRequest): Promise<ApiResponse<UserDto>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<UserResponse>>({
-          url: '/v1/user',
-          method: 'POST',
+        await this.api.client.request<ApiResponse<UserDto>>({
+          url: '/v2/user',
+          method: 'PATCH',
           data,
         })
       ).data;
