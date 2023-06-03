@@ -16,6 +16,9 @@ export class MemberDto {
   public systemId: string;
 
   @ApiProperty()
+  public systemRef: string;
+
+  @ApiProperty()
   public name: string;
 
   @ApiProperty()
@@ -35,6 +38,7 @@ export class MemberDto {
   constructor(
     id: string,
     systemId: string,
+    systemSlug: string,
     name: string,
     pronouns: string | null,
     color: string | null,
@@ -44,6 +48,7 @@ export class MemberDto {
   ) {
     this.id = id;
     this.systemId = systemId;
+    this.systemRef = systemSlug;
     this.name = name;
     this.pronouns = pronouns;
     this.color = color;
@@ -56,6 +61,7 @@ export class MemberDto {
     return new MemberDto(
       member.id,
       member.systemId,
+      member.system.slug,
       plural.content.name,
       plural.content.pronouns,
       plural.content.color,
