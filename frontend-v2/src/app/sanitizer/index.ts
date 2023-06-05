@@ -438,10 +438,9 @@ export class Sanitizer {
       return Sanitizer.getDefaultConfiguration();
     }
 
-    let normalizedConfig: SanitizerConfig = {};
+    const normalizedConfig: SanitizerConfig = {};
     // TODO https://github.com/mozilla/sanitizer-polyfill/issues/29
-    // eslint-disable-next-line compat/compat
-    for (let [configurationElementList, elements] of Object.entries(config)) {
+    for (const [configurationElementList, elements] of Object.entries(config)) {
       if (SUPPORTED_CONFIGURATION_LISTS.has(configurationElementList)) {
         (normalizedConfig as any)[configurationElementList] = elements.map((element: string) => {
           return element.toLowerCase();
@@ -456,9 +455,7 @@ export class Sanitizer {
       }
     }
 
-    const allowElements =
-      // eslint-disable-next-line compat/compat
-      normalizedConfig.allowElements || Array.from(DEFAULT_ALLOWED_ELEMENTS);
+    const allowElements = normalizedConfig.allowElements || Array.from(DEFAULT_ALLOWED_ELEMENTS);
     const allowAttributes = normalizedConfig.allowAttributes || DEFAULT_ALLOWED_ATTRIBUTES;
     const blockElements = normalizedConfig.blockElements || DEFAULT_BLOCKED_ELEMENTS;
     const dropElements = normalizedConfig.dropElements || DEFAULT_DROP_ELEMENTS;
@@ -486,7 +483,7 @@ export class Sanitizer {
     // To drop elements and their children upon sanitization, those elements need to be in both DOMPurify's FORBID_TAGS and FORBID_CONTENTS lists
     const isdropElementsSet = dropElements !== DEFAULT_DROP_ELEMENTS && dropElements.length !== 0;
     const isblockElementsSet = blockElements !== DEFAULT_BLOCKED_ELEMENTS && blockElements.length !== 0;
-    let domPurifyConfig: DOMPurify.Config = {
+    const domPurifyConfig: DOMPurify.Config = {
       ALLOWED_TAGS: allowElems,
       ALLOWED_ATTR: allowAttrs as any,
       FORBID_ATTR: dropAttrs as any,
@@ -530,13 +527,13 @@ export class Sanitizer {
    * @internal
    */
   public static sanitizeDocFragment(config: SanitizerConfig, input: Node) {
-    let domPurifyConfig = Sanitizer._transformConfig(config);
+    const domPurifyConfig = Sanitizer._transformConfig(config);
     domPurifyConfig.IN_PLACE = true;
     DOMPurify.sanitize(input, domPurifyConfig);
   }
 
   /**
-   * @returns {SanitizerConfig} the normalized config 
+   * @returns {SanitizerConfig} the normalized config
    */
   public getConfiguration(): SanitizerConfig {
     return this.normalizedConfig;

@@ -11,7 +11,7 @@ export function setHTML(this: HTMLElement, input: string, opt?: SetHTMLOptions) 
   context.innerHTML = input;
   Sanitizer.sanitizeDocFragment(sanitizerObj.getConfiguration(), context);
   this.replaceChildren(...Array.from(context.childNodes));
-};
+}
 
 export const polyfill = (force = false) => {
   if (typeof window === 'undefined' || !window.isSecureContext) {
@@ -25,5 +25,5 @@ export const polyfill = (force = false) => {
 
   window[Sanitizer.GLOBALNAME] = Sanitizer;
 
-  HTMLElement.prototype[Sanitizer.SETTER_NAME] = setHTML
+  HTMLElement.prototype[Sanitizer.SETTER_NAME] = setHTML;
 };

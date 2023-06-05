@@ -1,8 +1,9 @@
 import { BackgroundType } from '@domain/common';
 import { HasBackground } from '@domain/common/types';
 import { ApiProperty } from '@nestjs/swagger';
+import { BackgroundDataInterface } from './BackgroundDataInterface';
 
-export class BackgroundData {
+export class BackgroundData implements BackgroundDataInterface {
   @ApiProperty()
   public type: BackgroundType;
 

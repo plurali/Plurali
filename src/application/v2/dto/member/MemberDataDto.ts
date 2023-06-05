@@ -2,9 +2,11 @@ import { convertBackgroundType } from '@domain/common';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { Member, Visibility } from '@prisma/client';
 import { BackgroundData } from '../partials/BackgroundData';
+import { MemberDataDtoInterface } from './MemberDataDtoInterface';
+import { BackgroundDataInterface } from '../partials/BackgroundDataInterface';
 
 @ApiExtraModels(BackgroundData)
-export class MemberDataDto {
+export class MemberDataDto implements MemberDataDtoInterface {
   @ApiProperty()
   public slug: string | null;
 
@@ -18,14 +20,14 @@ export class MemberDataDto {
   public visibility: Visibility;
 
   @ApiProperty({ type: BackgroundData })
-  public background: BackgroundData;
+  public background: BackgroundDataInterface;
 
   constructor(
     slug: string | null,
     description: string | null,
     assetsUpdatedAt: Date,
     visibility: Visibility,
-    background: BackgroundData
+    background: BackgroundDataInterface
   ) {
     this.slug = slug;
     this.description = description;

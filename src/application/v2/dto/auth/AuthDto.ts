@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AuthDtoInterface } from './AuthDtoInterface';
 
-export class AuthDto {
+export class AuthDto implements AuthDtoInterface {
   @ApiProperty()
   public readonly token: string;
 

@@ -1,14 +1,14 @@
-import type { AuthRequest } from '@app/v2/dto/auth/request/AuthRequest';
-import type { AuthDto } from '@app/v2/dto/auth/AuthDto';
+import type { AuthRequestInterface } from '@app/v2/dto/auth/request/AuthRequestInterface';
+import type { AuthDtoInterface } from '@app/v2/dto/auth/AuthDtoInterface';
 import { $api, ApiService } from '@/app/api/ApiService';
 import { ApiResponse } from '@app/v2/types/response';
 
 export class AuthService {
-  constructor(private readonly api: ApiService) { }
+  constructor(private readonly api: ApiService) {}
 
-  public async register(data: AuthRequest): Promise<ApiResponse<AuthDto>> {
+  public async register(data: AuthRequestInterface): Promise<ApiResponse<AuthDtoInterface>> {
     try {
-      const res = await this.api.client.request<ApiResponse<AuthDto>>({
+      const res = await this.api.client.request<ApiResponse<AuthDtoInterface>>({
         url: '/v2/auth/register',
         method: 'PUT',
         data,
@@ -25,9 +25,9 @@ export class AuthService {
     }
   }
 
-  public async login(data: AuthRequest): Promise<ApiResponse<AuthDto>> {
+  public async login(data: AuthRequestInterface): Promise<ApiResponse<AuthDtoInterface>> {
     try {
-      const res = await this.api.client.request<ApiResponse<AuthDto>>({
+      const res = await this.api.client.request<ApiResponse<AuthDtoInterface>>({
         url: '/v2/auth/login',
         method: 'POST',
         data,

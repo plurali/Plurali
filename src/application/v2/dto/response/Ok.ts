@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { OkInterface } from './OkInterface';
 
-export class Ok {
+export class Ok implements OkInterface {
   @ApiProperty({ default: 'ok' })
   public message = 'ok';
 

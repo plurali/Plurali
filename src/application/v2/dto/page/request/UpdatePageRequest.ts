@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { UpdatePageRequestInterface } from './UpdatePageRequestInterface';
 
-export class UpdatePageRequest {
+export class UpdatePageRequest implements UpdatePageRequestInterface {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
@@ -18,5 +19,5 @@ export class UpdatePageRequest {
   @IsNotEmpty()
   @IsOptional()
   @ApiProperty()
-  public visible: boolean | null = null;
+  public visible: boolean | null = null; // TODO
 }

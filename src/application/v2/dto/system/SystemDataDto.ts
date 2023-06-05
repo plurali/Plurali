@@ -2,9 +2,10 @@ import { convertBackgroundType } from '@domain/common';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { System, Visibility } from '@prisma/client';
 import { BackgroundData } from '../partials/BackgroundData';
+import { SystemDataDtoInterface } from './SystemDataDtoInterface';
 
 @ApiExtraModels(BackgroundData)
-export class SystemDataDto {
+export class SystemDataDto implements SystemDataDtoInterface {
   public slug: string | null;
 
   public description: string | null;

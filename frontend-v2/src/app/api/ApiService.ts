@@ -1,9 +1,8 @@
 import type { AxiosInstance, AxiosError } from 'axios';
 import axios from 'axios';
 import { TokenStorage, $tokenStorage } from './TokenStorage';
-import { ApiErrorResponse } from "@app/v2/types/response";
+import { ApiErrorResponse } from '@app/v2/types/response';
 import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utilts';
-
 
 export class ApiService {
   public readonly client: AxiosInstance;
@@ -27,8 +26,9 @@ export class ApiService {
   }
 
   public getErrorMessage(e: any | ApiError | AxiosError | ApiErrorResponse): string {
-    if (!e || !["object", "string"].includes(typeof e)) return ApiErrorMessage[apiError(ApiErrorMap.UnknownError)];
-    if (typeof e === "object") e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type ?? ApiErrorMap.UnknownError);
+    if (!e || !['object', 'string'].includes(typeof e)) return ApiErrorMessage[apiError(ApiErrorMap.UnknownError)];
+    if (typeof e === 'object')
+      e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type ?? ApiErrorMap.UnknownError);
 
     if (e in ApiErrorMessage) {
       return (ApiErrorMessage as any)[e];

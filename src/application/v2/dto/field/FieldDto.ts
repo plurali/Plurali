@@ -3,8 +3,10 @@ import { FieldDataDto } from './FieldDataDto';
 import { ApiProperty } from '@nestjs/swagger';
 import { MemberFieldType } from '@domain/plural/utils';
 import { convertFieldType } from '@domain/common';
+import { FieldDtoInterface } from './FieldDtoInterface';
+import { FieldDataDtoInterface } from './FieldDataDtoInterface';
 
-export class FieldDto {
+export class FieldDto implements FieldDtoInterface {
   public type = "field";
 
   @ApiProperty()
@@ -20,9 +22,9 @@ export class FieldDto {
   public fieldType: MemberFieldType;
 
   @ApiProperty()
-  public data: FieldDataDto;
+  public data: FieldDataDtoInterface;
 
-  constructor(id: string, name: string, position: number, fieldType: MemberFieldType, data: FieldDataDto) {
+  constructor(id: string, name: string, position: number, fieldType: MemberFieldType, data: FieldDataDtoInterface) {
     this.id = id;
     this.name = name;
     this.position = position;

@@ -29,8 +29,8 @@ import PageFields from '../components/global/page/PageFields.vue';
 import { getRouteParam } from '../utils';
 import { withBackground } from '../composables/background';
 import { getSystem, getSystemPages } from '../api/public';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
+import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
+import type { PageDto } from '@app/v1/dto/page/PageDto';
 
 export default defineComponent({
   components: {

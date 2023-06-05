@@ -4,7 +4,7 @@ import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
 const baseURL = window.location.href.includes('.local')
-  ? 'http://rayliliannotraychel.local:3000'
+  ? 'http://formerlyhappy.local:3000'
   : window.location.href.includes('dev.')
   ? 'https://dev.plurali.icu/api'
   : 'https://plurali.icu/api';

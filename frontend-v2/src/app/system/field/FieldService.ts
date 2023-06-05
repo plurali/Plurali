@@ -1,16 +1,16 @@
 import type { ApiService } from '@/app/api/ApiService';
 import { $api } from '@/app/api/ApiService';
 import { ApiResponse } from '@app/v2/types/response';
-import {UpdateFieldRequest} from '@app/v2/dto/field/request/UpdateFieldRequest'
-import { FieldDto } from '@app/v2/dto/field/FieldDto';
+import { UpdateFieldRequestInterface } from '@app/v2/dto/field/request/UpdateFieldRequestInterface';
+import { FieldDtoInterface } from '@app/v2/dto/field/FieldDtoInterface';
 
 export class FieldService {
   constructor(public readonly api: ApiService) {}
 
-  public async getFields(): Promise<ApiResponse<FieldDto[]>> {
+  public async getFields(): Promise<ApiResponse<FieldDtoInterface[]>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<FieldDto[]>>({
+        await this.api.client.request<ApiResponse<FieldDtoInterface[]>>({
           url: `/v2/system/field`,
           method: 'GET',
         })
@@ -22,11 +22,11 @@ export class FieldService {
 
   public async updateField(
     id: string,
-    data: Partial<UpdateFieldRequest>
-  ): Promise<ApiResponse<FieldDto>> {
+    data: Partial<UpdateFieldRequestInterface>
+  ): Promise<ApiResponse<FieldDtoInterface>> {
     try {
       return (
-        await this.api.client.request<ApiResponse<FieldDto>>({
+        await this.api.client.request<ApiResponse<FieldDtoInterface>>({
           url: `/v2/system/field/${id}`,
           method: 'PATCH',
           data,

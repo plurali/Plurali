@@ -1,57 +1,60 @@
-import { $api } from "@/app/api/ApiService";
-import { $system } from "@/app/system/SystemService"
-import { PageDto } from "@app/v2/dto/page/PageDto";
-import { SystemDto } from "@app/v2/dto/system/SystemDto"
-import { ApiErrorResponse } from "@app/v2/types/response";
-import { UseQueryResult, useQuery } from "react-query" 
+import { $api } from '@/app/api/ApiService';
+import { $system } from '@/app/system/SystemService';
+import { PageDtoInterface } from '@app/v2/dto/page/PageDtoInterface';
+import { SystemDtoInterface } from '@app/v2/dto/system/SystemDtoInterface';
+import { ApiErrorResponse } from '@app/v2/types/response';
+import { UseQueryResult, useQuery } from 'react-query';
 
-export const usePublicSystemQuery = (systemId: string): UseQueryResult<SystemDto> => {
-    return useQuery({
-        queryKey: ['public:system', systemId],
-        queryFn: async () => {
-            if (!systemId) return null;
+export const usePublicSystemQuery = (systemId: string): UseQueryResult<SystemDtoInterface> => {
+  return useQuery({
+    queryKey: ['public:system', systemId],
+    queryFn: async () => {
+      if (!systemId) return null;
 
-            const data = await $system.getPublicSystem(systemId)
-            
-            if (!data.success) {
-                return Promise.reject(data);
-            }
+      const data = await $system.getPublicSystem(systemId);
 
-            return data.data;
-        }
-    });
-}
+      if (!data.success) {
+        return Promise.reject(data);
+      }
 
-export const useSystemQuery = (): UseQueryResult<SystemDto> => {
-    const token = $api.token.get();
+      return data.data;
+    },
+  });
+};
 
-    return useQuery({
-        queryKey: ['dashboard:system', token],
-        queryFn: async () => {
-            if (!token) return null;
+export const useSystemQuery = (): UseQueryResult<SystemDtoInterface> => {
+  const token = $api.token.get();
 
-            const data = await $system.getSystem();
-            
-            if (!data.success) {
-                return Promise.reject(data);
-            }
+  return useQuery({
+    queryKey: ['dashboard:system', token],
+    queryFn: async () => {
+      if (!token) return null;
 
-            return data.data;
-        }
-    });
-}
+      const data = await $system.getSystem();
 
-export const usePublicSystemPageQuery = (systemId: string, pageId: string): UseQueryResult<PageDto, ApiErrorResponse> => {
-    return useQuery({
-        queryKey: ['public:system', systemId, 'page', pageId],
-        queryFn: async () => {
-            const data = await $system.getPublicSystemPage(systemId, pageId)
-            
-            if (!data.success) {
-                return Promise.reject(data);
-            }
+      if (!data.success) {
+        return Promise.reject(data);
+      }
 
-            return data.data;
-        }
-    });
-}
+      return data.data;
+    },
+  });
+};
+
+export const usePublicSystemPageQuery = (
+  systemId: string,
+  pageId: string
+): UseQueryResult<PageDtoInterface, ApiErrorResponse> => {
+  return useQuery({
+    queryKey: ['public:system', systemId, 'page', pageId],
+    queryFn: async () => {
+      const data = await $system.getPublicSystemPage(systemId, pageId);
+
+      if (!data.success) {
+        return Promise.reject(data);
+      }
+
+      return data.data;
+    },
+  });
+};

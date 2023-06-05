@@ -34,6 +34,10 @@ export const Footer = () => (
         >
           Data Transparency
         </a>
+        {' | '}
+        <Link href="/swagger" className="text-violet-500">
+          API Docs
+        </Link>
       </span>
     </p>
   </div>

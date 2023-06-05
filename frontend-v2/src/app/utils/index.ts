@@ -7,14 +7,14 @@ export const c = (...strings: (string | false | undefined | false | null)[]) => 
 export const transitionClass = 'transition duration-300 ease-in-out';
 
 export const external = {
-  target: "_blank",
-  rel: "noopenner noreferrer",
+  target: '_blank',
+  rel: 'noopenner noreferrer',
 };
 
 export const icon = {
-  small: "w-8 h-8 text-white",
-  medium: "w-16 h-16 text-white",
-  smallToMedium: "w-8 md:w-16 h-8 md:h-16 text-white"
+  small: 'w-8 h-8 text-white',
+  medium: 'w-16 h-16 text-white',
+  smallToMedium: 'w-8 md:w-16 h-8 md:h-16 text-white',
 };
 
 export function string(val: any): val is string {

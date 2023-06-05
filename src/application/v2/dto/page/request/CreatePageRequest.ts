@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { CreatePageRequestInterface } from './CreatePageRequestInterface';
 
-export class CreatePageRequest {
+export class CreatePageRequest implements CreatePageRequestInterface {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -14,5 +15,5 @@ export class CreatePageRequest {
 
   @IsBoolean()
   @ApiProperty()
-  public visible: boolean;
+  public visible: boolean; // TODO
 }

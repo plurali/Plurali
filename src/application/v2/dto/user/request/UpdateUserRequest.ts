@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, MinLength } from 'class-validator';
+import { UpdateUserRequestInterface } from './UpdateUserRequestInterface';
 
-export class UpdateUserRequest {
+export class UpdateUserRequest implements UpdateUserRequestInterface {
   @IsString()
   @MinLength(32)
   @IsOptional()

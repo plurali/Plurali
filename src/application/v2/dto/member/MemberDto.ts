@@ -3,9 +3,11 @@ import { MemberWithSystem } from '@domain/common/types';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { parseAvatar } from '@domain/plural/utils';
 import { MemberDataDto } from './MemberDataDto';
+import { MemberDataDtoInterface } from './MemberDataDtoInterface';
+import { MemberDtoInterface } from './MemberDtoInterface';
 
 @ApiExtraModels(MemberDataDto)
-export class MemberDto {
+export class MemberDto implements MemberDtoInterface {
   @ApiProperty({ default: 'member' })
   public type = 'member';
 
@@ -31,10 +33,11 @@ export class MemberDto {
   public description: string | null;
 
   @ApiProperty()
-  public data: MemberDataDto;
+  public data: MemberDataDtoInterface;
 
   @ApiProperty()
   public avatar: string | null = null;
+
   constructor(
     id: string,
     systemId: string,
@@ -43,7 +46,7 @@ export class MemberDto {
     pronouns: string | null,
     color: string | null,
     description: string | null,
-    data: MemberDataDto,
+    data: MemberDataDtoInterface,
     avatar: string | null = null
   ) {
     this.id = id;

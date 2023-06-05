@@ -7,7 +7,7 @@ import { MemberFieldType } from '@domain/plural/utils';
 export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
   key = 'id'
-): T => (typeof val === 'object' ? val[key] : val);
+): T => (typeof val === 'object' ? (val as any)[key] : val);
 
 export const safeStringify = (val: unknown) => {
   const seen = new WeakSet();
@@ -29,12 +29,12 @@ export const safeStringify = (val: unknown) => {
 };
 
 export const overrideLoggerPrefix = <T = Logger>(logger: T, prefix = 'Server'): T =>
-  Object.assign(logger, {
+  Object.assign(logger as any, {
     // https://github.com/nestjs/nest/blob/85966703ac57a5b263ab5807033f6ac78548c0ef/packages/common/services/console-logger.service.ts#L206-L208
     formatPid(pid: number) {
       return `[${prefix}] ${pid}  - `;
     },
-  });
+  }) as T;
 
 export const getRouteParam = (val: unknown | string | string[]): string => String(Array.isArray(val) ? val[0] : val);
 

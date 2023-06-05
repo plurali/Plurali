@@ -1,3 +1,1 @@
-export const AlertRenderer = () => {
-    
-}
+export const AlertRenderer = () => <></>;

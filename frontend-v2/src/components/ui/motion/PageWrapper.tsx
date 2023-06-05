@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
-import { ComponentPropsWithoutRef, PropsWithChildren } from "react";
+import { motion } from 'framer-motion';
+import { ComponentPropsWithoutRef, PropsWithChildren } from 'react';
 
 const pageVariants = {
   initial: {
@@ -16,12 +16,12 @@ const pageVariants = {
   },
 };
 const pageTransition = {
-  type: "tween",
-  ease: "anticipate",
+  type: 'tween',
+  ease: 'anticipate',
   duration: 1,
 };
 
-export const PageWrapper = ({ children, ...props }: PropsWithChildren<ComponentPropsWithoutRef<"div">>) => (
+export const PageWrapper = ({ children, ...props }: PropsWithChildren<ComponentPropsWithoutRef<'div'>>) => (
   // todo: fix this stupid type
   // @ts-ignore
   <motion.div initial="initial" animate="in" exit="out" variants={pageVariants} transition={pageTransition} {...props}>

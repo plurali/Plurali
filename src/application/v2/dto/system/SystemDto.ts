@@ -3,9 +3,11 @@ import { parseAvatar } from '@domain/plural/utils';
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { SystemDataDto } from './SystemDataDto';
 import { System } from '@prisma/client';
+import { SystemDtoInterface } from './SystemDtoInterface';
+import { SystemDataDtoInterface } from './SystemDataDtoInterface';
 
 @ApiExtraModels(SystemDataDto)
-export class SystemDto {
+export class SystemDto implements SystemDtoInterface {
   @ApiProperty({ default: 'system' })
   public type = 'system';
 
@@ -25,15 +27,15 @@ export class SystemDto {
   public avatar: string | null = null;
 
   @ApiProperty()
-  public data: SystemDataDto;
+  public data: SystemDataDtoInterface;
 
   constructor(
     id: string,
     name: string,
     color: string | null,
     description: string | null,
-    avatar: string | null = null,
-    data: SystemDataDto
+    avatar: string | null,
+    data: SystemDataDtoInterface
   ) {
     this.id = id;
     this.name = name;
@@ -49,7 +51,7 @@ export class SystemDto {
       plural.content.username,
       plural.content.color,
       plural.content.desc,
-      parseAvatar(plural.content),
+      parseAvatar(plural.content) ?? null,
       SystemDataDto.from(system)
     );
   }

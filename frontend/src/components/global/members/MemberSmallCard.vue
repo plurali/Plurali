@@ -20,7 +20,7 @@
       class="w-16 h-16 rounded-full object-cover"
       loading="lazy"
     />
-    <Color v-else :color="systemMember.color ?? '#e2e8f0'" class="flex-shrink-0 w-16 h-16 opacity-25" />
+    <Color v-else :color="systemMember.color ?? '#e2e8f0'" class="flex-shrink-0 !w-16 !h-16 opacity-25" />
     <div>
       <h2 class="text-xl font-medium">
         {{ systemMember.name }}

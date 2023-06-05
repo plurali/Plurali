@@ -1,7 +1,7 @@
 import xss from 'xss';
 import markdown from 'markdown-it';
-import type { FieldDto } from '@app/v2/dto/field/FieldDto';
-import type { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
+import type { FieldDtoInterface } from '@app/v2/dto/field/FieldDtoInterface';
+import type { ValueFieldDtoInterface } from '@app/v2/dto/field/ValueFieldDtoInterface';
 import { MemberFieldType } from '@domain/plural/utils';
 
 export const string = (string: string, useMd: boolean): string =>
@@ -49,11 +49,11 @@ export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean)
   [MemberFieldType.MonthDay]: monthDay,
 };
 
-export function hasValue(value: FieldDto | ValueFieldDto): value is ValueFieldDto {
+export function hasValue(value: FieldDtoInterface | ValueFieldDtoInterface): value is ValueFieldDtoInterface {
   return value.hasOwnProperty('value');
 }
 
-export const formatField = (field: ValueFieldDto): string | null => {
+export const formatField = (field: ValueFieldDtoInterface): string | null => {
   let str = fieldConvertors[field.fieldType]?.(field.value, true);
 
   // Distinguish empty strings
