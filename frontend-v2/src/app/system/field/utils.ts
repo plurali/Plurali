@@ -36,7 +36,7 @@ const monthYear = (string: string): string => {
 
 const timestamp = (string: string): string => new Date(xss(string)).toLocaleString();
 
-const monthDay = (string: string): string => `${month(string)} ${new Date(xss(string)).getDay()}`;
+const monthDay = (string: string): string => `${month(string)} ${new Date(xss(string)).getDate()}`;
 
 export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean) => string | null> = {
   [MemberFieldType.String]: string,
