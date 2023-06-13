@@ -34,7 +34,7 @@
     "@nestjs/event-emitter": "^1.4.1",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/microservices": "^9.4.0",
-    "@nestjs/platform-fastify": "^9.4.0",
+    "@nestjs/platform-fastify": "^9.4.3",
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/websockets": "^9.4.0",
     "@prisma/client": "^4.13.0",
