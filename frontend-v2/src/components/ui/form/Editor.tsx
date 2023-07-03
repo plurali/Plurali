@@ -31,6 +31,7 @@ export const Editor = ({
         initialValue = `<p></p>`;
       }
       value = htmlToSlate(initialValue);
+      console.log(value);
     }
 
     if (value.length < 1) {

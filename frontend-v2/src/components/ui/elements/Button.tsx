@@ -10,23 +10,23 @@ export type ButtonProps<C extends ElementType = 'button'> = PolymorphicProps<C, 
   spinnerClassName?: string;
 };
 
-export const Button = <C extends ElementType = 'button'>({
+export const Button =  forwardRef<any, ButtonProps<ElementType>>(({
   as,
   className,
   children,
   loading = false,
   spinnerClassName = '',
   ...props
-}: ButtonProps<C>) => {
+}, ref) => {
   const Component = as ?? 'button';
 
   return (
-    <Component className={c('hover:opacity-75 px-4 py-2 rounded-xl transition outline-none focus:outline-none', className)} {...props}>
+    <Component ref={ref} className={c('hover:opacity-75 px-4 py-2 rounded-xl transition outline-none focus:outline-none', className)} {...props}>
       {children}
       {loading && <Spinner className={spinnerClassName} />}
     </Component>
   );
-};
+})
 
 export const ButtonLink = ({
   href,

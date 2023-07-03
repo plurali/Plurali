@@ -12,6 +12,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Editor } from '../ui/form/Editor';
 import { ButtonLink } from '../ui/elements/Button';
+import { UserContent } from '../ui/elements/UserContent';
 
 export interface SystemSummaryProps {
   system: SystemDtoInterface;
@@ -109,8 +110,10 @@ export const SystemSummary = ({ system, dashboardMode = false }: SystemSummaryPr
           initialValue={system.data.description ?? ''}
           placeholder={`Add custom description for ${system.name}...`}
         />
-      ) : (
-        <></>
+      ) : system.data.description && (
+        <UserContent>
+          <Sanitized unsafeValue={system.data.description}/>
+        </UserContent>
       )}
     </>
   );
