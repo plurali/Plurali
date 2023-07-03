@@ -3,6 +3,7 @@ import { Bars3BottomRightIcon } from '@heroicons/react/24/outline';
 import Link, { LinkProps } from 'next/link';
 import { ButtonLink } from '@/components/ui/elements/Button';
 import { c, transitionClass, external } from '@/app/utils';
+import { useUserQuery } from '@/hooks/user/query';
 
 export type NavLinkProps = Omit<LinkProps, 'href'> & {
   to?: LinkProps['href'];
@@ -45,6 +46,8 @@ export const Navbar = () => {
 
   const toggleDrawer = () => setDrawerOpen(val => !val);
 
+  const {data} = useUserQuery();
+
   return (
     <div className="relative">
       <div className="py-6 px-4 flex items-center justify-center z-50">
@@ -62,8 +65,8 @@ export const Navbar = () => {
           ))}
         </div>
         <div className="w-full flex justify-end items-center">
-          <ButtonLink href="/dashboard" className="hidden md:inline-flex text-white bg-violet-700 px  -6">
-            Dashboard
+          <ButtonLink href="/dashboard" className="hidden md:inline-flex text-white bg-violet-700 px-6">
+            {data ? <>Logged in as <b className='ml-1.5'>{data.username}</b></> : <>Dashboard</>}
           </ButtonLink>
           <button
             className="focus:outline-none p-2 rounded-xl bg-primary text-white inline-flex md:hidden"

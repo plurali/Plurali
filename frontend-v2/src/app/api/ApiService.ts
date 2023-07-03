@@ -11,6 +11,8 @@ export class ApiService {
     this.client = axios.create({
       baseURL: baseUrl,
     });
+
+    this.updateAuth();
   }
 
   public handleException(e: any): ApiErrorResponse {

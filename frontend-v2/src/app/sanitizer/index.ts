@@ -442,8 +442,8 @@ export class Sanitizer {
     // TODO https://github.com/mozilla/sanitizer-polyfill/issues/29
     for (const [configurationElementList, elements] of Object.entries(config)) {
       if (SUPPORTED_CONFIGURATION_LISTS.has(configurationElementList)) {
-        (normalizedConfig as any)[configurationElementList] = elements.map((element: string) => {
-          return element.toLowerCase();
+        (normalizedConfig as any)[configurationElementList] = Array.from(elements).map((element) => {
+          return (element as string).toLowerCase();
         });
         if (configurationElementList === 'allowElements') {
           (normalizedConfig as any)[configurationElementList].forEach((element: string) => {

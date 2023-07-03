@@ -13,7 +13,7 @@ export const SystemPage = () => {
       query={query}
       render={system => (
         <>
-          <SystemSummary system={system} dashboardMode={true} />
+          <SystemSummary system={system} dashboardMode={false} />
         </>
       )}
     />

@@ -7,11 +7,11 @@ import { MemberFieldType } from '../../../src/domain/plural/utils';
 export const string = (string: string, useMd = true): string =>
   useMd
     ? markdown({
-        html: true,
-        linkify: true,
-        breaks: true,
-        typographer: true,
-      }).render(xss(string))
+      html: true,
+      linkify: true,
+      breaks: true,
+      typographer: true,
+    }).render(xss(string))
     : xss(string);
 
 const color = (string: string): string | null => {

@@ -22,3 +22,23 @@ export interface Alert {
 }
 
 export const { Provider: AlertStateProvider, useTracked: useAlertState } = createContainer(() => useState<Alert[]>([]));
+
+export const useAlert = () => {
+  const [, setAlert] = useAlertState();
+
+  return (message: string, type: AlertType = AlertType.Info, removeOnNextRedirect = false, clear = true) => {
+    const alert: Alert = {
+      message,
+      type,
+      removeOnNextRedirect,
+    }
+
+    setAlert((prev) => clear ? [alert] : [...prev, alert])
+  } 
+}
+
+export const useClearAlerts = () => {
+  const [, setAlert] = useAlertState();
+
+  return () => setAlert([]);
+}

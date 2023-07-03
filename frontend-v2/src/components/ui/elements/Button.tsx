@@ -21,7 +21,7 @@ export const Button = <C extends ElementType = 'button'>({
   const Component = as ?? 'button';
 
   return (
-    <Component className={c('hover:opacity-75 px-4 py-2 rounded-xl transition', className)} {...props}>
+    <Component className={c('hover:opacity-75 px-4 py-2 rounded-xl transition outline-none focus:outline-none', className)} {...props}>
       {children}
       {loading && <Spinner className={spinnerClassName} />}
     </Component>
@@ -38,7 +38,7 @@ export const ButtonLink = ({
   children,
   ...props
 }: Omit<ButtonProps<'a'>, 'as'> & Omit<LinkProps, 'as' | 'legacyBehavior' | 'passHref'>) => {
-  const Component = forwardRef(() => <Button as={'a'} href={href} {...props}>
+  const Component = forwardRef((props, ref) => <Button ref={ref} as={'a'} href={href} {...props}>
     {children}
   </Button>);
 
@@ -53,7 +53,7 @@ export const ButtonLink = ({
       locale={locale}
       legacyBehavior={true}
     >
-      <Component/>
+      <Component {...props}/>
     </Link>
   );
 };
