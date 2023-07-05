@@ -47,7 +47,7 @@ Calling the SP API each time a system and/or it's member is requested (not just 
 
 ## Requesting deletion of data
 
-TBD
+As per the EU regulations, a user is entitled for complete deletion of their account (and all of it's associated data), if you wish to delete your account, you can request it via email at valisova@lilianaa.dev.
 
 <hr>
 
