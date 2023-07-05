@@ -9,10 +9,10 @@ import { PluralCachedRestService } from './PluralCachedRestService';
       useClass: PluralCachedRestService,
     },
     {
-      provide: 'PluralResetServiceBase',
+      provide: 'PluralRestServiceBase',
       useClass: PluralRestService,
     },
   ],
-  exports: [PluralRestService, 'PluralResetServiceBase'],
+  exports: [PluralRestService, 'PluralRestServiceBase'],
 })
 export class PluralModule {}

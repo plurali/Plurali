@@ -22,7 +22,7 @@ import { error, ok } from '@app/misc/swagger';
 @ApiExtraModels(UserResponse)
 export class UserController {
   constructor(
-    @Inject('PluralResetServiceBase') private readonly rest: PluralRestService,
+    @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly users: UserRepository
   ) {}

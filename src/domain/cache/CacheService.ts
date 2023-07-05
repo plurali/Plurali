@@ -22,7 +22,7 @@ export class CacheService {
     private readonly prisma: PrismaService,
     private readonly repository: CacheRepository,
     private readonly logger: ConsoleLogger,
-    @Inject('PluralResetServiceBase') private readonly plural: PluralRestService
+    @Inject('PluralRestServiceBase') private readonly plural: PluralRestService
   ) {
     this.logger.setContext(this.constructor.name);
   }

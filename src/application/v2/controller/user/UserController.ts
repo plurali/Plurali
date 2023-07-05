@@ -24,7 +24,7 @@ import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 @ApiExtraModels(UserDto)
 export class UserController extends BaseController {
   constructor(
-    @Inject('PluralResetServiceBase') private readonly rest: PluralRestService,
+    @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly users: UserRepository
   ) {
