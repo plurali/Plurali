@@ -1,0 +1,22 @@
+{
+  "name": "@plurali/account-deletion",
+  "version": "1.0.0",
+  "description": "Util for deleting user accounts",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "author": "Liliana <valisova@lilianaa.dev>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "@prisma/client": "^4.13.0",
+    "@types/inquirer": "^8.2.6",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "bson": "^5.4.0",
+    "inquirer": "^8.2.6"
+  }
+}
