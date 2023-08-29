@@ -8,11 +8,11 @@ class _PrismaRepository<N extends PrismaModelName = PrismaModelName> {
         if (prop in target) {
           return target[prop];
         } else if (prop in target.prisma[target.modelName]) {
-          return (
+          return ((
             target.prisma[target.modelName][
               prop
             ] as PrismaDelegate<PrismaModelName>[keyof PrismaDelegate<PrismaModelName>]
-          ).bind(target.prisma);
+          ) as any).bind(target.prisma); // TODO: remove any
         }
       },
     });
