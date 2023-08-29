@@ -11,4 +11,8 @@ export class UserRepository extends PrismaRepository<'user'> {
   public async usernameExists(username: string): Promise<boolean> {
     return (await this.count({ where: { username } })) >= 1;
   }
+
+  public async emailExists(email: string): Promise<boolean> {
+    return (await this.count({ where: { email } })) >= 1;
+  }
 }

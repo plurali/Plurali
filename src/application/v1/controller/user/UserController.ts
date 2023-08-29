@@ -12,6 +12,7 @@ import { CacheService } from '@domain/cache/CacheService';
 import { UserDto } from '@app/v1/dto/user/UserDto';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
+import { StatusException } from '@app/v1/exception/StatusException';
 
 @Controller({
   path: '/user',
@@ -51,6 +52,17 @@ export class UserController {
 
     if (notEmpty(data.overridePluralId) && user.role === UserRole.Admin) {
       update.pluralOverride = data.overridePluralId;
+    }
+
+    if (notEmpty(data.email) && user.email !== data.email) {
+      if (await this.users.emailExists(data.email)) {
+        throw new StatusException(StatusMap.EmailTaken);
+      }
+
+      update.email = data.email;
+      update.emailVerified = false;
+      
+      // TODO: send verify email
     }
 
     if (shouldUpdate(update)) {

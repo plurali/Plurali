@@ -3,9 +3,10 @@ import { $axios } from '.';
 import type { Status } from '@app/v1/dto/Status';
 import type { AuthResponse } from '@app/v1/dto/auth/response/AuthResponse';
 import type { AuthRequest } from '@app/v1/dto/auth/request/AuthRequest';
+import type { RegisterRequest } from '@app/v1/dto/auth/request/RegisterRequest';
 import type { OkResponse } from '@app/v1/dto/OkResponse';
 
-export const register = (data: AuthRequest): Promise<AxiosResponse<Status<AuthResponse>>> =>
+export const register = (data: RegisterRequest): Promise<AxiosResponse<Status<AuthResponse>>> =>
   $axios.request<Status<AuthResponse>>({
     url: '/v1/auth/register',
     method: 'PUT',

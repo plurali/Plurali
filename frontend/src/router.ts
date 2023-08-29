@@ -117,12 +117,21 @@ router.beforeEach(async to => {
       user.value = data.data.user;
       if (isAuth(to)) return '/dashboard';
 
-      if (isDashboard(to) && !user.value.pluralKey) {
-        flash('You must setup your Simply Plural API key!', FlashType.Danger);
-        if (to.path !== '/dashboard/user') {
-          return '/dashboard/user';
+      if (isDashboard(to)) {
+        if (!user.value.email) {
+          flash('There is no email assigned to your account yet. Add one to prevent losing your account.', FlashType.Warning, false, true);
+        } else if (!user.value.verified) {
+          flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);  
+        }
+
+        if (!user.value.pluralKey) {
+          flash('You must setup your Simply Plural API key!', FlashType.Danger, false, true);
+          if (to.path !== '/dashboard/user') {
+            return '/dashboard/user';
+          }
         }
       }
+
     } catch (error) {
       user.value = null;
       const status = formatError(error);

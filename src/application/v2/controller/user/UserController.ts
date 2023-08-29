@@ -14,6 +14,7 @@ import { UpdateUserRequest } from '@app/v2/dto/user/request/UpdateUserRequest';
 import { BaseController } from '../BaseController';
 import { AuthGuard } from '@app/v2/context/auth/AuthGuard';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
+import { EmailAlreadyUsedException } from '@app/v2/exception/EmailAlreadyUsedException';
 
 @Controller({
   path: '/user',
@@ -60,6 +61,17 @@ export class UserController extends BaseController {
         throw new UnauthorizedException();
       }
       update.pluralOverride = data.systemIdOverride;
+    }
+
+    if (notEmpty(data.email) && user.email !== data.email) {
+      if (await this.users.emailExists(data.email)) {
+        throw new EmailAlreadyUsedException();
+      }
+
+      update.email = data.email;
+      update.emailVerified = false;
+      
+      // TODO: send verify email
     }
 
     if (shouldUpdate(update)) {

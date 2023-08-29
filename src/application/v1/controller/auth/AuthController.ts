@@ -15,6 +15,7 @@ import { StatusException } from '@app/v1/exception/StatusException';
 import { jwtConfig } from '@app/misc/jwt';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
+import { RegisterRequest } from '@app/v1/dto/auth/request/RegisterRequest';
 
 @Controller({
   path: '/auth',
@@ -29,7 +30,7 @@ export class AuthController {
     private readonly users: UserRepository,
     private readonly hasher: Hasher,
     private readonly cache: CacheService
-  ) {}
+  ) { }
 
   @Post('/login')
   @ApiResponse(ok(200, AuthResponse))
@@ -54,17 +55,20 @@ export class AuthController {
   @Put('/register')
   @ApiResponse(ok(200, AuthResponse))
   @ApiResponse(error(400, StatusMap.UsernameAlreadyUsed))
-  public async register(@Body() credentials: AuthRequest): Promise<Ok<AuthResponse>> {
-    if (!!(await this.users.findUnique({ where: { username: credentials.username } }))) {
+  public async register(@Body() credentials: RegisterRequest): Promise<Ok<AuthResponse>> {
+    if (!!(await this.users.findFirst({ where: { OR: [{ username: credentials.username }, { email: credentials.email }] } }))) {
       throw new StatusException(StatusMap.UsernameAlreadyUsed);
     }
 
     await this.users.create({
       data: {
         username: credentials.username,
+        email: credentials.email,
         passwordHash: this.hasher.hash(credentials.password),
       },
     });
+
+    // TODO: send verify email
 
     return await this.login(credentials);
   }

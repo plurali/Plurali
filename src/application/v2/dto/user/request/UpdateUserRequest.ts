@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 import { UpdateUserRequestInterface } from './UpdateUserRequestInterface';
 
 export class UpdateUserRequest implements UpdateUserRequestInterface {
@@ -8,6 +8,12 @@ export class UpdateUserRequest implements UpdateUserRequestInterface {
   @IsOptional()
   @ApiProperty()
   public accessToken: string | null = null;
+
+  @IsString()
+  @IsEmail()
+  @IsOptional()
+  @ApiProperty()
+  public email: string | null = null;
 
   @IsString()
   @IsOptional()

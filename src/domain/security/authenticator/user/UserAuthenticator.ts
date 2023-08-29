@@ -12,9 +12,12 @@ export class UserAuthenticator extends Authenticator<UserCredentials, User> {
   }
 
   async attempt({ username, password }: UserCredentials): Promise<User | null> {
-    const user = await this.users.findUnique({
+    const user = await this.users.findFirst({
       where: {
-        username,
+        OR: [
+          { username },
+          { email: username }
+        ]
       },
     });
 

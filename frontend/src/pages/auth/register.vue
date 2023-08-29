@@ -20,6 +20,21 @@
     </div>
 
     <div class="mb-3.5">
+      <Label>Your email</Label>
+      <input
+        :disabled="loading"
+        v-model="form.email"
+        @keyup="validate"
+        class="w-full p-2.5 border rounded-xl border-gray-400"
+        placeholder="Your email"
+        type="email"
+      />
+      <InputError v-if="formErrors.email">
+        {{ formErrors.email }}
+      </InputError>
+    </div>
+
+    <div class="mb-3.5">
       <Label>Your password</Label>
       <input
         :disabled="loading"
@@ -60,6 +75,7 @@ import { register } from '../../api/auth'
 import InputError from '../../components/InputError.vue'
 import Spinner from '../../components/Spinner.vue'
 import { setAuth, wrapRequest } from '../../api'
+import {emailRegex} from "../../utils"
 
 export default defineComponent({
   components: {
@@ -75,12 +91,14 @@ export default defineComponent({
 
     const form = reactive({
       username: '',
+      email: '',
       password: '',
     })
 
     const formErrors = reactive({
-      username: null as string | null,
-      password: null as string | null,
+      username: null as string|null,
+      email: null as string|null,
+      password: null as string|null,
     })
 
     const loading = ref(false)
@@ -89,6 +107,11 @@ export default defineComponent({
       formErrors.username =
         !form.username || form.username.trim().length < 3
           ? 'Username must be at least 3 characters long.'
+          : null
+
+      formErrors.email =
+        !form.email || !emailRegex.test(form.email)
+          ? 'A valid email must be entered.'
           : null
 
       formErrors.password =

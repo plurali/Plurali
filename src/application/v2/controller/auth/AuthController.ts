@@ -14,8 +14,9 @@ import { ApiError } from '@app/v2/dto/response/errors';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { AuthRequest } from '@app/v2/dto/auth/request/AuthRequest';
 import { InvalidCredentialsException } from '@app/v2/exception/InvalidCredentialsException';
-import { UsernameTakenException } from '@app/v2/exception/UsernameTakenException';
+import { UsernameOrEmailTakenException } from '@app/v2/exception/UsernameOrEmailTakenException';
 import { BaseController } from '../BaseController';
+import { RegisterRequest } from '@app/v2/dto/auth/request/RegisterRequest';
 
 @Controller({
   path: '/auth',
@@ -55,18 +56,21 @@ export class AuthController extends BaseController {
   @Put('/register')
   @HttpCode(200)
   @ApiResponse(ok(200, AuthDto))
-  @ApiResponse(error(400, ApiError.UsernameTaken))
-  public async register(@Body() credentials: AuthRequest): Promise<ApiDataResponse<AuthDto>> {
-    if (await this.users.usernameExists(credentials.username)) {
-      throw new UsernameTakenException();
+  @ApiResponse(error(400, ApiError.UsernameOrEmailTaken))
+  public async register(@Body() credentials: RegisterRequest): Promise<ApiDataResponse<AuthDto>> {
+    if (!!(await this.users.findFirst({ where: { OR: [{ username: credentials.username }, { email: credentials.email }] } }))) {
+      throw new UsernameOrEmailTakenException();
     }
 
     await this.users.create({
       data: {
         username: credentials.username,
+        email: credentials.email,
         passwordHash: this.hasher.hash(credentials.password),
       },
     });
+
+    // TODO: verify email
 
     return await this.login(credentials);
   }
