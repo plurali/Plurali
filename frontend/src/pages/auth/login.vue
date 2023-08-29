@@ -6,13 +6,13 @@
 
   <form class="mb-4 w-full" @submit.prevent="submit">
     <div class="mb-3.5">
-      <Label>Your username</Label>
+      <Label>Your username or email</Label>
       <input
         :disabled="loading"
         v-model="form.username"
         @keyup="validate"
         class="w-full p-2.5 border rounded-xl border-gray-400"
-        placeholder="Your username"
+        placeholder="Your username or email"
       />
       <InputError v-if="formErrors.username">
         {{ formErrors.username }}

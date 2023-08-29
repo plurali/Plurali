@@ -41,7 +41,7 @@ export const LoginPage = () => {
 
             <form className="mb-4 w-full" onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-3.5">
-                    <Label>Your username</Label>
+                    <Label>Your username or email</Label>
 
                     <input
                         className="w-full p-2.5 border rounded-xl border-gray-400 outline-none focus:outline-none"
