@@ -19,6 +19,9 @@ import { PluralModule } from '@domain/plural/PluralModule';
 import { SecurityModule } from '@domain/security/SecurityModule';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from './misc/jwt';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 
 @Global()
 @Module({
@@ -47,6 +50,24 @@ import { jwtConfig } from './misc/jwt';
         ...config.get('redis'),
       }),
       inject: [ConfigService],
+    }),
+
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService<Config>) => ({
+        transport: config.get("email").transport,
+        defaults: {
+          from: `"Plurali" <${config.get("email").from}>`,
+        },
+        template: {
+          dir: join(__dirname, "..", "..", "email"),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
     }),
 
     BasePrismaModule.forRootAsync({
@@ -87,7 +108,7 @@ import { jwtConfig } from './misc/jwt';
   providers: [CacheRepository, CacheService],
   exports: [BullModule, CacheRepository, CacheService],
 })
-export class Kernel {}
+export class Kernel { }
 
 /**
  * @internal
@@ -109,7 +130,7 @@ export const serverLogger = overrideLoggerPrefix(new ConsoleLogger());
   ],
   exports: [Kernel, ConsoleLogger, Logger],
 })
-export class ServerKernel {}
+export class ServerKernel { }
 
 @Global()
 @Module({
@@ -117,4 +138,4 @@ export class ServerKernel {}
   // microservices add their own logger
   exports: [Kernel],
 })
-export class MicroserviceKernel {}
+export class MicroserviceKernel { }

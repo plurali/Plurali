@@ -13,6 +13,7 @@ import { UserDto } from '@app/v1/dto/user/UserDto';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
 import { StatusException } from '@app/v1/exception/StatusException';
+import { UserService } from '@domain/user/UserService';
 
 @Controller({
   path: '/user',
@@ -25,6 +26,7 @@ export class UserController {
   constructor(
     @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
+    private readonly userService: UserService,
     private readonly users: UserRepository
   ) {}
 
@@ -62,7 +64,7 @@ export class UserController {
       update.email = data.email;
       update.emailVerified = false;
       
-      // TODO: send verify email
+      await this.userService.sendVerificationEmail(user, update.email);
     }
 
     if (shouldUpdate(update)) {

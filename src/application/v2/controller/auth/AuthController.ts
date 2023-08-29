@@ -17,6 +17,7 @@ import { InvalidCredentialsException } from '@app/v2/exception/InvalidCredential
 import { UsernameOrEmailTakenException } from '@app/v2/exception/UsernameOrEmailTakenException';
 import { BaseController } from '../BaseController';
 import { RegisterRequest } from '@app/v2/dto/auth/request/RegisterRequest';
+import { UserService } from '@domain/user/UserService';
 
 @Controller({
   path: '/auth',
@@ -28,6 +29,7 @@ export class AuthController extends BaseController {
   constructor(
     @Inject(Authenticator) private readonly authenticator: UserAuthenticator,
     private readonly signer: JwtService,
+    private readonly userService: UserService,
     private readonly users: UserRepository,
     private readonly hasher: Hasher,
     private readonly cache: CacheService
@@ -62,7 +64,7 @@ export class AuthController extends BaseController {
       throw new UsernameOrEmailTakenException();
     }
 
-    await this.users.create({
+    const user = await this.users.create({
       data: {
         username: credentials.username,
         email: credentials.email,
@@ -70,7 +72,7 @@ export class AuthController extends BaseController {
       },
     });
 
-    // TODO: verify email
+    await this.userService.sendVerificationEmail(user);
 
     return await this.login(credentials);
   }

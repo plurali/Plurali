@@ -40,6 +40,11 @@ export interface PluralConfig {
   observer: PluralObserverConfig;
 }
 
+export interface EmailConfig {
+  from: string;
+  transport: string;
+}
+
 export interface ConfigInterface {
   env: Environment;
   dev: boolean;
@@ -49,6 +54,7 @@ export interface ConfigInterface {
   storage: StorageConfig;
   digitalocean: DigitalOceanConfig | null;
   plural: PluralConfig;
+  email: EmailConfig;
 }
 
 export class Config implements ConfigInterface {
@@ -120,6 +126,12 @@ export class Config implements ConfigInterface {
   @IsString()
   protected JWT_SECRET: string;
 
+  @IsString()
+  protected EMAIL_FROM: string = "plurali@plurali.icu";
+
+  @IsString()
+  protected EMAIL_TRANSPORT: string;
+
   get env(): Environment {
     return this.NODE_ENV;
   }
@@ -136,6 +148,13 @@ export class Config implements ConfigInterface {
         origin: this.CORS_ORIGIN,
       },
     };
+  }
+
+  get email(): EmailConfig {
+    return {
+      from: this.EMAIL_FROM,
+      transport: this.EMAIL_TRANSPORT,
+    }
   }
 
   get db(): string {

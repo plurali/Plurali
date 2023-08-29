@@ -16,6 +16,7 @@ import { jwtConfig } from '@app/misc/jwt';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
 import { RegisterRequest } from '@app/v1/dto/auth/request/RegisterRequest';
+import { UserService } from '@domain/user/UserService';
 
 @Controller({
   path: '/auth',
@@ -27,6 +28,7 @@ export class AuthController {
   constructor(
     @Inject(Authenticator) private readonly authenticator: UserAuthenticator,
     private readonly signer: JwtService,
+    private readonly userService: UserService,
     private readonly users: UserRepository,
     private readonly hasher: Hasher,
     private readonly cache: CacheService
@@ -60,7 +62,7 @@ export class AuthController {
       throw new StatusException(StatusMap.UsernameAlreadyUsed);
     }
 
-    await this.users.create({
+    const user = await this.users.create({
       data: {
         username: credentials.username,
         email: credentials.email,
@@ -68,8 +70,8 @@ export class AuthController {
       },
     });
 
-    // TODO: send verify email
-
+    await this.userService.sendVerificationEmail(user);
+    
     return await this.login(credentials);
   }
 

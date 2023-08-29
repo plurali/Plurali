@@ -15,6 +15,7 @@ import { BaseController } from '../BaseController';
 import { AuthGuard } from '@app/v2/context/auth/AuthGuard';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 import { EmailAlreadyUsedException } from '@app/v2/exception/EmailAlreadyUsedException';
+import { UserService } from '@domain/user/UserService';
 
 @Controller({
   path: '/user',
@@ -27,6 +28,7 @@ export class UserController extends BaseController {
   constructor(
     @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
+    private readonly userService: UserService,
     private readonly users: UserRepository
   ) {
     super();
@@ -71,7 +73,7 @@ export class UserController extends BaseController {
       update.email = data.email;
       update.emailVerified = false;
       
-      // TODO: send verify email
+      await this.userService.sendVerificationEmail(user, update.email);
     }
 
     if (shouldUpdate(update)) {
