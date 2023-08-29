@@ -138,8 +138,8 @@ importers:
         specifier: ^1.4.7
         version: 1.4.7
       '@types/node':
-        specifier: 18.15.11
-        version: 18.15.11
+        specifier: 20.5.7
+        version: 20.5.7
       '@types/ws':
         specifier: ^8.5.5
         version: 8.5.5
@@ -178,7 +178,7 @@ importers:
         version: 9.4.4(typescript@5.0.4)(webpack@5.88.2)
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.15.11)(typescript@5.0.4)
+        version: 10.9.1(@types/node@20.5.7)(typescript@5.0.4)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
@@ -187,7 +187,7 @@ importers:
         version: 5.0.4
       vite:
         specifier: ^4.3.1
-        version: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
+        version: 4.3.3(@types/node@20.5.7)(sass@1.62.0)
       vite-plugin-node:
         specifier: ^3.0.2
         version: 3.0.2(vite@4.3.3)
@@ -215,7 +215,7 @@ importers:
         version: 16.3.1
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.15.11)(typescript@5.1.6)
+        version: 10.9.1(@types/node@20.5.7)(typescript@5.1.6)
 
   frontend:
     dependencies:
@@ -257,7 +257,7 @@ importers:
         version: 2.0.1
       vite:
         specifier: ^4.3.1
-        version: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
+        version: 4.3.3(@types/node@20.5.7)(sass@1.62.0)
       vite-tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0(typescript@5.0.4)(vite@4.3.3)
@@ -436,7 +436,7 @@ importers:
         version: 16.3.1
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.15.11)(typescript@5.1.6)
+        version: 10.9.1(@types/node@20.5.7)(typescript@5.1.6)
 
 packages:
 
@@ -2835,26 +2835,26 @@ packages:
   /@types/bcrypt@5.0.0:
     resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/body-parser@1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/cheerio@0.22.31:
     resolution: {integrity: sha512-Kt7Cdjjdi2XWSfrZ53v4Of0wG3ZcmaegFXjMmz9tfNrZSkzzo36G0AL1YqSdcIA78Etjt6E609pt5h1xnQkPUw==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/connect@3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/dompurify@3.0.2:
@@ -2895,7 +2895,7 @@ packages:
   /@types/express-serve-static-core@4.17.36:
     resolution: {integrity: sha512-zbivROJ0ZqLAtMzgzIUC4oNqDG9iF0lSsAqpOD9kbs5xcIM3dTiyuHvBc7R8MtWBp3AAWGaovJa+wzWPjLYW7Q==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
       '@types/send': 0.17.1
@@ -2938,7 +2938,7 @@ packages:
   /@types/jsonwebtoken@9.0.2:
     resolution: {integrity: sha512-drE6uz7QBKq1fYqqoFKTDRdFCPHd5TCub75BM+D+cMx7NU9hUz7SESLfC2fSCXVFMO5Yj8sOWHuGqPgjc+fz0Q==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: false
 
   /@types/linkify-it@3.0.2:
@@ -2981,12 +2981,16 @@ packages:
   /@types/node-fetch@2.6.3:
     resolution: {integrity: sha512-ETTL1mOEdq/sxUtgtOhKjyB2Irra4cjxksvcMUR5Zr4n+PxVhsCD9WS46oPbHL3et9Zde7CNRr+WUNlcHvsX+w==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       form-data: 3.0.1
     dev: true
 
   /@types/node@18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
+    dev: true
+
+  /@types/node@20.5.7:
+    resolution: {integrity: sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==}
 
   /@types/parse-json@4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
@@ -3035,7 +3039,7 @@ packages:
     resolution: {integrity: sha512-Cwo8LE/0rnvX7kIIa3QHCkcuF21c05Ayb0ZfxPiv0W8VRiZiNW/WuRupHKpqqGVGf7SUA44QSOUKaEd9lIrd/Q==}
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/serve-static@1.15.2:
@@ -3043,7 +3047,7 @@ packages:
     dependencies:
       '@types/http-errors': 2.0.1
       '@types/mime': 3.0.1
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/sizzle@2.3.3:
@@ -3059,7 +3063,7 @@ packages:
   /@types/through@0.0.30:
     resolution: {integrity: sha512-FvnCJljyxhPM3gkRgWmxmDZyAQSiBQQWLI0A0VFL0K7W1oRUrPJSqNO0NvTnLkBcotdlp3lKvaT0JrnyRDkzOg==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@types/trusted-types@2.0.3:
@@ -3073,7 +3077,7 @@ packages:
   /@types/ws@8.5.5:
     resolution: {integrity: sha512-lwhs8hktwxSjf9UaZ9tG5M03PGogvFaH8gUgLNbN9HKIg0dvv6q+gkSuJ8HN4/VbyxkuLzCjlN7GquQ0gUJfIg==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
     dev: true
 
   /@typescript-eslint/eslint-plugin@6.5.0(@typescript-eslint/parser@6.5.0)(eslint@8.48.0)(typescript@5.0.4):
@@ -3214,7 +3218,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
+      vite: 4.3.3(@types/node@20.5.7)(sass@1.62.0)
       vue: 3.2.47
     dev: true
 
@@ -5994,7 +5998,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       merge-stream: 2.0.0
       supports-color: 8.1.1
     dev: true
@@ -7666,7 +7670,7 @@ packages:
     dependencies:
       lilconfig: 2.1.0
       postcss: 8.4.23
-      ts-node: 10.9.1(@types/node@18.15.11)(typescript@5.0.4)
+      ts-node: 10.9.1(@types/node@20.5.7)(typescript@5.0.4)
       yaml: 1.10.2
     dev: true
 
@@ -9001,7 +9005,7 @@ packages:
       webpack: 5.88.2
     dev: true
 
-  /ts-node@10.9.1(@types/node@18.15.11)(typescript@5.0.4):
+  /ts-node@10.9.1(@types/node@20.5.7)(typescript@5.0.4):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -9020,7 +9024,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -9032,7 +9036,7 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /ts-node@10.9.1(@types/node@18.15.11)(typescript@5.1.6):
+  /ts-node@10.9.1(@types/node@20.5.7)(typescript@5.1.6):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -9051,7 +9055,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -9267,7 +9271,7 @@ packages:
       '@rollup/pluginutils': 4.2.1
       chalk: 4.1.2
       debug: 4.3.4
-      vite: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
+      vite: 4.3.3(@types/node@20.5.7)(sass@1.62.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9283,12 +9287,12 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.1(typescript@5.0.4)
-      vite: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
+      vite: 4.3.3(@types/node@20.5.7)(sass@1.62.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  /vite@4.3.3(@types/node@18.15.11)(sass@1.62.0):
+  /vite@4.3.3(@types/node@20.5.7)(sass@1.62.0):
     resolution: {integrity: sha512-MwFlLBO4udZXd+VBcezo3u8mC77YQk+ik+fbc0GZWGgzfbPP+8Kf0fldhARqvSYmtIWoAJ5BXPClUbMTlqFxrA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -9313,7 +9317,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 20.5.7
       esbuild: 0.17.18
       postcss: 8.4.23
       rollup: 3.21.0
