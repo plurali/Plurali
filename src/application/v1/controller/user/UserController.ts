@@ -14,6 +14,8 @@ import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagg
 import { error, ok } from '@app/misc/swagger';
 import { StatusException } from '@app/v1/exception/StatusException';
 import { UserService } from '@domain/user/UserService';
+import { SystemAlreadyAssociatedException } from '@app/v1/exception/SystemAlreadyAssociatedException';
+import { SystemRepository } from '@domain/system/SystemRepository';
 
 @Controller({
   path: '/user',
@@ -27,8 +29,9 @@ export class UserController {
     @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly userService: UserService,
-    private readonly users: UserRepository
-  ) {}
+    private readonly users: UserRepository,
+    private readonly systems: SystemRepository
+  ) { }
 
   @UseGuards(AuthGuard)
   @Get('/')
@@ -41,13 +44,26 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Post('/')
   @ApiResponse(ok(200, UserResponse))
-  @ApiResponse(error(401, StatusMap.NotAuthenticated))
+  @ApiResponse(error(401, StatusMap.NotAuthenticated, StatusMap.SystemAlreadyAssociated))
   async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<Ok<UserResponse>> {
     const update: Prisma.UserUpdateInput = {};
     let rebuild = false;
 
     if (notEmpty(data.pluralKey)) {
       const plural = await this.rest.findUserForId('me', data.pluralKey);
+
+      if (plural) {
+        const alreadyAssociated = !!(await this.systems.findUnique({
+          where: {
+            pluralId: plural.id
+          }
+        }));
+
+        if (alreadyAssociated) {
+          throw new SystemAlreadyAssociatedException();
+        }
+      }
+
       update.pluralAccessToken = !!plural ? data.pluralKey : null;
       rebuild = true;
     }
@@ -63,7 +79,7 @@ export class UserController {
 
       update.email = data.email;
       update.emailVerified = false;
-      
+
       await this.userService.sendVerificationEmail(user, update.email);
     }
 

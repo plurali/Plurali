@@ -16,6 +16,8 @@ import { AuthGuard } from '@app/v2/context/auth/AuthGuard';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 import { EmailAlreadyUsedException } from '@app/v2/exception/EmailAlreadyUsedException';
 import { UserService } from '@domain/user/UserService';
+import { SystemRepository } from '@domain/system/SystemRepository';
+import { SystemAlreadyAssociatedException } from '@app/v2/exception/SystemAlreadyAssociatedException';
 
 @Controller({
   path: '/user',
@@ -29,7 +31,8 @@ export class UserController extends BaseController {
     @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly userService: UserService,
-    private readonly users: UserRepository
+    private readonly users: UserRepository,
+    private readonly systems: SystemRepository
   ) {
     super();
   }
@@ -47,13 +50,26 @@ export class UserController extends BaseController {
   @Patch('/')
   @HttpCode(200)
   @ApiResponse(ok(200, UserDto))
-  @ApiResponse(error(401, ApiError.NotAuthenticated, ApiError.Unauthorized))
+  @ApiResponse(error(401, ApiError.NotAuthenticated, ApiError.Unauthorized, ApiError.SystemAlreadyAssociated))
   async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<ApiDataResponse<UserDto>> {
     const update: Prisma.UserUpdateInput = {};
     let clearCache = false;
 
     if (notEmpty(data.accessToken)) {
       const plural = await this.rest.findUserForId('me', data.accessToken);
+
+      if (plural) {
+        const alreadyAssociated = !!(await this.systems.findUnique({
+          where: {
+            pluralId: plural.id
+          }
+        }));
+
+        if (alreadyAssociated) {
+          throw new SystemAlreadyAssociatedException();
+        }
+      }
+
       update.pluralAccessToken = !!plural ? data.accessToken : null;
       clearCache = true;
     }
@@ -72,7 +88,7 @@ export class UserController extends BaseController {
 
       update.email = data.email;
       update.emailVerified = false;
-      
+
       await this.userService.sendVerificationEmail(user, update.email);
     }
 

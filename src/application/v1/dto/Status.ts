@@ -20,6 +20,7 @@ export const StatusMap = {
   MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form',
   CacheDemand:
     'Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.',
+  SystemAlreadyAssociated: 'The provided system is already associated to another account.'
 };
 
 export type StatusMapType = typeof StatusMap;
