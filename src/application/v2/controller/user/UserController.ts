@@ -148,6 +148,12 @@ export class UserController extends BaseController {
       }
     })
 
+    await this.verifications.delete({
+      where: {
+        id: verification.id
+      }
+    });
+
     return this.ok();
   }
 }
