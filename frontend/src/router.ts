@@ -89,6 +89,11 @@ const routes: RouteRecordRaw[] = [
         path: '/:systemId/m/:memberId/p/:pageId',
         component: () => import('./pages/page.vue' as string),
       },
+      {
+        name: 'user:verify-email',
+        path: '/user/verify-email/:code',
+        component: () => import('./pages/user/verify-email.vue' as string),
+      },
     ],
   },
 ];

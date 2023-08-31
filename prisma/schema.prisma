@@ -33,10 +33,15 @@ enum MemberFieldType {
   MonthDay
 }
 
+enum UserVerificationType {
+  Email
+  PasswordReset
+}
+
 // this is just a dummy model for Prisma to generate a dummy delegate that
 // the PrismaRepository can extend
 model BaseModel {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
   @@map("_internal")
 }
@@ -45,7 +50,7 @@ model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   username String @unique
 
-  email String?
+  email         String?
   emailVerified Boolean @default(false)
 
   system System?
@@ -58,15 +63,30 @@ model User {
   role UserRole @default(User)
 
   pages Page[]
-  
+
+  verifications UserVerification[]
+
   @@map("pluraliapp_users")
+}
+
+model UserVerification {
+  id   String               @id @default(auto()) @map("_id") @db.ObjectId
+  type UserVerificationType
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+
+  @@map("pluraliapp_users_verifications")
 }
 
 model System {
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
   slug String?
 
-  pluralId      String @unique
+  pluralId String @unique
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique @db.ObjectId
@@ -90,12 +110,12 @@ model System {
 model Field {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  pluralId      String @unique
+  pluralId       String @unique
   pluralParentId String
 
-  name String
-  position Int @default(0)
-  type MemberFieldType
+  name     String
+  position Int             @default(0)
+  type     MemberFieldType
 
   system   System @relation(fields: [systemId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   systemId String @db.ObjectId
@@ -134,18 +154,18 @@ enum OwnerType {
 }
 
 model Page {
-  id String  @id @default(auto()) @map("_id") @db.ObjectId
-  slug String? 
+  id   String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug String?
 
-  ownerId String // attach to pluralId to bind to member/system
+  ownerId   String // attach to pluralId to bind to member/system
   ownerType OwnerType
 
-  name String
+  name    String
   content String
 
   visibility Visibility
 
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @db.ObjectId
 
   @@map("pluraliapp_pages")

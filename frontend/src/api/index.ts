@@ -28,8 +28,17 @@ if (auth) {
   setAuth(auth);
 }
 
-export const formatError = (e: any) =>
-  e?.response?.data?.error ?? e?.message ?? 'Unknown error has occurred. Please try again.';
+export const formatError = (e: any) => {
+  const unknownErrorMessage = 'Unknown error has occurred. Please try again.';
+
+  const error = e?.response?.data?.error ?? e?.message ?? unknownErrorMessage;
+
+  if (typeof error === "object") {
+    return error.message ?? error.type ?? unknownErrorMessage;
+  }
+
+  return error;
+}
 
 export const wrapRequest = async <T extends object = SuccessData>(
   fn: () => Promise<AxiosResponse<Status<T>>> | null

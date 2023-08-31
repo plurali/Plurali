@@ -55,7 +55,10 @@ export class UserController {
       if (plural) {
         const alreadyAssociated = !!(await this.systems.findUnique({
           where: {
-            pluralId: plural.id
+            pluralId: plural.id,
+            NOT: {
+              userId: user.id
+            }
           }
         }));
 

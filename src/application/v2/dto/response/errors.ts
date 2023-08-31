@@ -11,7 +11,8 @@ export enum ApiError {
   UnsupportedFile = 'unsupported_file',
   UploadFailed = 'upload_failed',
   UnknownError = 'unknown_error',
-  SystemAlreadyAssociated = 'system_already_associated'
+  SystemAlreadyAssociated = 'system_already_associated',
+  InvalidVerification = 'invalid_verification',
 }
 
 export const ApiErrorMessage: Record<ApiError, string> = {
@@ -27,5 +28,6 @@ export const ApiErrorMessage: Record<ApiError, string> = {
   [ApiError.UnsupportedFile]: 'This file is not supported',
   [ApiError.UploadFailed]: 'The file upload has failed, please try again',
   [ApiError.UnknownError]: 'An unknown error has occurred, please try again',
-  [ApiError.SystemAlreadyAssociated]: 'This system is already associated with another account.'
+  [ApiError.SystemAlreadyAssociated]: 'This system is already associated with another account.',
+  [ApiError.InvalidVerification]: 'The verification code is either invalid or has expired.'
 };

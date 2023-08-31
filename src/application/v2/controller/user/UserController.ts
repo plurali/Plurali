@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Inject, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Prisma, User, UserRole } from '@prisma/client';
+import { Prisma, User, UserRole, UserVerificationType } from '@prisma/client';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { UserRepository } from '@domain/user/UserRepository';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
@@ -18,6 +18,11 @@ import { EmailAlreadyUsedException } from '@app/v2/exception/EmailAlreadyUsedExc
 import { UserService } from '@domain/user/UserService';
 import { SystemRepository } from '@domain/system/SystemRepository';
 import { SystemAlreadyAssociatedException } from '@app/v2/exception/SystemAlreadyAssociatedException';
+import { Ok } from '@app/v2/dto/response/Ok';
+import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
+import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
+import { VerifyUserEmailRequest } from '@app/v2/dto/user/request/VerifyUserEmailRequest';
+import {ObjectId} from 'bson';
 
 @Controller({
   path: '/user',
@@ -32,7 +37,8 @@ export class UserController extends BaseController {
     private readonly cache: CacheService,
     private readonly userService: UserService,
     private readonly users: UserRepository,
-    private readonly systems: SystemRepository
+    private readonly systems: SystemRepository,
+    private readonly verifications: UserVerificationRepository,
   ) {
     super();
   }
@@ -61,7 +67,10 @@ export class UserController extends BaseController {
       if (plural) {
         const alreadyAssociated = !!(await this.systems.findUnique({
           where: {
-            pluralId: plural.id
+            pluralId: plural.id,
+            NOT: {
+              userId: user.id
+            }
           }
         }));
 
@@ -106,5 +115,39 @@ export class UserController extends BaseController {
     }
 
     return this.data(UserDto.from(user));
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/verify-email')
+  @ApiResponse(ok(200, UserDto))
+  @ApiResponse(error(401, ApiError.NotAuthenticated, ApiError.InvalidVerification))
+  async verifyEmail(@CurrentUser() user: User, @Body() { code }: VerifyUserEmailRequest): Promise<ApiDataResponse<Ok>> {
+    if (!ObjectId.isValid(code)) {
+      throw new InvalidVerificationException();
+    }
+
+    const verification = await this.verifications.findFirst({
+      where: {
+        id: code,
+        type: UserVerificationType.Email,
+        userId: user.id
+      }
+    })
+
+    if (!verification) {
+      throw new InvalidVerificationException();
+    }
+
+    await this.users.update({
+      where: {
+        id: user.id
+      },
+      data: {
+        email: user.email, // ensure another email isn't saved on parallel
+        emailVerified: true,
+      }
+    })
+
+    return this.ok();
   }
 }
