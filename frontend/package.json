@@ -1,11 +1,17 @@
 {
   "name": "@plurali/frontend",
   "version": "1.0.0",
-  "author": "Liliana <lilianalillyy@gmail.com>",
+  "description": "Frontend for Plurali. https://plurali.icu",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
+  "private": true,
   "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
   "main": "src/",
   "type": "module",
-  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",

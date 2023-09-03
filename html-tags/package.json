@@ -2,13 +2,18 @@
   "name": "@plurali/html-tags",
   "version": "1.0.0",
   "description": "Util used for migrating old HTML tinymce output to Slate",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
+  "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
   "main": "index.ts",
   "scripts": {
     "start": "ts-node index.ts"
   },
-  "author": "Liliana <valisova@lilianaa.dev>",
-  "license": "MIT",
-  "private": true,
   "devDependencies": {
     "@prisma/client": "^4.13.0",
     "cheerio": "^1.0.0-rc.12",

@@ -1,10 +1,16 @@
 {
   "name": "@plurali/frontend-v2",
-  "version": "2.0.0",
-  "author": "Liliana <lilianalillyy@gmail.com>",
-  "license": "MIT",
-  "main": "src/",
+  "version": "1.0.0",
+  "description": "Rewrite of the current Vue 3 frontend",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
   "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
+  "main": "src/",
   "scripts": {
     "dev": "next dev -p 5173",
     "build": "next build",

@@ -1,14 +1,18 @@
 {
   "name": "@plurali/account-deletion",
   "version": "1.0.0",
-  "description": "Util for deleting user accounts",
-  "main": "index.ts",
+  "description": "Script for deleting user accounts",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
+  "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
   "scripts": {
     "start": "ts-node index.ts"
   },
-  "author": "Liliana <valisova@lilianaa.dev>",
-  "license": "MIT",
-  "private": true,
   "devDependencies": {
     "@prisma/client": "^4.13.0",
     "@types/inquirer": "^8.2.6",

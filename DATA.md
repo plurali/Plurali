@@ -51,4 +51,4 @@ As per the EU regulations, a user is entitled for complete deletion of their acc
 
 <hr>
 
-Last updated at April 9, 2023 by @lilianalillyy
+Last updated at April 9, 2023 by [Mia Vališová (valisova@lilianaa.dev)](mailto:valisova@lilianaa.dev) ([@lilianalillyy](https://github.com/lilianalillyy))
