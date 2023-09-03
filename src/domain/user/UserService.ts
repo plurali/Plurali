@@ -2,6 +2,8 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable } from "@nestjs/common";
 import { User, UserVerificationType } from "@prisma/client";
 import { UserVerificationRepository } from "./verification/UserVerificationRepository";
+import { render } from "@react-email/render";
+import { UserVerificationEmail } from "@domain/emails/UserVerificationEmail";
 
 @Injectable()
 export class UserService {
@@ -32,10 +34,10 @@ export class UserService {
         await this.mailer.sendMail({
             to: email ?? user.email,
             subject: "Verify your Plurali account",
-            template: "verification",
-            context: {
+            html: render(UserVerificationEmail({
                 link: `https://plurali.icu/user/verify-email/${verification.id}`, // TODO: domain as param
-            }
+                username: user.username
+            }))
         })
     }
 }

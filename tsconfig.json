@@ -19,6 +19,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "importsNotUsedAsValues": "remove",
+    "jsx": "react-jsx",
     "paths": {
       "@domain/*": ["./src/domain/*"],
       "@infra/*": ["./src/infrastructure/*"],
