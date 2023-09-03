@@ -11,7 +11,6 @@
 | [frontend](frontend)                 |                    Vue 3 frontend (current)                    |
 | [frontend-v2](frontend-v2)           |                 React rewrite of the frontend                  |
 | [account-deletion](account-deletion) |                Script for user account deletion                |
-| [email-templates](email-templates)                     |                 React Email project for emails                 |
 | [html-tags](html-tags)               | Util for collecting utilized html tags by TinyMCE descriptions |
 
 *The plan is to migrate away from TinyMCE and create a better rich text editor, however for the sake of ensuring the current
