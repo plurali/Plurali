@@ -20,8 +20,6 @@ import { SecurityModule } from '@domain/security/SecurityModule';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from './misc/jwt';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { join } from 'path';
 
 @Global()
 @Module({
@@ -59,13 +57,6 @@ import { join } from 'path';
         transport: config.get("email").transport,
         defaults: {
           from: `"Plurali" <${config.get("email").from}>`,
-        },
-        template: {
-          dir: join(__dirname, "..", "..", "email"),
-          adapter: new HandlebarsAdapter(),
-          options: {
-            strict: true,
-          },
         },
       }),
     }),
