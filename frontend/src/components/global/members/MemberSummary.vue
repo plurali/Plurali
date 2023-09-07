@@ -29,13 +29,15 @@ import { computed, defineComponent, PropType } from 'vue';
 import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { useRoute } from 'vue-router';
 import { string } from '../../../api/fields';
+import Sanitized from '../Sanitized.vue';
 
 export default defineComponent({
   components: {
     PageTitle,
     Subtitle,
     ColorCircle,
-  },
+    Sanitized
+},
   props: {
     member: {
       type: Object as PropType<UserMemberDto>,

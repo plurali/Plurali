@@ -26,9 +26,9 @@
         {{ systemMember.name }}
         <span v-if="systemMember.pronouns" class="text-sm text-gray-500 font-normaly">{{ systemMember.pronouns }}</span>
       </h2>
-      <h3 class="text-gray-700 !max-w-md max-h-20 overflow-hidden w-full" v-if="systemMember.description">
+      <!-- <h3 class="text-gray-700 !max-w-md max-h-20 overflow-hidden w-full" v-if="systemMember.description">
         <Sanitized :value="string(systemMember.description, true)" />
-      </h3>
+      </h3> -->
     </div>
   </router-link>
 </template>
