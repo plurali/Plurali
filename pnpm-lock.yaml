@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -18,8 +14,8 @@ importers:
         specifier: ^6.4.0
         version: 6.4.0
       '@fastify/helmet':
-        specifier: ^11.0.0
-        version: 11.0.0
+        specifier: ^11.1.1
+        version: 11.1.1
       '@fastify/multipart':
         specifier: ^7.7.3
         version: 7.7.3
@@ -152,7 +148,7 @@ importers:
         version: 10.1.16
       '@nestjs/schematics':
         specifier: ^10.0.2
-        version: 10.0.2(typescript@5.0.4)
+        version: 10.0.2(chokidar@3.5.3)(typescript@5.1.6)
       '@types/bcrypt':
         specifier: ^5.0.0
         version: 5.0.0
@@ -1695,8 +1691,8 @@ packages:
       fastify-plugin: 4.5.0
     dev: false
 
-  /@fastify/helmet@11.0.0:
-    resolution: {integrity: sha512-YSFhJFR4Pk2azmTkX54f0Z/O7h5j4ruCQUlagf/Rw1P45u5/2u+F+I83DRyIKryM6prXl++X2yY0Ib0RXAlZ7Q==}
+  /@fastify/helmet@11.1.1:
+    resolution: {integrity: sha512-pjJxjk6SLEimITWadtYIXt6wBMfFC1I6OQyH/jYVCqSAn36sgAIFjeNiibHtifjCd+e25442pObis3Rjtame6A==}
     dependencies:
       fastify-plugin: 4.5.0
       helmet: 7.0.0
@@ -2325,21 +2321,6 @@ packages:
       jsonc-parser: 3.2.0
       pluralize: 8.0.0
       typescript: 5.1.6
-    transitivePeerDependencies:
-      - chokidar
-    dev: true
-
-  /@nestjs/schematics@10.0.2(typescript@5.0.4):
-    resolution: {integrity: sha512-DaZZjymYoIfRqC5W62lnYXIIods1PDY6CGc8+IpRwyinzffjKxZ3DF3exu+mdyvllzkXo9DTXkoX4zOPSJHCkw==}
-    peerDependencies:
-      typescript: '>=4.8.2'
-    dependencies:
-      '@angular-devkit/core': 16.1.8(chokidar@3.5.3)
-      '@angular-devkit/schematics': 16.1.8(chokidar@3.5.3)
-      comment-json: 4.2.3
-      jsonc-parser: 3.2.0
-      pluralize: 8.0.0
-      typescript: 5.0.4
     transitivePeerDependencies:
       - chokidar
     dev: true
@@ -10782,3 +10763,7 @@ packages:
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
