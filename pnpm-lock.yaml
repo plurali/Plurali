@@ -455,6 +455,10 @@ importers:
         version: 3.0.2
 
   slate:
+    dependencies:
+      node-html-parser:
+        specifier: ^6.1.10
+        version: 6.1.10
     devDependencies:
       '@prisma/client':
         specifier: ^5.2.0
@@ -7926,6 +7930,13 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /node-html-parser@6.1.10:
+    resolution: {integrity: sha512-6/uWdWxjQWQ7tMcFK2wWlrflsQUzh1HsEzlIf2j5+TtzfhT2yUvg3DwZYAmjEHeR3uX74ko7exjHW69J0tOzIg==}
+    dependencies:
+      css-select: 5.1.0
+      he: 1.2.0
+    dev: false
 
   /node-releases@2.0.10:
     resolution: {integrity: sha512-5GFldHPXVG/YZmFzJvKK2zDSzPKhEp0+ZR5SVaoSag9fsL5YgHbUHDfnG5494ISANDcK4KwPXAx2xqVEydmd7w==}
