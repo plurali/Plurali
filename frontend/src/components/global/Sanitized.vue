@@ -4,8 +4,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { Sanitizer } from '../../sanitizer';
-import { setHTML } from '../../sanitizer/polyfill';
+import { Sanitizer, setHTML } from '@plurali/sanitizer';
 
 export default defineComponent({
   props: {

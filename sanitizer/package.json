@@ -1,0 +1,23 @@
+{
+  "name": "@plurali/sanitizer",
+  "version": "1.0.0",
+  "description": "Sanitizer of HTML content",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
+  "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
+  "main": "src/index.ts",
+  "files": [
+    "src/"
+  ],
+  "dependencies": {
+    "dompurify": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.2"
+  }
+}

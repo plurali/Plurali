@@ -568,3 +568,6 @@ export class Sanitizer {
     };
   }
 }
+
+export * from "./polyfill";
+export * from "./types";

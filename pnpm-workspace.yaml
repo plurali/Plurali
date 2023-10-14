@@ -1,1 +1,6 @@
-{ 'workspaces': ['frontend', 'frontend-v2'] }
+packages:
+  - frontend
+  - frontend-v2
+  - account-deletion
+  - html-tags
+  - sanitizer
