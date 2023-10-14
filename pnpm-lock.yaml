@@ -229,8 +229,8 @@ importers:
         version: 8.2.6
     devDependencies:
       '@prisma/client':
-        specifier: ^4.13.0
-        version: 4.13.0(prisma@5.2.0)
+        specifier: ^5.2.0
+        version: 5.2.0(prisma@5.2.0)
       '@types/inquirer':
         specifier: ^8.2.6
         version: 8.2.6
@@ -457,8 +457,8 @@ importers:
   slate:
     devDependencies:
       '@prisma/client':
-        specifier: ^4.13.0
-        version: 4.13.0(prisma@5.2.0)
+        specifier: ^5.2.0
+        version: 5.2.0(prisma@5.2.0)
       cheerio:
         specifier: ^1.0.0-rc.12
         version: 1.0.0-rc.12
@@ -2649,20 +2649,6 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /@prisma/client@4.13.0(prisma@5.2.0):
-    resolution: {integrity: sha512-YaiiICcRB2hatxsbnfB66uWXjcRw3jsZdlAVxmx0cFcTc/Ad/sKdHCcWSnqyDX47vAewkjRFwiLwrOUjswVvmA==}
-    engines: {node: '>=14.17'}
-    requiresBuild: true
-    peerDependencies:
-      prisma: '*'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-    dependencies:
-      '@prisma/engines-version': 4.13.0-50.1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a
-      prisma: 5.2.0
-    dev: true
-
   /@prisma/client@5.2.0(prisma@5.2.0):
     resolution: {integrity: sha512-AiTjJwR4J5Rh6Z/9ZKrBBLel3/5DzUNntMohOy7yObVnVoTNVFi2kvpLZlFuKO50d7yDspOtW6XBpiAd0BVXbQ==}
     engines: {node: '>=16.13'}
@@ -2675,15 +2661,9 @@ packages:
     dependencies:
       '@prisma/engines-version': 5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f
       prisma: 5.2.0
-    dev: false
-
-  /@prisma/engines-version@4.13.0-50.1e7af066ee9cb95cf3a403c78d9aab3e6b04f37a:
-    resolution: {integrity: sha512-fsQlbkhPJf08JOzKoyoD9atdUijuGBekwoOPZC3YOygXEml1MTtgXVpnUNchQlRSY82OQ6pSGQ9PxUe4arcSLQ==}
-    dev: true
 
   /@prisma/engines-version@5.2.0-25.2804dc98259d2ea960602aca6b8e7fdc03c1758f:
     resolution: {integrity: sha512-jsnKT5JIDIE01lAeCj2ghY9IwxkedhKNvxQeoyLs6dr4ZXynetD0vTy7u6wMJt8vVPv8I5DPy/I4CFaoXAgbtg==}
-    dev: false
 
   /@prisma/engines@5.2.0:
     resolution: {integrity: sha512-dT7FOLUCdZmq+AunLqB1Iz+ZH/IIS1Fz2THmKZQ6aFONrQD/BQ5ecJ7g2wGS2OgyUFf4OaLam6/bxmgdOBDqig==}

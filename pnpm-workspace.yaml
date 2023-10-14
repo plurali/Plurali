@@ -2,5 +2,5 @@ packages:
   - frontend
   - frontend-v2
   - account-deletion
-  - html-tags
+  - slate
   - sanitizer

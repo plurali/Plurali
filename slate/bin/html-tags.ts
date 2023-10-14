@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import {config} from "dotenv";
-import {join} from "path";
-import {load} from "cheerio"
+import { config } from "dotenv";
+import { join } from "path";
+import { load } from "cheerio"
 
-config({path: join(__dirname, "..", ".env")})
+config({ path: join(__dirname, "..", ".env") })
 
 const db = new PrismaClient();
 
@@ -42,7 +42,7 @@ const collectDescriptions = async () => {
             content: true
         },
     })).map((s) => s.content);
-    
+
     return ([] as string[]).concat(systems, members, pages);
 }
 
@@ -52,7 +52,7 @@ const parseTags = (html: string): string[] => {
     return $("*")
         .toArray()
         .map((el) => (el.parent as any).name)
-        .filter((v: string|undefined) => !!v);
+        .filter((v: string | undefined) => !!v);
 }
 
 const run = async () => {
