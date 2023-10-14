@@ -15,6 +15,9 @@ interface DeletionInquiry {
     value: string;
 }
 
+// TODO: refactor to use the nest container and it's services
+// TODO: cdn cleanup
+
 const deleteUser = async (userId: string | null) => {
     let user: User | null = null;
 
