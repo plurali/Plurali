@@ -38,6 +38,11 @@ enum UserVerificationType {
   PasswordReset
 }
 
+enum NotificationType {
+  User
+  Global
+}
+
 // this is just a dummy model for Prisma to generate a dummy delegate that
 // the PrismaRepository can extend
 model BaseModel {
@@ -65,6 +70,7 @@ model User {
   pages Page[]
 
   verifications UserVerification[]
+  notifications  Notification[]
 
   @@map("pluraliapp_users")
 }
@@ -169,4 +175,21 @@ model Page {
   userId String @db.ObjectId
 
   @@map("pluraliapp_pages")
+}
+
+model Notification {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  color   String
+  type    NotificationType
+  content String
+
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @db.ObjectId
+
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
+  permanent Boolean   @default(false)
+
+  @@map("pluraliapp_notifications")
 }

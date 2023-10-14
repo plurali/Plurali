@@ -2,6 +2,7 @@ import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory
 import { flash, FlashType, nextRedirect, user } from './store';
 import { getUser } from './api/user';
 import { StatusMap, formatError } from './api';
+import { getNotifications } from './api/notification';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -114,6 +115,7 @@ export const isFront = (route: string | RouteLocationNormalized) => !isAuth(rout
 router.beforeEach(async to => {
   nextRedirect();
 
+  // TODO: refactor this horrendous thing
   const promise = (async () => {
     try {
       const data = (await getUser()).data;
@@ -122,11 +124,21 @@ router.beforeEach(async to => {
       user.value = data.data.user;
       if (isAuth(to)) return '/dashboard';
 
+      try {
+        const notifications = (await getNotifications()).data ?? { success: false };
+
+        if (notifications.success && notifications.data.length >= 1) {
+          notifications.data.forEach((n) => flash(n.content, n.color, false, true));
+        }
+      } catch (e) {
+        console.warn("failed to fetch notifications", { e });
+      }
+
       if (isDashboard(to)) {
         if (!user.value.email) {
           flash('There is no email assigned to your account yet. Add one to prevent losing your account.', FlashType.Warning, false, true);
         } else if (!user.value.verified) {
-          flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);  
+          flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);
         }
 
         if (!user.value.pluralKey) {

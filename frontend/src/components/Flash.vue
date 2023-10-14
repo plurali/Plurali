@@ -7,6 +7,7 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import { isHex } from '../utils';
+import { FlashType } from '../store';
 
 export default defineComponent({
   props: {
@@ -15,8 +16,8 @@ export default defineComponent({
     },
   },
   setup({ color }) {
-    const containerStyle = computed(() => (color?.startsWith("#") && isHex(color)) ? { backgroundColor: color } : {});
-    const containerClass = computed(() => (color && !color.startsWith("#")) ? color : "");
+    const containerStyle = computed(() => (color?.startsWith("#") && isHex(color)) ? { backgroundColor: color, color: "#fff" } : {});
+    const containerClass = computed(() => (color && !color.startsWith("#")) ? FlashType[color as any] : "");
 
     return {
       containerStyle,

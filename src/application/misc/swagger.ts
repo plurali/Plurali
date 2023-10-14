@@ -34,6 +34,7 @@ export const swagger = new DocumentBuilder()
   .addTag('MemberPage')
   .addTag('MemberFieldPublic')
   .addTag('MemberPagePublic')
+  .addTag('Notification')
 
   .addBearerAuth()
 

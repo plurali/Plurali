@@ -4,3 +4,4 @@ packages:
   - account-deletion
   - slate
   - sanitizer
+  - notifications
