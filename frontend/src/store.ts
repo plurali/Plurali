@@ -9,17 +9,17 @@ export enum FlashType {
 }
 
 export interface Flash {
-  type: FlashType
-  message: string
-  removeOnNextRedirect: boolean
+  color: FlashType|string;
+  message: string;
+  removeOnNextRedirect: boolean;
 }
 
 export const flashes = ref<Flash[]>([])
 
-export const flash = (message: string = 'An error has occurred, please refresh the site.', type: FlashType = FlashType.Danger, clear = true, removeOnNextRedirect = true) => {
+export const flash = (message: string = 'An error has occurred, please refresh the site.', typeOrColor: FlashType | string = FlashType.Danger, clear = true, removeOnNextRedirect = true) => {
   const f: Flash = {
     message,
-    type,
+    color: typeOrColor,
     removeOnNextRedirect
   }
 
