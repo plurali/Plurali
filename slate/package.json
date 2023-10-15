@@ -12,15 +12,21 @@
   "packageManager": "pnpm@8.1.1",
   "main": "index.ts",
   "scripts": {
-    "html-tags": "ts-node bin/html-tags.ts"
+    "html-tags": "ts-node bin/html-tags.ts",
+    "convert": "ts-node bin/convert.ts"
   },
   "devDependencies": {
     "@prisma/client": "^5.2.0",
+    "@types/inquirer": "^8.2.6",
+    "bson": "^5.4.0",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.3.1",
+    "inquirer": "^8.2.6",
+    "prisma": "^5.2.0",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "@plurali/pluraliapp": "workspace:^",
     "node-html-parser": "^6.1.10"
   }
 }
