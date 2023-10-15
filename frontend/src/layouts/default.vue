@@ -68,7 +68,7 @@
       <div class="py-16 md:py-24 px-4">
         <div v-if="flashes.length >= 1" class="inline-flex flex-col gap-0.5 w-full">
           <Flash v-for="flash of flashes" :color="flash.color">
-            {{ flash.message }}
+            <Sanitized :value="flash.message"/>
           </Flash>
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8" :class="typeof bg === 'string' && 'bg-opacity-60'">
@@ -121,6 +121,7 @@ import { computed, defineComponent, onBeforeUnmount, ref, watch } from 'vue';
 import { background, flashes, goBack } from '../store';
 import Flash from '../components/Flash.vue';
 import { isUrl, generateShades } from '../utils';
+import Sanitized from '../components/global/Sanitized.vue';
 
 export default defineComponent({
   setup() {
@@ -162,6 +163,6 @@ export default defineComponent({
       arr: (...arrays: any[]) => arrays.find(val => Array.isArray(val)),
     };
   },
-  components: { Flash },
+  components: { Flash, Sanitized },
 });
 </script>
