@@ -1,7 +1,10 @@
 import { Node as ParserNode, HTMLElement as ParserHTMLElement, NodeType, parse } from 'node-html-parser';
 import { isBrowser } from '../utils/env';
+import { htmlTagToSlateMap } from '../utils/htmlTagToSlateMap';
 
 export type EitherNode = Node | ParserNode;
+
+export type EitherElement = Element | ParserHTMLElement;
 
 export type NodeOrHtml = string | EitherNode;
 
@@ -29,6 +32,10 @@ const getChildNodes = (htmlOrEl: NodeOrHtml): (ChildNode | ParserNode)[] => {
     return [...childNodes];
 }
 
+function isElement(htmlNode): htmlNode is EitherElement {
+    return (isBrowser ? htmlNode instanceof Element : htmlNode instanceof ParserHTMLElement)
+}
+
 export const htmlToSlateTree = (htmlOrEl: NodeOrHtml): SlateItem[] => {
     return getChildNodes(htmlOrEl).map(htmlNodeToSlateItem).filter(val => !!val) as SlateItem[];
 }
@@ -42,9 +49,18 @@ export const htmlNodeToSlateItem = (node: EitherNode): SlateItem|null => {
         };
     }
 
-    if (nodeType === NodeType.ELEMENT_NODE) {
+    if (nodeType === NodeType.ELEMENT_NODE && isElement(node)) {
+        const tagName = node.tagName.toLowerCase();
+        let type = htmlTagToSlateMap[tagName];
+
+        if (!type) {
+            // todo
+            // console.log(` unrecognized tag <${tagName}>`);
+            type = tagName;
+        }
+
         return {
-            type: "node", // todo
+            type, // todo
             children: htmlToSlateTree(node)
         }
     }
