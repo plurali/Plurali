@@ -1,12 +1,15 @@
+// WIP
 import { Node as ParserNode, HTMLElement as ParserHTMLElement, NodeType, parse } from 'node-html-parser';
-import { isBrowser } from '../utils/env';
-import { htmlTagToSlateMap } from '../utils/htmlTagToSlateMap';
+import { htmlTagToSlateMap } from './htmlTagToSlateMap';
 
 export type EitherNode = Node | ParserNode;
 
 export type EitherElement = Element | ParserHTMLElement;
 
 export type NodeOrHtml = string | EitherNode;
+
+// TODO: move to common
+const isBrowser = typeof window !== "undefined";
 
 // todo
 export type SlateItem = {
@@ -32,15 +35,15 @@ const getChildNodes = (htmlOrEl: NodeOrHtml): (ChildNode | ParserNode)[] => {
     return [...childNodes];
 }
 
-function isElement(htmlNode): htmlNode is EitherElement {
+function isElement(htmlNode: any): htmlNode is EitherElement {
     return (isBrowser ? htmlNode instanceof Element : htmlNode instanceof ParserHTMLElement)
 }
 
-export const htmlToSlateTree = (htmlOrEl: NodeOrHtml): SlateItem[] => {
-    return getChildNodes(htmlOrEl).map(htmlNodeToSlateItem).filter(val => !!val) as SlateItem[];
+export const htmlToSlateTree = (htmlOrEl: NodeOrHtml, strict = false): SlateItem[] => {
+    return getChildNodes(htmlOrEl).map((el) => htmlNodeToSlateItem(el, strict)).filter(val => !!val) as SlateItem[];
 }
 
-export const htmlNodeToSlateItem = (node: EitherNode): SlateItem|null => {
+export const htmlNodeToSlateItem = (node: EitherNode, strict = false): SlateItem | null => {
     const nodeType = node.nodeType;
 
     if (nodeType === NodeType.TEXT_NODE && node.textContent && node.textContent.trim().length) {
@@ -51,17 +54,18 @@ export const htmlNodeToSlateItem = (node: EitherNode): SlateItem|null => {
 
     if (nodeType === NodeType.ELEMENT_NODE && isElement(node)) {
         const tagName = node.tagName.toLowerCase();
-        let type = htmlTagToSlateMap[tagName];
+        let type = htmlTagToSlateMap[tagName as keyof typeof htmlTagToSlateMap]
 
         if (!type) {
-            // todo
-            // console.log(` unrecognized tag <${tagName}>`);
+            if (strict) {
+                throw new Error(`Found unexpected tag "${tagName}"`);
+            }
             type = tagName;
         }
 
         return {
             type, // todo
-            children: htmlToSlateTree(node)
+            children: htmlToSlateTree(node, strict),
         }
     }
 

@@ -1,7 +1,7 @@
 {
-  "name": "@plurali/slate",
+  "name": "@plurali/editor",
   "version": "1.0.0",
-  "description": "Slate Editor configuration and utilities",
+  "description": "Text Editor configuration and utilities",
   "author": "Mia Vališová <valisova@lilianaa.dev>",
   "private": true,
   "license": "MIT",
@@ -10,7 +10,10 @@
     "node": ">=20.0.0"
   },
   "packageManager": "pnpm@8.1.1",
-  "main": "index.ts",
+  "main": "src/index.ts",
+  "files": [
+    "./src"
+  ],
   "scripts": {
     "html-tags": "ts-node bin/html-tags.ts",
     "convert": "ts-node bin/convert.ts"
@@ -27,6 +30,7 @@
   },
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
-    "node-html-parser": "^6.1.10"
+    "node-html-parser": "^6.1.10",
+    "tinymce": "^6.4.1"
   }
 }

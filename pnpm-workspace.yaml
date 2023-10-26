@@ -2,6 +2,6 @@ packages:
   - frontend
   - frontend-v2
   - account-deletion
-  - slate
+  - editor
   - sanitizer
   - notifications
