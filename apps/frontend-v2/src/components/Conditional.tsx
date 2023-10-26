@@ -15,7 +15,12 @@ export const DefaultLoader = () => (
   </div>
 );
 
-export const Conditional = <T, E>({ query, render, renderError, renderLoad = DefaultLoader }: ConditionalProps<T, E>) => {
+export const Conditional = <T, E>({
+  query,
+  render,
+  renderError,
+  renderLoad = DefaultLoader,
+}: ConditionalProps<T, E>) => {
   if (query.isError) {
     // TODO. default error
     return <>{renderError?.(query.error) ?? null}</>;

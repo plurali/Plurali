@@ -32,7 +32,7 @@ export const InfoField = ({ field, onToggleVisibility }: InfoFieldProps) => {
       className={c(
         'px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25',
         onToggleVisibility && (field.data.visibility === Visibility.Public ? 'border-l-green-500' : 'border-l-red-500'),
-        loading && '!bg-gray-100 bg-opacity-10'
+        loading && '!bg-gray-100 bg-opacity-10',
       )}
     >
       <p className="font-medium">{field.name}</p>

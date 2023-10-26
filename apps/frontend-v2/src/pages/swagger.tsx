@@ -1,6 +1,6 @@
-import { $api } from '@/app/api/ApiService';
 import { useBackgroundState } from '@/store/background';
 import { useGoBackState } from '@/store/goBack';
+import { $api } from '@plurali/api-client';
 import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 

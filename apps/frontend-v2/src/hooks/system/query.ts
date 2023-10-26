@@ -1,8 +1,7 @@
-import { $api } from '@/app/api/ApiService';
-import { $system } from '@/app/system/SystemService';
 import { PageDtoInterface } from '@app/v2/dto/page/PageDtoInterface';
 import { SystemDtoInterface } from '@app/v2/dto/system/SystemDtoInterface';
 import { ApiErrorResponse } from '@app/v2/types/response';
+import { $api, $system } from '@plurali/api-client';
 import { UseQueryResult, useQuery } from 'react-query';
 
 export const usePublicSystemQuery = (systemId: string): UseQueryResult<SystemDtoInterface> => {
@@ -43,7 +42,7 @@ export const useSystemQuery = (): UseQueryResult<SystemDtoInterface> => {
 
 export const usePublicSystemPageQuery = (
   systemId: string,
-  pageId: string
+  pageId: string,
 ): UseQueryResult<PageDtoInterface, ApiErrorResponse> => {
   return useQuery({
     queryKey: ['public:system', systemId, 'page', pageId],

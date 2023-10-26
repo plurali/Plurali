@@ -83,7 +83,7 @@ export const BackgroundSelector = ({ initialData, name, onUpdateColor, onUpdateI
                 onClick={() => setType(t as BackgroundType)}
                 className={c(
                   'text-lg transition duration-500 ease-in-out',
-                  t === type && `bg-white shadow-md font-medium`
+                  t === type && `bg-white shadow-md font-medium`,
                 )}
               >
                 {type}

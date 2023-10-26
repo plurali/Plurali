@@ -16,9 +16,9 @@
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@domain/*": ["../src/domain/*"],
-      "@infra/*": ["../src/infrastructure/*"],
-      "@app/*": ["../src/application/*"]
+      "@domain/*": ["../../src/domain/*"],
+      "@infra/*": ["../../src/infrastructure/*"],
+      "@app/*": ["../../src/application/*"]
     },
     "plugins": [
       {
@@ -27,5 +27,5 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "../src/**/*"]
+  "exclude": ["node_modules", "../../src/**/*"]
 }

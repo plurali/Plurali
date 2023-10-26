@@ -7,7 +7,7 @@ import { DocumentIcon, InboxStackIcon, PencilIcon, PhotoIcon, UserIcon, UsersIco
 import { hasWindow, icon } from '@/app/utils';
 
 import mainBg from '@/assets/main_bg.svg';
-import uiRender from "@/assets/ui_render.png";
+import uiRender from '@/assets/ui_render.png';
 
 const mainBackground = {
   background: `url(${mainBg.src}) no-repeat`,
@@ -44,7 +44,11 @@ export default function Index() {
             </div>
           </div>
 
-          <img src={uiRender.src} alt="UI" className='hidden md:block absolute -right-64 top-16 rounded-2xl shadow-2xl' />
+          <img
+            src={uiRender.src}
+            alt="UI"
+            className="hidden md:block absolute -right-64 top-16 rounded-2xl shadow-2xl"
+          />
         </div>
       </HeroWrapper>
       <div className="pt-6 flex flex-col">

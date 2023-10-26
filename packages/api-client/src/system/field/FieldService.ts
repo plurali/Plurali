@@ -1,8 +1,8 @@
-import type { ApiService } from '@/app/api/ApiService';
-import { $api } from '@/app/api/ApiService';
-import { ApiResponse } from '@app/v2/types/response';
-import { UpdateFieldRequestInterface } from '@app/v2/dto/field/request/UpdateFieldRequestInterface';
-import { FieldDtoInterface } from '@app/v2/dto/field/FieldDtoInterface';
+import type { ApiService } from '../../ApiService';
+import { $api } from '../../ApiService';
+import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
+import { UpdateFieldRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/request/UpdateFieldRequestInterface';
+import { FieldDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/FieldDtoInterface';
 
 export class FieldService {
   constructor(public readonly api: ApiService) {}

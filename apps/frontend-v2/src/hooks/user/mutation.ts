@@ -1,10 +1,9 @@
-import { $api } from '@/app/api/ApiService';
 import { queryClient } from '@/app/api/queryClient';
-import { $user } from '@/app/user/UserService';
 import { createMutation } from '@/app/utils/data';
 import { UserDtoInterface } from '@app/v2/dto/user/UserDtoInterface';
 import { UpdateUserRequestInterface } from '@app/v2/dto/user/request/UpdateUserRequestInterface';
 import { ApiErrorResponse } from '@app/v2/types/response';
+import { $api, $user } from '@plurali/api-client';
 import { UseMutationResult, useMutation } from 'react-query';
 
 export const useUserMutation = (): UseMutationResult<

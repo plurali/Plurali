@@ -1,7 +1,7 @@
-import type { AuthRequestInterface } from '@app/v2/dto/auth/request/AuthRequestInterface';
-import type { AuthDtoInterface } from '@app/v2/dto/auth/AuthDtoInterface';
-import { $api, ApiService } from '@/app/api/ApiService';
-import { ApiResponse } from '@app/v2/types/response';
+import type { AuthRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/auth/request/AuthRequestInterface';
+import type { AuthDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/auth/AuthDtoInterface';
+import { $api, ApiService } from '../ApiService';
+import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
 
 export class AuthService {
   constructor(private readonly api: ApiService) {}

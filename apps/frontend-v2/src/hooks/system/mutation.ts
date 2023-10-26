@@ -1,6 +1,5 @@
-import { $api } from '@/app/api/ApiService';
+import { $api, $system } from '@plurali/api-client';
 import { queryClient } from '@/app/api/queryClient';
-import { $system } from '@/app/system/SystemService';
 import { SystemDtoInterface } from '@app/v2/dto/system/SystemDtoInterface';
 import { UpdateSystemRequestInterface } from '@app/v2/dto/system/request/UpdateSystemRequestInterface';
 import { ApiErrorResponse } from '@app/v2/types/response';

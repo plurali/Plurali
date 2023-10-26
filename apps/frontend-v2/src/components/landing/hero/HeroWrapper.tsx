@@ -16,7 +16,7 @@ export const HeroWrapper = ({
     className={c(
       'w-full h-full rounded-3xl py-6 md:py-12 px-6 md:px-16 flex flex-col justify-center',
       transitionClass,
-      className
+      className,
     )}
     {...props}
   >

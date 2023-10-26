@@ -21,7 +21,7 @@ export const NavLink = ({
 }: PropsWithChildren<NavLinkProps>) => {
   const className = useMemo(
     () => c('text-black hover:text-gray-600 font-medium', transitionClass, _className),
-    [_className]
+    [_className],
   );
 
   return to ? (
@@ -46,7 +46,7 @@ export const Navbar = () => {
 
   const toggleDrawer = () => setDrawerOpen(val => !val);
 
-  const {data} = useUserQuery();
+  const { data } = useUserQuery();
 
   return (
     <div className="relative">
@@ -66,7 +66,13 @@ export const Navbar = () => {
         </div>
         <div className="w-full flex justify-end items-center">
           <ButtonLink href="/dashboard" className="hidden md:inline-flex text-white bg-violet-700 px-6">
-            {data ? <>Logged in as <b className='ml-1.5'>{data.username}</b></> : <>Dashboard</>}
+            {data ? (
+              <>
+                Logged in as <b className="ml-1.5">{data.username}</b>
+              </>
+            ) : (
+              <>Dashboard</>
+            )}
           </ButtonLink>
           <button
             className="focus:outline-none p-2 rounded-xl bg-primary text-white inline-flex md:hidden"

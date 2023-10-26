@@ -100,7 +100,7 @@ export const BackgroundRenderer = () => {
             src={bg}
             className={c(
               'absolute w-screen top-0 object-cover -z-10 transition-all duration-300 h-full',
-              !imageLoaded && 'opacity-0'
+              !imageLoaded && 'opacity-0',
             )}
           />
         )}

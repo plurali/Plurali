@@ -1,12 +1,12 @@
-import type { UpdateMemberRequestInterface } from '@app/v2/dto/member/request/UpdateMemberRequestInterface';
-import type { UpdatePageRequestInterface } from '@app/v2/dto/page/request/UpdatePageRequestInterface';
-import type { CreatePageRequestInterface } from '@app/v2/dto/page/request/CreatePageRequestInterface';
-import type { OkInterface } from '@app/v2/dto/response/OkInterface';
-import type { MemberDtoInterface } from '@app/v2/dto/member/MemberDtoInterface';
-import type { PageDtoInterface } from '@app/v2/dto/page/PageDtoInterface';
-import { $api, ApiService } from '@/app/api/ApiService';
-import type { PaginationRequestQuery } from '@app/v2/types/request';
-import type { ApiResponse } from '@app/v2/types/response';
+import type { UpdateMemberRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/member/request/UpdateMemberRequestInterface';
+import type { UpdatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/UpdatePageRequestInterface';
+import type { CreatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/CreatePageRequestInterface';
+import type { OkInterface } from '@plurali/pluraliapp/src/application/v2/dto/response/OkInterface';
+import type { MemberDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/member/MemberDtoInterface';
+import type { PageDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/PageDtoInterface';
+import { $api, ApiService } from '../../ApiService';
+import type { PaginationRequestQuery } from '@plurali/pluraliapp/src/application/v2/types/request';
+import type { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
 
 export class MemberService {
   constructor(private readonly api: ApiService) {}

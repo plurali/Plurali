@@ -1,8 +1,8 @@
 import type { AxiosInstance, AxiosError } from 'axios';
 import axios from 'axios';
 import { TokenStorage, $tokenStorage } from './TokenStorage';
-import { ApiErrorResponse } from '@app/v2/types/response';
-import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utilts';
+import { ApiErrorResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
+import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utils';
 
 export class ApiService {
   public readonly client: AxiosInstance;

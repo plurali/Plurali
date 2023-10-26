@@ -1,14 +1,14 @@
-import { hasWindow } from '../utils';
+import { isBrowser } from './utils';
 
 export class TokenStorage {
   constructor(public readonly storageKey: string) {}
 
   get(): string | null {
-    return hasWindow() ? localStorage.getItem(this.storageKey) ?? null : null;
+    return isBrowser ? localStorage.getItem(this.storageKey) ?? null : null;
   }
 
   set(value: string | null): void {
-    if (!hasWindow()) return;
+    if (!isBrowser) return;
 
     if (value) {
       localStorage.setItem(this.storageKey, value);

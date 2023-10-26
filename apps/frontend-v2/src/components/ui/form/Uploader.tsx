@@ -58,7 +58,7 @@ export const Uploader = ({
       className={c(
         'w-full min-h-[10rem] h-full inset-0 flex justify-center items-center rounded-2xl cursor-pointer',
         !value && 'bg-gray-100 bg-opacity-50',
-        className
+        className,
       )}
     >
       <input ref={setInput} type="file" className="hidden" accept={accept.join(',')} onChange={handleChange} />

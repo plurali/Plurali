@@ -1,5 +1,4 @@
-import { Sanitizer } from '@/app/sanitizer';
-import { setHTML } from '@/app/sanitizer/polyfill';
+import { Sanitizer, setHTML } from '@plurali/sanitizer';
 import { hasWindow } from '@/app/utils';
 import { useState, useEffect } from 'react';
 

@@ -22,7 +22,7 @@ export const MemberCard = ({ member, onToggleVisibility }: MemberCardProps) => {
 
     try {
       await onToggleVisibility?.(
-        member.data.visibility === Visibility.Private ? Visibility.Public : Visibility.Private
+        member.data.visibility === Visibility.Private ? Visibility.Public : Visibility.Private,
       );
     } catch {}
 
@@ -41,7 +41,7 @@ export const MemberCard = ({ member, onToggleVisibility }: MemberCardProps) => {
             ? 'border-l-green-500'
             : 'border-l-red-500'
           : '',
-        loading && 'bg-gray-200'
+        loading && 'bg-gray-200',
       )}
       style={!onToggleVisibility && member.color ? { borderLeftColor: member.color } : {}}
     >

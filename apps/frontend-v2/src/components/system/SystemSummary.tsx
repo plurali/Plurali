@@ -110,10 +110,12 @@ export const SystemSummary = ({ system, dashboardMode = false }: SystemSummaryPr
           initialValue={system.data.description ?? ''}
           placeholder={`Add custom description for ${system.name}...`}
         />
-      ) : system.data.description && (
-        <UserContent>
-          <Sanitized unsafeValue={system.data.description}/>
-        </UserContent>
+      ) : (
+        system.data.description && (
+          <UserContent>
+            <Sanitized unsafeValue={system.data.description} />
+          </UserContent>
+        )
       )}
     </>
   );

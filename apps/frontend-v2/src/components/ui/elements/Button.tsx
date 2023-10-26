@@ -10,23 +10,22 @@ export type ButtonProps<C extends ElementType = 'button'> = PolymorphicProps<C, 
   spinnerClassName?: string;
 };
 
-export const Button =  forwardRef<any, ButtonProps<ElementType>>(({
-  as,
-  className,
-  children,
-  loading = false,
-  spinnerClassName = '',
-  ...props
-}, ref) => {
-  const Component = as ?? 'button';
+export const Button = forwardRef<any, ButtonProps<ElementType>>(
+  ({ as, className, children, loading = false, spinnerClassName = '', ...props }, ref) => {
+    const Component = as ?? 'button';
 
-  return (
-    <Component ref={ref} className={c('hover:opacity-75 px-4 py-2 rounded-xl transition outline-none focus:outline-none', className)} {...props}>
-      {children}
-      {loading && <Spinner className={spinnerClassName} />}
-    </Component>
-  );
-})
+    return (
+      <Component
+        ref={ref}
+        className={c('hover:opacity-75 px-4 py-2 rounded-xl transition outline-none focus:outline-none', className)}
+        {...props}
+      >
+        {children}
+        {loading && <Spinner className={spinnerClassName} />}
+      </Component>
+    );
+  },
+);
 
 export const ButtonLink = ({
   href,
@@ -38,9 +37,11 @@ export const ButtonLink = ({
   children,
   ...props
 }: Omit<ButtonProps<'a'>, 'as'> & Omit<LinkProps, 'as' | 'legacyBehavior' | 'passHref'>) => {
-  const Component = forwardRef((props, ref) => <Button ref={ref} as={'a'} href={href} {...props}>
-    {children}
-  </Button>);
+  const Component = forwardRef((props, ref) => (
+    <Button ref={ref} as={'a'} href={href} {...props}>
+      {children}
+    </Button>
+  ));
 
   return (
     <Link
@@ -53,7 +54,7 @@ export const ButtonLink = ({
       locale={locale}
       legacyBehavior={true}
     >
-      <Component {...props}/>
+      <Component {...props} />
     </Link>
   );
 };

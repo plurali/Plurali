@@ -20,24 +20,24 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>Plurali</title>
       </Head>
-        <BackgroundStateProvider>
-          <AlertStateProvider>
-            <GoBackStateProvider>
-              <div
-                id="plurali"
-                className={
-                  isLanding ? 'landing' : 'relative w-screen min-h-screen bg-cover bg-no-repeat bg-center flex font-sans'
-                }
-              >
-                <QueryClientProvider client={queryClient}>
-                  <Layout>
-                    <Component {...pageProps} />
-                  </Layout>
-                </QueryClientProvider>
-              </div>
-            </GoBackStateProvider>
-          </AlertStateProvider>
-        </BackgroundStateProvider>
+      <BackgroundStateProvider>
+        <AlertStateProvider>
+          <GoBackStateProvider>
+            <div
+              id="plurali"
+              className={
+                isLanding ? 'landing' : 'relative w-screen min-h-screen bg-cover bg-no-repeat bg-center flex font-sans'
+              }
+            >
+              <QueryClientProvider client={queryClient}>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </QueryClientProvider>
+            </div>
+          </GoBackStateProvider>
+        </AlertStateProvider>
+      </BackgroundStateProvider>
     </>
   );
 }

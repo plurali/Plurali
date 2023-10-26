@@ -1,4 +1,6 @@
-import type { ApiError as BaseApiError } from '@app/v2/dto/response/errors';
+import type { ApiError as BaseApiError } from '@plurali/pluraliapp/src/application/v2/dto/response/errors';
+
+export const isBrowser = typeof window !== undefined;
 
 export const ApiErrorMap = {
   InvalidRequest: 'invalid_req',

@@ -1,12 +1,12 @@
-import type { ApiService } from '@/app/api/ApiService';
-import { $api } from '@/app/api/ApiService';
-import { ApiResponse } from '@app/v2/types/response';
-import { SystemDtoInterface } from '@app/v2/dto/system/SystemDtoInterface';
-import { UpdateSystemRequestInterface } from '@app/v2/dto/system/request/UpdateSystemRequestInterface';
-import { PageDtoInterface } from '@app/v2/dto/page/PageDtoInterface';
-import { UpdatePageRequestInterface } from '@app/v2/dto/page/request/UpdatePageRequestInterface';
-import { OkInterface } from '@app/v2/dto/response/OkInterface';
-import { CreatePageRequestInterface } from '@app/v2/dto/page/request/CreatePageRequestInterface';
+import type { ApiService } from '../ApiService';
+import { $api } from '../ApiService';
+import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
+import { SystemDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/system/SystemDtoInterface';
+import { UpdateSystemRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/system/request/UpdateSystemRequestInterface';
+import { PageDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/PageDtoInterface';
+import { UpdatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/UpdatePageRequestInterface';
+import { OkInterface } from '@plurali/pluraliapp/src/application/v2/dto/response/OkInterface';
+import { CreatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/CreatePageRequestInterface';
 
 export class SystemService {
   constructor(public readonly api: ApiService) {}

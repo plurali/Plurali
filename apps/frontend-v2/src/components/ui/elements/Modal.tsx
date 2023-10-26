@@ -37,7 +37,7 @@ export const Modal = ({
             info: 'bg-blue-100',
           }[color] ?? null
         : null,
-    [color]
+    [color],
   );
 
   const iconColorClass = useMemo(
@@ -50,7 +50,7 @@ export const Modal = ({
             info: 'text-blue-600',
           }[color] ?? null
         : null,
-    [color]
+    [color],
   );
   return (
     <Transition.Root as={Fragment} show={value}>
@@ -90,7 +90,7 @@ export const Modal = ({
                       <div
                         className={c(
                           'inline-flex h-16 w-16 items-center justify-center rounded-full',
-                          iconContainerColorClass
+                          iconContainerColorClass,
                         )}
                       >
                         {iconColorClass && <XMarkIcon className={c('h-8 w-8', iconColorClass)} />}

@@ -10,8 +10,9 @@
 | - root -                        |             The backend API              |
 |                                 |
 | [frontend](apps/frontend)       |         Vue 3 frontend (current)         |
-| [frontend-v2](appsúfrontend-v2) |      React rewrite of the frontend       |
+| [frontend-v2](apps/frontend-v2) |      React rewrite of the frontend       |
 |                                 |
+| [api-client](apps/api-client)   |     Client for the backend REST API      |
 | [editor](apps/editor)           | Text Editor configuration and utilities* |
 | [sanitizer](apps/sanitizer)     |       Sanitizer of HTML content**        |
 

@@ -1,8 +1,8 @@
-import type { UpdateUserRequestInterface } from '@app/v2/dto/user/request/UpdateUserRequestInterface';
-import type { UserDtoInterface } from '@app/v2/dto/user/UserDtoInterface';
-import type { ApiService } from '@/app/api/ApiService';
-import { $api } from '@/app/api/ApiService';
-import { ApiResponse } from '@app/v2/types/response';
+import type { UpdateUserRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/user/request/UpdateUserRequestInterface';
+import type { UserDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/user/UserDtoInterface';
+import type { ApiService } from '../ApiService';
+import { $api } from '../ApiService';
+import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
 
 export class UserService {
   constructor(private readonly api: ApiService) {}

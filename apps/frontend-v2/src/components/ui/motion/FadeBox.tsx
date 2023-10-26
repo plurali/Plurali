@@ -32,7 +32,7 @@ const FadeBox = ({
       delay,
       ease: easing,
     }),
-    [delay, easing]
+    [delay, easing],
   );
 
   const variants = {

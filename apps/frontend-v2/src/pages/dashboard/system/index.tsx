@@ -6,7 +6,7 @@ import { useGoBack } from '@/store/goBack';
 export const SystemPage = () => {
   const query = useSystemQuery();
 
-  useGoBack("/dashboard")
+  useGoBack('/dashboard');
 
   return (
     <Conditional

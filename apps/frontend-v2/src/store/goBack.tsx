@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { createContainer } from 'react-tracked';
 
 export const { Provider: GoBackStateProvider, useTracked: useGoBackState } = createContainer(() =>
-  useState<string | null>(null)
+  useState<string | null>(null),
 );
 
 export const useGoBack = (goBack: string | null) => {
@@ -12,5 +12,5 @@ export const useGoBack = (goBack: string | null) => {
     setGoBack(goBack);
 
     return () => setGoBack(null);
-  }, [])
-}
+  }, []);
+};

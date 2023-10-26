@@ -31,14 +31,14 @@ export const useAlert = () => {
       message,
       type,
       removeOnNextRedirect,
-    }
+    };
 
-    setAlert((prev) => clear ? [alert] : [...prev, alert])
-  } 
-}
+    setAlert(prev => (clear ? [alert] : [...prev, alert]));
+  };
+};
 
 export const useClearAlerts = () => {
   const [, setAlert] = useAlertState();
 
   return () => setAlert([]);
-}
+};

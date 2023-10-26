@@ -1,12 +1,12 @@
-import { $api } from "@/app/api/ApiService";
-import { useRouter } from "next/router";
+import { $api } from '@plurali/api-client';
+import { useRouter } from 'next/router';
 
 export const useLogout = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    return () => {
-        $api.token.clear()
-        $api.updateAuth();
-        router.push("/");
-    }
-}
+  return () => {
+    $api.token.clear();
+    $api.updateAuth();
+    router.push('/');
+  };
+};
