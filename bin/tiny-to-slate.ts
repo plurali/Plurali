@@ -1,8 +1,8 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaModelName } from "@plurali/pluraliapp/src/infrastructure/prisma/types";
+import { PrismaModelName } from "../src/infrastructure/prisma/types";
 import { prompt } from "inquirer";
 import { ObjectId } from "bson";
-import { htmlToSlateTree } from "../src/html/htmlToSlate";
+import { htmlToSlateTree } from "@plurali/editor";
 
 const prisma = new PrismaClient();
 

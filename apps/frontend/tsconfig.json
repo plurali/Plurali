@@ -13,14 +13,14 @@
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
-      "@domain/*": ["../src/domain/*"],
-      "@infra/*": ["../src/infrastructure/*"],
-      "@app/*": ["../src/application/*"],
-      "@observer/*": ["../src/observer/*"],
+      "@domain/*": ["../../src/domain/*"],
+      "@infra/*": ["../../src/infrastructure/*"],
+      "@app/*": ["../../src/application/*"],
+      "@observer/*": ["../../src/observer/*"],
     }
   },
   "exclude": [
-    "../src"
+    "../../src"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

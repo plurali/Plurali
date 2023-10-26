@@ -1,7 +1,3 @@
 packages:
-  - frontend
-  - frontend-v2
-  - account-deletion
-  - editor
-  - sanitizer
-  - notifications
+  - apps/*
+  - packages/*

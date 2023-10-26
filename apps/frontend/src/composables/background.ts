@@ -2,7 +2,7 @@ import { WatchSource, watch } from 'vue';
 import { background } from '../store';
 import type { HasBackground } from '@domain/common/types';
 import { onBeforeRouteLeave } from 'vue-router';
-import { BackgroundType } from '../../../src/domain/common';
+import { BackgroundType } from '../../../../src/domain/common';
 
 export interface Assetable {
   lastTimeAssetChanged: Date;

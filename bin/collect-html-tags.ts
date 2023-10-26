@@ -62,11 +62,11 @@ const run = async () => {
         tags = tags.concat(parseTags(description));
     }
 
-    tags = tags.filter((v, i, a) => a.indexOf(v) !== i);
+    const uniqueTags = new Set(tags);
 
-    console.log(tags)
+    console.log(uniqueTags)
 
-    return tags;
+    return uniqueTags;
 }
 
 run();
