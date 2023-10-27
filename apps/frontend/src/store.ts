@@ -2,10 +2,10 @@ import { ref } from 'vue'
 import type { UserDto } from '@app/v1/dto/user/UserDto'
 
 export enum FlashType {
-  Danger = 'bg-red-700 text-white',
-  Warning = 'bg-yellow-600 text-white',
-  Success = 'bg-green-700 text-white',
-  Info = 'bg-blue-700 text-white',
+  Danger = 'Danger',
+  Warning = 'Warning',
+  Success = 'Success',
+  Info = 'Info',
 }
 
 export interface Flash {
