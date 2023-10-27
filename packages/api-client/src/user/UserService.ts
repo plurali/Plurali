@@ -1,4 +1,5 @@
 import type { UpdateUserRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/user/request/UpdateUserRequestInterface';
+import type { VerifyUserEmailRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/user/request/VerifyUserEmailRequestInterface';
 import type { UserDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/user/UserDtoInterface';
 import type { ApiService } from '../ApiService';
 import { $api } from '../ApiService';
@@ -26,6 +27,20 @@ export class UserService {
         await this.api.client.request<ApiResponse<UserDtoInterface>>({
           url: '/v2/user',
           method: 'PATCH',
+          data,
+        })
+      ).data;
+    } catch (error) {
+      return this.api.handleException(error);
+    }
+  }
+
+  public async verifyEmail(data: VerifyUserEmailRequestInterface): Promise<ApiResponse<UserDtoInterface>> {
+    try {
+      return (
+        await this.api.client.request<ApiResponse<UserDtoInterface>>({
+          url: '/v2/user/verify-email',
+          method: 'POST',
           data,
         })
       ).data;

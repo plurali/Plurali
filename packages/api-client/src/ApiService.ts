@@ -3,6 +3,7 @@ import axios from 'axios';
 import { TokenStorage, $tokenStorage } from './TokenStorage';
 import { ApiErrorResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
 import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utils';
+import { apiUrl } from './env';
 
 export class ApiService {
   public readonly client: AxiosInstance;
@@ -47,4 +48,4 @@ export class ApiService {
   }
 }
 
-export const $api = new ApiService(process.env.NEXT_PUBLIC_BASE_URL ?? 'https://plurali.icu/api', $tokenStorage);
+export const $api = new ApiService(apiUrl, $tokenStorage);

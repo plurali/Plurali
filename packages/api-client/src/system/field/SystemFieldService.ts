@@ -4,7 +4,7 @@ import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/respon
 import { UpdateFieldRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/request/UpdateFieldRequestInterface';
 import { FieldDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/FieldDtoInterface';
 
-export class FieldService {
+export class SystemFieldService {
   constructor(public readonly api: ApiService) {}
 
   public async getFields(): Promise<ApiResponse<FieldDtoInterface[]>> {
@@ -38,4 +38,4 @@ export class FieldService {
   }
 }
 
-export const $field = new FieldService($api);
+export const $systemField = new SystemFieldService($api);
