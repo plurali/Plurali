@@ -19,6 +19,7 @@ import { UserController } from './controller/user/UserController';
 import { MemberController } from './controller/member/MemberController';
 import { SystemController } from './controller/system/SystemController';
 import { NotificationController } from './controller/notification/NotificationController';
+import { MemberFieldController } from './controller/member/field/MemberFieldController';
 
 @Module({
   imports: [PageModule, SystemModule, UserModule, NotificationModule, JwtModule, PluralModule, StorageModule],
@@ -26,6 +27,7 @@ import { NotificationController } from './controller/notification/NotificationCo
     AuthController,
     UserController,
     MemberController,
+    MemberFieldController,
     MemberPageController,
     SystemController,
     SystemPageController,

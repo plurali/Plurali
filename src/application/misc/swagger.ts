@@ -31,6 +31,7 @@ export const swagger = new DocumentBuilder()
   .addTag('SystemPagePublic')
 
   .addTag('Member')
+  .addTag('MemberField')
   .addTag('MemberPage')
   .addTag('MemberFieldPublic')
   .addTag('MemberPagePublic')
