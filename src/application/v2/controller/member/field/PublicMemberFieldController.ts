@@ -12,7 +12,7 @@ import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
 import { BaseController } from '../../BaseController';
 
 @Controller({
-  path: '/public/member/:member/field',
+  path: '/public/system/:system/member/:member/field',
   version: '2',
 })
 @ApiTags('MemberFieldPublic')
@@ -27,10 +27,11 @@ export class PublicMemberFieldController extends BaseController {
   @ApiResponse(ok(200, [FieldDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
-  public async list(@Param('member') memberId: string): Promise<ApiDataResponse<FieldDto[]>> {
+  public async list(@Param('system') systemId: string, @Param('member') memberId: string): Promise<ApiDataResponse<FieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
         slug: memberId,
+        systemId,
         visibility: Visibility.Public,
         system: {
           visibility: Visibility.Public,
