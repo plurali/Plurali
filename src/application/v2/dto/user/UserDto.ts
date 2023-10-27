@@ -10,6 +10,12 @@ export class UserDto implements UserDtoInterface {
   public username: string;
 
   @ApiProperty()
+  public email: string;
+
+  @ApiProperty()
+  public verified: boolean;
+
+  @ApiProperty()
   public accessToken: string | null;
 
   @ApiProperty()
@@ -21,18 +27,30 @@ export class UserDto implements UserDtoInterface {
   constructor(
     id: string,
     username: string,
+    email: string,
+    verified: boolean,
     accessToken: string | null,
     systemIdOverride: string | null,
     role: UserRole
   ) {
     this.id = id;
     this.username = username;
+    this.email = email;
+    this.verified = verified;
     this.accessToken = accessToken;
     this.systemIdOverride = systemIdOverride;
     this.role = role;
   }
 
   public static from(user: BaseUser): UserDto {
-    return new this(user.id, user.username, user.pluralAccessToken ?? null, user.pluralOverride ?? null, user.role);
+    return new this(
+      user.id,
+      user.username,
+      user.email,
+      user.emailVerified,
+      user.pluralAccessToken ?? null,
+      user.pluralOverride ?? null,
+      user.role
+    );
   }
 }
