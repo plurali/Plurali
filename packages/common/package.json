@@ -1,0 +1,28 @@
+{
+  "name": "@plurali/common",
+  "version": "1.0.0",
+  "description": "Common utilities",
+  "author": "Mia Vališová <valisova@lilianaa.dev>",
+  "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
+  "main": "src/index.ts",
+  "files": [
+    "src/"
+  ],
+  "devDependencies": {
+    "@types/markdown-it": "^12.2.3",
+    "vite": "^4.3.1",
+    "vite-plugin-dts": "^3.6.1"
+  },
+  "dependencies": {
+    "@plurali/pluraliapp": "workspace:^",
+    "markdown-it": "^13.0.1",
+    "topbar": "^2.0.1",
+    "xss": "^1.0.14"
+  }
+}

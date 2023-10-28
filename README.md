@@ -5,16 +5,17 @@
 
 # Monorepo packages
 
-| Package                         |               Description                |
-| :------------------------------ | :--------------------------------------: |
-| - root -                        |             The backend API              |
-|                                 |
-| [frontend](apps/frontend)       |         Vue 3 frontend (current)         |
-| [frontend-v2](apps/frontend-v2) |      React rewrite of the frontend       |
-|                                 |
-| [api-client](apps/api-client)   |     Client for the backend REST API      |
-| [editor](apps/editor)           | Text Editor configuration and utilities* |
-| [sanitizer](apps/sanitizer)     |       Sanitizer of HTML content**        |
+| Package                           |               Description                |
+| :-------------------------------- | :--------------------------------------: |
+| - root -                          |             The backend API              |
+|                                   |
+| [frontend](apps/frontend)         |         Vue 3 frontend (current)         |
+| [frontend-v2](apps/frontend-v2)   |      React rewrite of the frontend       |
+|                                   |
+| [api-client](packages/api-client) |     Client for the backend REST API      |
+| [editor](packages/editor)         | Text Editor configuration and utilities* |
+| [sanitizer](packages/sanitizer)   |       Sanitizer of HTML content**        |
+| [common](packages/common)         |             Common utilities             |
 
 *The plan is to migrate away from TinyMCE and create a better rich text editor, however for the sake of ensuring the current
 content created by Plurali users is migrated correctly, the bin/collect-html-tags.ts util parses all current content and creates a list of all currently used
