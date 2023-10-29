@@ -1,9 +1,5 @@
-import type { UpdatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/UpdatePageRequestInterface';
-import type { CreatePageRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/request/CreatePageRequestInterface';
-import type { OkInterface } from '@plurali/pluraliapp/src/application/v2/dto/response/OkInterface';
-import type { PageDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/page/PageDtoInterface';
 import { $api, ApiService } from '../../../ApiService';
-import type { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
+import { ApiResponse, CreatePageRequestInterface, OkInterface, PageDtoInterface, UpdatePageRequestInterface } from '../../../types';
 
 export class MemberPageService {
     constructor(private readonly api: ApiService) {}

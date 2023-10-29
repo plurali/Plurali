@@ -1,9 +1,9 @@
 import type { AxiosInstance, AxiosError } from 'axios';
 import axios from 'axios';
 import { TokenStorage, $tokenStorage } from './TokenStorage';
-import { ApiErrorResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
-import { ApiError, ApiErrorMap, ApiErrorMessage, apiError } from './utils';
 import { apiUrl } from './env';
+import { ApiError, ApiErrorMessage, ApiErrorResponse } from './types';
+import { apiError } from './utils';
 
 export class ApiService {
   public readonly client: AxiosInstance;
@@ -21,7 +21,7 @@ export class ApiService {
       success: false,
       statusCode: e?.response?.data?.statusCode ?? e?.response?.statusCode ?? e?.statusCode ?? -1,
       error: {
-        type: e?.response?.data?.error?.type ?? e?.error?.type ?? ApiErrorMap.UnknownError,
+        type: e?.response?.data?.error?.type ?? e?.error?.type ?? ApiError.UnknownError,
         message: this.getErrorMessage(e),
       },
       meta: e?.response?.data?.meta ?? e?.meta ?? {},
@@ -29,9 +29,9 @@ export class ApiService {
   }
 
   public getErrorMessage(e: any | ApiError | AxiosError | ApiErrorResponse): string {
-    if (!e || !['object', 'string'].includes(typeof e)) return ApiErrorMessage[apiError(ApiErrorMap.UnknownError)];
+    if (!e || !['object', 'string'].includes(typeof e)) return ApiErrorMessage[ApiError.UnknownError];
     if (typeof e === 'object')
-      e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type ?? ApiErrorMap.UnknownError);
+      e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type);
 
     if (e in ApiErrorMessage) {
       return (ApiErrorMessage as any)[e];
@@ -40,7 +40,11 @@ export class ApiService {
     return e;
   }
 
-  public updateAuth() {
+  public updateAuth(token?: string|null) {
+    if (typeof token !== "undefined") {
+      this.token.set(token);
+    }
+
     const auth = this.token.get();
     if (auth) {
       this.client.defaults.headers.common.Authorization = `Bearer ${auth}`;

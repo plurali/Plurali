@@ -1,8 +1,5 @@
-import type { ApiService } from '../ApiService';
-import { $api } from '../ApiService';
-import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
-import { SystemDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/system/SystemDtoInterface';
-import { UpdateSystemRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/system/request/UpdateSystemRequestInterface';
+import { ApiResponse, SystemDtoInterface, UpdateSystemRequestInterface } from '../types';
+import { $api, ApiService } from '../ApiService';
 
 export class SystemService {
   constructor(public readonly api: ApiService) {}

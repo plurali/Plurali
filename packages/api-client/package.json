@@ -14,11 +14,17 @@
   "files": [
     "src/"
   ],
+  "scripts": {
+    "build": "vite build",
+    "build:watch": "vite build --watch"
+  },
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
-    "axios": "^1.3.5"
+    "axios": "^1.3.5",
+    "vite-tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
+    "typescript": "^5.0.4",
     "vite": "^4.3.1",
     "vite-plugin-dts": "^3.6.1"
   }

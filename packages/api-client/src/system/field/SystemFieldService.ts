@@ -1,8 +1,6 @@
 import type { ApiService } from '../../ApiService';
 import { $api } from '../../ApiService';
-import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
-import { UpdateFieldRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/request/UpdateFieldRequestInterface';
-import { FieldDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/FieldDtoInterface';
+import { ApiResponse, FieldDtoInterface, UpdateFieldRequestInterface } from '../../types';
 
 export class SystemFieldService {
   constructor(public readonly api: ApiService) {}

@@ -1,7 +1,6 @@
 import type { ApiService } from '../../../ApiService';
 import { $api } from '../../../ApiService';
-import { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
-import { ValueFieldDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/field/ValueFieldDtoInterface';
+import { ApiResponse, ValueFieldDtoInterface } from '../../../types';
 
 export class MemberFieldService {
   constructor(public readonly api: ApiService) {}

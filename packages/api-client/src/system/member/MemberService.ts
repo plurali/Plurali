@@ -1,8 +1,5 @@
-import type { UpdateMemberRequestInterface } from '@plurali/pluraliapp/src/application/v2/dto/member/request/UpdateMemberRequestInterface';
-import type { MemberDtoInterface } from '@plurali/pluraliapp/src/application/v2/dto/member/MemberDtoInterface';
 import { $api, ApiService } from '../../ApiService';
-import type { PaginationRequestQuery } from '@plurali/pluraliapp/src/application/v2/types/request';
-import type { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
+import { ApiResponse, MemberDtoInterface, PaginationRequestQuery, UpdateMemberRequestInterface } from '../../types';
 
 export class MemberService {
   constructor(private readonly api: ApiService) {}

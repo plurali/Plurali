@@ -1,7 +1,6 @@
 import { $api } from "../ApiService";
 import type { ApiService } from "../ApiService";
-import type { ApiResponse } from '@plurali/pluraliapp/src/application/v2/types/response';
-import type { NotificationDtoInterface } from "@plurali/pluraliapp/src/application/v2/dto/notification/NotificationDtoInterface";
+import { ApiResponse, NotificationDtoInterface } from "../types";
 
 export class NotificationService {
     constructor(private readonly api: ApiService) { }
