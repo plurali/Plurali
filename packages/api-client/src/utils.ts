@@ -1,7 +1,5 @@
 import { ApiError } from "./types";
 
-export const isBrowser = typeof window !== undefined;
-
 export const apiError = (e?: string|null|false) => {
     if (!e) {
         return ApiError.UnknownError;
