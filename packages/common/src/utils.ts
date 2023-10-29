@@ -1,3 +1,5 @@
+import { Visibility } from "@prisma/client";
+
 export const getRouteParam = (val: unknown | string | string[]): string => String(Array.isArray(val) ? val[0] : val);
 
 export const hexRegex = /^#(([0-9A-Fa-f]{2}){3,4}|[0-9A-Fa-f]{3,4})$/;
@@ -19,3 +21,27 @@ export const isUrl = (url: string): boolean => {
     return false;
   }
 };
+
+export const toggleVisibilityState = (visibility: Visibility) => {
+  return visibility === Visibility.Private ? Visibility.Public : Visibility.Private;
+}
+
+type EntityOrVisibility = Visibility | { visibility: Visibility } | { data: { visibility: Visibility } };
+
+const parseVisibility = (entityOrVisibility: EntityOrVisibility) => {
+  const visibility = typeof entityOrVisibility === "object"
+    ? "data" in entityOrVisibility
+      ? entityOrVisibility.data.visibility
+      : entityOrVisibility.visibility
+    : entityOrVisibility;
+
+  return visibility;
+}
+
+export const isVisibilityPublic = (entityOrVisibility: EntityOrVisibility) => {
+  return parseVisibility(entityOrVisibility) === Visibility.Public;
+}
+
+export const isVisibilityPrivate = (entityOrVisibility: EntityOrVisibility) => {
+  return parseVisibility(entityOrVisibility) === Visibility.Private;
+}

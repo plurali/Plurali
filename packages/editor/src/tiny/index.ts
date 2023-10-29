@@ -43,3 +43,5 @@ export const tinyInitConfig: EditorOptions = {
         autosave_interval: '3s',
     } as any),
 };
+
+export type {Editor as TinyEditorType} from "tinymce";
