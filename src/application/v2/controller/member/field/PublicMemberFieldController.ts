@@ -6,7 +6,6 @@ import { error, ok } from '@app/v2/misc/swagger';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { FieldDto } from '@app/v2/dto/field/FieldDto';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
 import { BaseController } from '../../BaseController';
@@ -16,7 +15,7 @@ import { BaseController } from '../../BaseController';
   version: '2',
 })
 @ApiTags('MemberFieldPublic')
-@ApiExtraModels(FieldDto)
+@ApiExtraModels(ValueFieldDto)
 export class PublicMemberFieldController extends BaseController {
   constructor(private member: MemberRepository, private plural: PluralRestService) {
     super();
@@ -24,10 +23,10 @@ export class PublicMemberFieldController extends BaseController {
 
   @Get('/')
   @HttpCode(200)
-  @ApiResponse(ok(200, [FieldDto]))
+  @ApiResponse(ok(200, [ValueFieldDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
-  public async list(@Param('system') systemId: string, @Param('member') memberId: string): Promise<ApiDataResponse<FieldDto[]>> {
+  public async list(@Param('system') systemId: string, @Param('member') memberId: string): Promise<ApiDataResponse<ValueFieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
         slug: memberId,

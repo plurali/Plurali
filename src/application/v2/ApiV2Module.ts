@@ -20,6 +20,7 @@ import { MemberController } from './controller/member/MemberController';
 import { SystemController } from './controller/system/SystemController';
 import { NotificationController } from './controller/notification/NotificationController';
 import { MemberFieldController } from './controller/member/field/MemberFieldController';
+import { SystemFieldController } from './controller/system/field/SystemFieldController';
 
 @Module({
   imports: [PageModule, SystemModule, UserModule, NotificationModule, JwtModule, PluralModule, StorageModule],
@@ -30,6 +31,7 @@ import { MemberFieldController } from './controller/member/field/MemberFieldCont
     MemberFieldController,
     MemberPageController,
     SystemController,
+    SystemFieldController,
     SystemPageController,
     NotificationController,
     PublicSystemController,
