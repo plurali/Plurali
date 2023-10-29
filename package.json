@@ -9,6 +9,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "files": [
+    "./src"
+  ],
   "packageManager": "pnpm@8.1.1",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nest start --watch",

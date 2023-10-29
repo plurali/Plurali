@@ -1,7 +1,7 @@
 <template>
   <Fetchable :retry="fetchSystem" :result="system">
     <div v-if="system">
-      <SystemSummary v-model:entity="system" />
+      <SystemSummary v-model:entity="system" :fields="fields" />
 
       <Fetchable :result="pages" :retry="fetchPages">
         <PageFields v-if="pages" :pages="pages" :modifiable="true" />
@@ -16,10 +16,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import Title from '../../components/Title.vue';
 import Subtitle from '../../components/Subtitle.vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { wrapRequest } from '../../api';
-import { getSystem } from '../../api/system';
-import { getSystemPages } from '../../api/page';
+import { wrapRequest } from '../../utils/api';
 import ColorCircle from '../../components/global/color/ColorCircle.vue';
 import CustomFields from '../../components/global/fields/CustomFields.vue';
 import Members from '../../components/dashboard/members/Members.vue';
@@ -28,8 +25,8 @@ import { useGoBack } from '../../composables/goBack';
 import Color from '../../components/global/color/ColorCircle.vue';
 import SystemSummary from '../../components/global/system/SystemSummary.vue';
 import { withBackground } from '../../composables/background';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
 import PageFields from '../../components/global/page/PageFields.vue';
+import { $system, $systemPage, SystemDtoInterface, PageDtoInterface, $systemField, FieldDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -44,8 +41,9 @@ export default defineComponent({
     PageFields
 },
   setup() {
-    const system = ref<SystemDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const system = ref<SystemDtoInterface | null | false>(false);
+    const fields = ref<FieldDtoInterface[] | null | false>(false);
+    const pages = ref<PageDtoInterface[] | null | false>(false);
 
     useGoBack('/dashboard');
 
@@ -53,20 +51,29 @@ export default defineComponent({
       if (system.value === null) return;
       system.value = null;
 
-      const res = await wrapRequest(getSystem);
-      system.value = res ? res.system : res;
+      const res = await wrapRequest(() => $system.getSystem());
+      system.value = res;
 
       if (system.value) {
+        fetchFields();
         fetchPages();
       }
+    };
+
+    const fetchFields = async () => {
+      if (fields.value === null) return;
+      fields.value = null;
+
+      const res = await wrapRequest(() => $systemField.getFields());
+      fields.value = res;
     };
 
     const fetchPages = async () => {
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest(() => getSystemPages());
-      pages.value = res ? res.pages : res;
+      const res = await wrapRequest(() => $systemPage.getSystemPages());
+      pages.value = res;
     };
 
     withBackground(system);
@@ -77,6 +84,7 @@ export default defineComponent({
       fetchSystem,
       fetchPages,
       pages,
+      fields,
       system,
     };
   },

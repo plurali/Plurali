@@ -6,14 +6,14 @@
 import { defineComponent, onMounted } from 'vue';
 // @ts-ignore
 import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-es-bundle.js';
-import { $axios } from '../api';
+import { apiUrl } from '@plurali/api-client';
 
 export default defineComponent({
   setup() {
     const init = () => {
       SwaggerUIBundle({
         dom_id: '#swagger-ui',
-        url: `${$axios.defaults.baseURL}/oa-json`,
+        url: `${apiUrl}/oa-json`,
         presets: [SwaggerUIBundle.presets.apis],
       });
     };

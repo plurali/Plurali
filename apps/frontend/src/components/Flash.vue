@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { isHex } from '../utils';
+import { isHex } from '@plurali/common';
 import { FlashType } from '../store';
 
 const flashTypeToClass = {

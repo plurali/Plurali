@@ -33,11 +33,10 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { PageDto } from '@app/v1/dto/page/PageDto';
-import { wrapRequest } from '../../../api/';
-import { updateSystemPage, updateMemberPage } from '../../../api/page';
 import ColorCircle from '../color/ColorCircle.vue';
-import { getRouteParam } from '../../../utils';
+import { getRouteParam } from '@plurali/common';
+import { $memberPage, $systemPage, PageDtoInterface } from '@plurali/api-client';
+import { wrapRequest } from '../../../utils/api';
 
 export default defineComponent({
   components: { ColorCircle },
@@ -47,7 +46,7 @@ export default defineComponent({
   },
   props: {
     page: {
-      type: Object as PropType<PageDto>,
+      type: Object as PropType<PageDtoInterface>,
       required: true,
     },
     modifiable: {
@@ -56,7 +55,7 @@ export default defineComponent({
     },
   },
   setup: function ({ page: _page, modifiable }) {
-    const page = ref<PageDto>(_page);
+    const page = ref<PageDtoInterface>(_page);
 
     const loading = ref(false);
 
@@ -78,13 +77,9 @@ export default defineComponent({
         if (!page.value) return null;
 
         return isMember.value
-          ? updateMemberPage(memberId.value ?? '', page.value.id, { visible: page.value.visible })
-          : updateSystemPage(page.value.id, { visible: page.value.visible });
+          ? $memberPage.updateMemberPage(memberId.value ?? '', page.value.id, { visible: page.value.visible })
+          : $systemPage.updateSystemPage(page.value.id, { visible: page.value.visible });
       });
-
-      if (res) {
-        page.value = res.page;
-      }
 
       loading.value = false;
     };

@@ -19,9 +19,8 @@ import "@plurali/editor/src/tiny/deps";
 
 import { PropType, defineComponent, ref } from 'vue';
 import Editor from '@tinymce/tinymce-vue';
-import { tinyInitConfig } from "@plurali/editor";
+import { TinyEditorType, tinyInitConfig } from "@plurali/editor";
 import Button from '../Button.vue';
-import type { Editor as EditorType } from 'tinymce';
 import Spinner from '../Spinner.vue';
 import UserContent from '../global/UserContent.vue';
 
@@ -56,7 +55,7 @@ export default defineComponent({
 
     const value = ref(initialValue.value);
 
-    const editor = ref<EditorType | null>(null);
+    const editor = ref<TinyEditorType | null>(null);
 
     const onInit = (_: any, _editor: EditorType) => {
       editor.value = _editor;

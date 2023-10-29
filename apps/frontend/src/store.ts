@@ -1,5 +1,5 @@
+import { UserDtoInterface } from '@plurali/api-client';
 import { ref } from 'vue'
-import type { UserDto } from '@app/v1/dto/user/UserDto'
 
 export enum FlashType {
   Danger = 'Danger',
@@ -45,4 +45,4 @@ export const background = ref<string | null>(null)
 
 export const goBack = ref<string | null>(null)
 
-export const user = ref<UserDto | null>(null)
+export const user = ref<UserDtoInterface | null>(null)

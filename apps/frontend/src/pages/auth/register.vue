@@ -71,11 +71,11 @@ import Title from '../../components/Title.vue'
 import Subtitle from '../../components/Subtitle.vue'
 import Button from '../../components/Button.vue'
 import Label from '../../components/Label.vue'
-import { register } from '../../api/auth'
 import InputError from '../../components/InputError.vue'
 import Spinner from '../../components/Spinner.vue'
-import { setAuth, wrapRequest } from '../../api'
-import {emailRegex} from "../../utils"
+import {emailRegex} from '@plurali/common'
+import { wrapRequest } from '../../utils/api'
+import { $api, $auth } from '@plurali/api-client'
 
 export default defineComponent({
   components: {
@@ -126,11 +126,11 @@ export default defineComponent({
       if (loading.value) return
       loading.value = true
 
-      const ok = await wrapRequest(() => register(form))
+      const authData = await wrapRequest(() => $auth.register(form))
       loading.value = false
 
-      if (ok) {
-        setAuth(ok.auth);
+      if (authData) {
+        $api.updateAuth(authData.token);
         await router.push('/dashboard')
       }
     }

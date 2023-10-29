@@ -17,8 +17,7 @@ import Subtitle from '../components/Subtitle.vue';
 import ButtonLink from '../components/ButtonLink.vue';
 import Button from '../components/Button.vue';
 import Spinner from '../components/Spinner.vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { wrapRequest } from '../api';
+import { wrapRequest } from '../utils/api';
 import Color from '../components/global/color/ColorCircle.vue';
 import { useRoute } from 'vue-router';
 import Fetchable from '../components/global/Fetchable.vue';
@@ -26,11 +25,9 @@ import Members from '../components/front/members/Members.vue';
 import ColorCircle from '../components/global/color/ColorCircle.vue';
 import SystemSummary from '../components/global/system/SystemSummary.vue';
 import PageFields from '../components/global/page/PageFields.vue';
-import { getRouteParam } from '../utils';
+import { getRouteParam } from '@plurali/common';
 import { withBackground } from '../composables/background';
-import { getSystem, getSystemPages } from '../api/public';
-import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import type { PageDto } from '@app/v1/dto/page/PageDto';
+import { $system, $systemPage, SystemDtoInterface, PageDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -47,8 +44,8 @@ export default defineComponent({
     Color,
   },
   setup() {
-    const system = ref<SystemDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const system = ref<SystemDtoInterface | null | false>(false);
+    const pages = ref<PageDtoInterface[] | null | false>(false);
 
     const route = useRoute();
 
@@ -58,8 +55,8 @@ export default defineComponent({
       if (system.value === null) return;
       system.value = null;
 
-      const res = await wrapRequest(() => getSystem(systemId.value));
-      system.value = res ? res.system : res;
+      const res = await wrapRequest(() => $system.getPublicSystem(systemId.value));
+      system.value = res ?? null;
 
       if (system.value) {
         await fetchPages();
@@ -70,8 +67,8 @@ export default defineComponent({
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest<PagesResponse>(() => getSystemPages(systemId.value));
-      pages.value = res ? res.pages : res;
+      const res = await wrapRequest(() => $systemPage.getPublicSystemPages(systemId.value));
+      pages.value = res ?? [];
     };
 
     withBackground(system);

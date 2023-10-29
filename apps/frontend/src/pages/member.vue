@@ -3,14 +3,16 @@
     <div v-if="member">
       <MemberSummary :member="member" />
 
-      <UserContent class="mb-5 p-6" v-if="member.data.customDescription">
-        <Sanitized :value="member.data.customDescription" />
+      <UserContent class="mb-5 p-6" v-if="member.data.description">
+        <Sanitized :value="member.data.description" />
       </UserContent>
 
-      <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
-      
+      <Fetchable :result="fields" :retry="fetchFields">
+        <CustomFields :fields="fields" :modifiable="false" title="System-wide Custom Fields" />
+      </Fetchable>
+
       <Fetchable :result="pages" :retry="fetchPages">
-        <PageFields v-if="pages" :pages="pages" :modifiable="false"/>
+        <PageFields v-if="pages" :pages="pages" :modifiable="false" />
       </Fetchable>
     </div>
   </Fetchable>
@@ -24,22 +26,19 @@ import Subtitle from '../components/Subtitle.vue';
 import ButtonLink from '../components/ButtonLink.vue';
 import Button from '../components/Button.vue';
 import Spinner from '../components/Spinner.vue';
-import { wrapRequest } from '../api';
-import { getMember, getMemberPages } from '../api/public';
+import { wrapRequest } from '../utils/api';
 import Color from '../components/global/color/ColorCircle.vue';
 import { useGoBack } from '../composables/goBack';
 import Fetchable from '../components/global/Fetchable.vue';
 import CustomFields from '../components/global/fields/CustomFields.vue';
 import PageFields from '../components/global/page/PageFields.vue';
 import ColorCircle from '../components/global/color/ColorCircle.vue';
-import { getRouteParam } from '../utils';
+import { getRouteParam } from '@plurali/common';
 import MemberSummary from '../components/global/members/MemberSummary.vue';
 import UserContent from '../components/global/UserContent.vue';
 import Sanitized from '../components/global/Sanitized.vue';
 import { withBackground } from '../composables/background';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
+import { $member, $memberField, $memberPage, MemberDtoInterface, PageDtoInterface, FieldDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -58,8 +57,9 @@ export default defineComponent({
     Sanitized,
   },
   setup() {
-    const member = ref<UserMemberDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const member = ref<MemberDtoInterface | null | false>(false);
+    const pages = ref<PageDtoInterface[] | null | false>(false);
+    const fields = ref<FieldDtoInterface[] | null | false>(false);
 
     const route = useRoute();
 
@@ -72,11 +72,11 @@ export default defineComponent({
       if (member.value === null) return;
       member.value = null;
 
-      const res = await wrapRequest(() => getMember(systemId.value, memberId.value));
-      member.value = res ? res.member : res;
+      const res = await wrapRequest(() => $member.getPublicMember(systemId.value, memberId.value));
+      member.value = res;
 
       if (member.value) {
-        await fetchPages();
+        await Promise.all([fetchFields(), fetchPages()])
       }
     };
 
@@ -84,8 +84,16 @@ export default defineComponent({
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest<PagesResponse>(() => getMemberPages(memberId.value));
-      pages.value = res ? res.pages : res;
+      const res = await wrapRequest(() => $memberPage.getPublicMemberPages(systemId.value, memberId.value));
+      pages.value = res;
+    };
+
+    const fetchFields = async () => {
+      if (pages.value === null) return;
+      pages.value = null;
+
+      const res = await wrapRequest(() => $memberField.getPublicFields(systemId.value, memberId.value));
+      fields.value = res;
     };
 
     withBackground(member);
@@ -95,6 +103,7 @@ export default defineComponent({
     return {
       fetchMember,
       fetchPages,
+      fetchFields,
       member,
       pages,
       systemId,

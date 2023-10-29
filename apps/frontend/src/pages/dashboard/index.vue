@@ -27,7 +27,7 @@ import ButtonLink from '../../components/ButtonLink.vue'
 import Button from '../../components/Button.vue'
 import { useRouter } from 'vue-router'
 import { useGoBack } from '../../composables/goBack'
-import { setAuth } from '../../api'
+import { $api } from '@plurali/api-client'
 
 export default defineComponent({
   components: {
@@ -42,7 +42,8 @@ export default defineComponent({
     useGoBack(null)
 
     const logout = async () => {
-      setAuth(null);
+      $api.updateAuth(null);
+
       await router.push('/auth/login')
     }
 

@@ -12,14 +12,13 @@
 <script lang="ts">
 import CustomField from './CustomField.vue'
 import { computed, defineComponent, PropType, ref } from 'vue'
-import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto'
-import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto'
 import Fetchable from '../Fetchable.vue'
+import { FieldDtoInterface, ValueFieldDtoInterface } from '@plurali/api-client'
 
 export default defineComponent({
   props: {
     fields: {
-      type: Array as PropType<(UserFieldDto | UserValueFieldDto)[]>,
+      type: Array as PropType<(FieldDtoInterface|ValueFieldDtoInterface)[]>,
       required: true,
     },
     modifiable: {
@@ -39,7 +38,7 @@ export default defineComponent({
     CustomField,
   },
   setup({ fields: _fields, hideNoValues }) {
-    const customFields = ref<(MemberField | MemberFieldWithValue)[] | null | false>(_fields)
+    const customFields = ref<(FieldDtoInterface | ValueFieldDtoInterface)[] | null | false>(_fields)
 
     return {
       customFields,

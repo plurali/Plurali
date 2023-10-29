@@ -8,14 +8,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
-import type { PageDto } from '@app/v1/dto/page/PageDto';
+import { defineComponent, PropType } from 'vue';
 import PageField from './PageField.vue';
+import { PageDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   props: {
     pages: {
-      type: Array as PropType<PageDto[]>,
+      type: Array as PropType<PageDtoInterface[]>,
       required: true,
     },
     modifiable: {

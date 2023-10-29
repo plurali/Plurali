@@ -1,22 +1,16 @@
 <template>
-  <div
-    @click.prevent="toggleVisibility"
-    class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25"
-    :class="[
+  <div @click.prevent="toggleVisibility"
+    class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25" :class="[
       isDashboard
-        ? customField.data.visible
+        ? isPublic
           ? 'border-l-green-500'
           : 'border-l-red-500'
         : '',
       loading && '!bg-gray-100 bg-opacity-10',
-    ]"
-  >
+    ]">
     <p class="font-medium">{{ customField.name }}</p>
     <p v-if="value && value.length" class="text-gray-500">
-      <span
-        v-if="customField.type === 'Color'"
-        class="inline-flex justify-center items-center gap-2"
-      >
+      <span v-if="customField.type === 'Color'" class="inline-flex justify-center items-center gap-2">
         <ColorCircle :color="value!" />
         <span class="text-sm">{{ value }}</span>
       </span>
@@ -29,14 +23,12 @@
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto'
-import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto'
 import { flash, FlashType } from '../../../store'
-import { formatError } from '../../../api'
-import { updateField } from '../../../api/system'
-import { formatField, string } from '../../../api/fields'
 import ColorCircle from '../color/ColorCircle.vue'
 import Sanitized from '../Sanitized.vue'
+import { $systemField, FieldDtoInterface, ValueFieldDtoInterface } from '@plurali/api-client'
+import { formatField, isVisibilityPublic, toggleVisibilityState } from '@plurali/common'
+import { wrapRequest } from '../../../utils/api'
 
 export default defineComponent({
   components: { ColorCircle, Sanitized },
@@ -46,7 +38,7 @@ export default defineComponent({
   },
   props: {
     field: {
-      type: Object as PropType<UserFieldDto | UserValueFieldDto>,
+      type: Object as PropType<FieldDtoInterface | ValueFieldDtoInterface>,
       required: true,
     },
     modifiable: {
@@ -55,36 +47,33 @@ export default defineComponent({
     },
   },
   setup: function ({ field: _field, modifiable }) {
-    const customField = ref<UserFieldDto | UserValueFieldDto>(_field)
+    const customField = ref<FieldDtoInterface | ValueFieldDtoInterface>(_field)
 
     const loading = ref(false)
 
     const route = useRoute()
 
     const toggleVisibility = async () => {
-      if (!modifiable || loading.value) return
-      loading.value = true
+      if (loading.value || !modifiable || !customField.value) return;
+      loading.value = true;
 
-      try {
-        const res = (
-          await updateField(customField.value.fieldId, {
-            visible: !customField.value.data.visible,
-          })
-        ).data
-        if (!res.success) throw new Error(res.error)
+      const newVisibility = toggleVisibilityState(customField.value.data.visibility);
 
-        customField.value = {
-          ...res.data.field,
-          ...((customField.value as any).value
-            ? { value: (customField.value as any).value }
-            : {}),
-        }
-        loading.value = false
-      } catch (e) {
-        flash(formatError(e), FlashType.Danger, true)
-        loading.value = false
+      const updatedField = await wrapRequest(() =>
+        $systemField.updateField(customField.value.id, {
+          visibility: newVisibility,
+        })
+      );
+   
+      loading.value = false;
+
+      if (!updatedField) {
+        flash('An error has occurred while changing the visibility state.', FlashType.Danger);
+        return;
       }
-    }
+
+      customField.value = updatedField;
+    };
 
     return {
       toggleVisibility,
@@ -93,10 +82,11 @@ export default defineComponent({
       formatField,
       value: computed(() =>
         (customField.value as any).value
-          ? formatField(customField.value as any as UserValueFieldDto)
+          ? formatField(customField.value as any as ValueFieldDtoInterface)
           : ''
       ),
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isPublic: computed(() => isVisibilityPublic(customField.value)),
     }
   },
 })

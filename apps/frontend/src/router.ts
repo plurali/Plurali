@@ -1,8 +1,6 @@
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
+import { $user, $notification, $api, ApiError } from "@plurali/api-client/src";
 import { flash, FlashType, nextRedirect, user } from './store';
-import { getUser } from './api/user';
-import { StatusMap, formatError } from './api';
-import { getNotifications } from './api/notification';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -118,14 +116,14 @@ router.beforeEach(async to => {
   // TODO: refactor this horrendous thing
   const promise = (async () => {
     try {
-      const data = (await getUser()).data;
+      const data = await $user.getUser();
       if (!data.success) throw new Error();
 
-      user.value = data.data.user;
+      user.value = data.data;
       if (isAuth(to)) return '/dashboard';
 
       try {
-        const notifications = (await getNotifications()).data ?? { success: false };
+        const notifications = await ($notification.getNotifications()) ?? { success: false };
 
         if (notifications.success && notifications.data.length >= 1) {
           notifications.data.forEach((n) => flash(n.content, n.color, false, true));
@@ -141,7 +139,7 @@ router.beforeEach(async to => {
           flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);
         }
 
-        if (!user.value.pluralKey) {
+        if (!user.value.accessToken) {
           flash('You must setup your Simply Plural API key!', FlashType.Danger, false, true);
           if (to.path !== '/dashboard/user') {
             return '/dashboard/user';
@@ -151,8 +149,8 @@ router.beforeEach(async to => {
 
     } catch (error) {
       user.value = null;
-      const status = formatError(error);
-      if (status !== StatusMap.NotAuthenticated) {
+      const status = $api.handleException(error).error.type;
+      if (status !== ApiError.NotAuthenticated) {
         flash(status, FlashType.Danger, true);
       } else if (isDashboard(to)) {
         flash('You need to be logged in to access the dashboard!', FlashType.Warning, true, false);

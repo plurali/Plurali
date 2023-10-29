@@ -7,36 +7,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { flash, FlashType } from '../../../store'
-import { formatError } from '../../../api'
-import { getMembers } from '../../../api/public'
 import Fetchable from '../../global/Fetchable.vue'
 import Color from '../../global/color/ColorCircle.vue'
 import MemberSmallCard from '../../global/members/MemberSmallCard.vue'
-import { getRouteParam } from '../../../utils'
+import { getRouteParam } from '@plurali/common'
 import { useRoute } from 'vue-router'
+import { $member, MemberDtoInterface } from '@plurali/api-client'
+import { wrapRequest } from '../../../utils/api'
 
 export default defineComponent({
   components: { MemberSmallCard, Color, Fetchable },
   setup() {
-    const members = ref<UserMemberDto[] | null | false>(false)
+    const members = ref<MemberDtoInterface[] | null | false>(false);
 
-    const route = useRoute()
+    const route = useRoute();
+
+    const systemId = computed(() => getRouteParam(route.params.systemId));
 
     const fetchMembers = async () => {
       if (members.value === null) return
       members.value = null
-      try {
-        const res = (await getMembers(getRouteParam(route.params.systemId))).data
-        if (!res.success) throw new Error(res.error)
+      
+      const systemMembers = await wrapRequest(() => $member.getPublicMembers(systemId.value));
 
-        members.value = res.data.members
-      } catch (e) {
-        members.value = false
-        flash(formatError(e), FlashType.Danger, true)
-      }
+      members.value = systemMembers;
     }
 
     onMounted(() => fetchMembers())

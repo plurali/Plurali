@@ -1,9 +1,9 @@
 <template>
   <div class="mb-5">
     <Title>Plurali</Title>
-    <Subtitle
-      >Informative page about your system and it's members you can share with people!</Subtitle
-    >
+    <Subtitle>
+      Informative page about your system and it's members you can share with people!
+    </Subtitle>
   </div>
 
   <div class="inline-flex items-center gap-2">

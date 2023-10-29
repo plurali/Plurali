@@ -3,37 +3,25 @@
     <div v-if="data.member && data.system">
       <div class="mb-5 flex justify-between items-start">
         <div class="flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
-          <img
-            v-if="data.member.avatar"
-            :src="data.member.avatar"
-            :alt="data.member.name"
-            class="flex-shrink-0 w-32 h-32 rounded-full object-cover"
-          />
+          <img v-if="data.member.avatar" :src="data.member.avatar" :alt="data.member.name"
+            class="flex-shrink-0 w-32 h-32 rounded-full object-cover" />
           <Color v-else :color="data.member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25" />
           <div>
             <p class="text-sm text-gray-700">SID: {{ data.member.id }}</p>
             <PageTitle class="text-violet-700 inline-flex items-center justify-center gap-3">
               {{ data.member.name }}
               <span class="inline-flex items-center justify-center gap-3">
-                <VisibilityTag
-                  v-if="isDashboard"
-                  :disabled="loading"
-                  :visible="data.member.data.visible"
-                  @click.prevent="toggleVisibility"
-                />
-                <a
-                  v-if="isDashboard && data.member.data.visible"
-                  :href="`/${data.system.data.slug}/m/${data.member.data.slug}`"
-                  class="text-sm text-gray-700 font-normal"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <VisibilityTag v-if="isDashboard" :disabled="loading" :visibility="data.member.data.visibility"
+                  @click.prevent="toggleVisibility" />
+                <a v-if="isDashboard && data.member.data.visibility"
+                  :href="`/${data.system.data.slug}/m/${data.member.data.slug}`" class="text-sm text-gray-700 font-normal"
+                  target="_blank" rel="noopener noreferrer">
                   <u>Open public view</u>
                 </a>
               </span>
             </PageTitle>
             <Subtitle class="mb-3" v-if="data.member.description">
-              <Sanitized :value="string(data.member.description, true)" />
+              <Sanitized :value="formatString(data.member.description, true)" />
             </Subtitle>
             <span v-if="data.member.color" class="inline-flex text-gray-700 items-center gap-1">
               Color: {{ data.member.color }}
@@ -44,29 +32,19 @@
 
         <div class="flex items-center gap-2">
           <BackgroundChooser v-model:entity="data.member" type="member" />
-          <ButtonLink
-            :to="{ name: 'dashboard:member:page:create', params: $route.params }"
-            class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
-          >
+          <ButtonLink :to="{ name: 'dashboard:member:page:create', params: $route.params }"
+            class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1">
             <DocumentIcon class="w-8 h-8 -ml-1" />
             <span>New Page</span>
           </ButtonLink>
         </div>
       </div>
 
-      <Editor
-        :id="`${data.member.id}_customDescription`"
-        :initial-value="data.member.data.customDescription"
-        :placeholder="`Add custom description for ${data.member.name}...`"
-        @save="updateCustomDescription"
-      />
+      <Editor :id="`${data.member.id}_customDescription`" :initial-value="data.member.data.description"
+        :placeholder="`Add custom description for ${data.member.name}...`" @save="updateCustomDescription" />
 
-      <CustomFields
-        :fields="data.member.fields"
-        :modifiable="true"
-        :hide-no-values="true"
-        title="System-wide Custom Fields"
-      />
+      <CustomFields :fields="data.fields" :modifiable="true" :hide-no-values="true"
+        title="System-wide Custom Fields" />
 
       <Fetchable :result="data.pages" :retry="fetchAll">
         <PageFields v-if="data.pages" :pages="data.pages" :modifiable="true" />
@@ -78,13 +56,9 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Editor as EditorType } from 'tinymce';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { getRouteParam } from '../../utils';
-import { wrapRequest } from '../../api';
-import { getMember, getSystem, updateMember } from '../../api/system';
-import { getMemberPages } from '../../api/page';
+import { getRouteParam, toggleVisibilityState, isVisibilityPublic } from '@plurali/common';
+import { TinyEditorType } from '@plurali/editor';
+import { wrapRequest } from '../../utils/api';
 import { useGoBack } from '../../composables/goBack';
 import { withBackground } from '../../composables/background';
 import PageTitle from '../../components/Title.vue';
@@ -98,11 +72,11 @@ import ColorCircle from '../../components/global/color/ColorCircle.vue';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
 import Editor from '../../components/dashboard/Editor.vue';
 import BackgroundChooser from '../../components/global/BackgroundChooser.vue';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
 import PageFields from '../../components/global/page/PageFields.vue';
 import { DocumentIcon } from '@heroicons/vue/24/outline';
-import { string } from '../../api/fields';
+import { $member, $memberField, $memberPage, $system, FieldDtoInterface, MemberDtoInterface, PageDtoInterface, SystemDtoInterface } from '@plurali/api-client';
+import { FlashType, flash } from '../../store';
+import { formatString } from '@plurali/common';
 
 export default defineComponent({
   components: {
@@ -123,14 +97,17 @@ export default defineComponent({
   setup() {
     // TODO
     const data = reactive({
-      system: false as SystemDto | null | false,
-      member: false as UserMemberDto | null | false,
-      pages: false as PageDto[] | null | false,
+      system: false as SystemDtoInterface | null | false,
+      member: false as MemberDtoInterface | null | false,
+      fields: false as FieldDtoInterface[] | null | false,
+      pages: false as PageDtoInterface[] | null | false,
     });
 
     const route = useRoute();
 
     const loading = ref(false);
+
+    const memberId = computed(() => getRouteParam(route.params.id));
 
     useGoBack('/dashboard/system');
 
@@ -138,17 +115,16 @@ export default defineComponent({
       if (data.system === null || data.member === null || data.pages === null) return;
       data.system = data.member = null;
 
-      let sys = await wrapRequest(getSystem);
-      data.system = sys ? sys.system : sys;
+      let system = await wrapRequest(() => $system.getSystem());
+      data.system = system;
 
       if (data.system) {
-        let mem = await wrapRequest(() => getMember(getRouteParam(route.params.id)));
-        data.member = mem ? mem.member : mem;
+        let member = await wrapRequest(() => $member.getMember(memberId.value));
+        data.member = member;
 
         if (data.member) {
-          const id = data.member.id; // stupid ts
-          const res = await wrapRequest<PagesResponse>(() => getMemberPages(id));
-          data.pages = res ? res.pages : res;
+          wrapRequest(() => $memberField.getFields(memberId.value)).then((fields) => (data.fields = fields));
+          wrapRequest(() => $memberPage.getMemberPages(memberId.value)).then((pages) => (data.pages = pages));
         }
       }
     };
@@ -156,51 +132,55 @@ export default defineComponent({
     withBackground(() => data.member);
 
     const toggleVisibility = async () => {
-      if (loading.value) return;
+      if (loading.value || !data.member) return;
       loading.value = true;
 
-      const res = await wrapRequest(() =>
-        data.member
-          ? updateMember(data.member.id, {
-              visible: !data.member.data.visible,
-            })
-          : null
-      );
+      const newVisibility = toggleVisibilityState(data.member.data.visibility);
 
-      data.member = res ? res.member : res;
+      const updatedMember = await wrapRequest(() => $member.updateMember(memberId.value, {
+        visibility: newVisibility,
+      }));
+
       loading.value = false;
+
+      if (!updatedMember) {
+        flash("An error has occured while changing visibility state.", FlashType.Danger);
+        return;
+      }
+
+      data.member = updatedMember;
     };
 
-    const updateCustomDescription = async (editor: EditorType) => {
+    const updateCustomDescription = async (editor: TinyEditorType) => {
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest(() => {
+      const updatedMember = await wrapRequest(() => {
         if (!data.member) return null;
 
         editor.readonly = true;
-        let customDescription: string | null = editor.getContent({ format: 'html' });
+        let description: string | null = editor.getContent({ format: 'html' });
 
         if (editor.getContent({ format: 'text' }).trim().length < 1) {
-          customDescription = null;
+          description = null;
         }
 
-        return updateMember(data.member.id, {
-          customDescription,
+        return $member.updateMember(data.member.pluralId, {
+          description,
         });
       });
 
-      data.member = res ? res.member : res;
       loading.value = false;
+
+      if (!updatedMember) {
+        flash("An error has occurred while updating the description.", FlashType.Danger);
+        return;
+      }
+
+      data.member = updatedMember;
     };
 
     onMounted(() => fetchAll());
-
-    // const onChooserCompleted = (res: SystemMemberData) => {
-    //   if (res) {
-    //     data.member = res.member;
-    //   }
-    // }
 
     return {
       fetchAll,
@@ -208,8 +188,9 @@ export default defineComponent({
       loading,
       toggleVisibility,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isPublic: computed(() => data.member && isVisibilityPublic(data.member)),
       updateCustomDescription,
-      string,
+      formatString,
     };
   },
 });

@@ -4,22 +4,22 @@
       <img
         v-if="system.avatar"
         :src="system.avatar"
-        :alt="system.username"
+        :alt="system.name"
         class="flex-shrink-0 w-32 h-32 rounded-full object-cover"
       />
       <Color v-else :color="system.color ?? '#e2e8f0'" class="flex-shrink-0 !w-32 !h-32 opacity-25" />
       <div>
         <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ system.id }}</p>
         <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
-          {{ system.username }}
+          {{ system.name }}
           <VisibilityTag
             v-if="isDashboard"
             :disabled="loading"
-            :visible="system.data.visible"
+            :visibility="system.data.visibility"
             @click.prevent="toggleVisibility"
           />
           <a
-            v-if="isDashboard && system.data.visible"
+            v-if="isDashboard && isPublic"
             :href="`/${system.data.slug}`"
             class="text-sm text-gray-700 font-normal"
             target="_blank"
@@ -29,7 +29,7 @@
           </a>
         </PageTitle>
         <Subtitle class="mb-3" v-if="system.description">
-          <Sanitized :value="string(system.description, true)"/>
+          <Sanitized :value="formatString(system.description, true)"/>
         </Subtitle>
         <span v-if="system.color" class="inline-flex text-gray-700 items-center gap-1">
           Color: {{ system.color }}
@@ -53,15 +53,17 @@
   <Editor
     v-if="isDashboard"
     :id="`${system.id}_customDescription`"
-    :initial-value="system.data.customDescription"
-    :placeholder="`Add custom description for ${system.username}...`"
+    :initial-value="system.data.description"
+    :placeholder="`Add custom description for ${system.name}...`"
     @save="updateCustomDescription"
   />
-  <UserContent class="mb-5 p-6" v-else-if="system.data.customDescription">
-    <Sanitized :value="system.data.customDescription" />
+  <UserContent class="mb-5 p-6" v-else-if="system.data.description">
+    <Sanitized :value="system.data.description" />
   </UserContent>
 
-  <CustomFields :fields="system.fields" :modifiable="isDashboard" />
+  <Fetchable :result="fields">
+    <CustomFields :fields="fields" :modifiable="isDashboard" />
+  </Fetchable>
 </template>
 <script lang="ts">
 import PageTitle from '../../Title.vue';
@@ -69,12 +71,8 @@ import Color from '../color/ColorCircle.vue';
 import Subtitle from '../../Subtitle.vue';
 import ColorCircle from '../color/ColorCircle.vue';
 import { computed, defineComponent, PropType, ref } from 'vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 import { useRoute } from 'vue-router';
 import VisibilityTag from '../visibility/VisibilityTag.vue';
-import { wrapRequest } from '../../../api';
-import { updateSystem } from '../../../api/system';
-import { Editor as EditorType } from 'tinymce';
 import CustomFields from '../fields/CustomFields.vue';
 import UserContent from '../UserContent.vue';
 import Sanitized from '../Sanitized.vue';
@@ -83,7 +81,11 @@ import BackgroundChooser from '../BackgroundChooser.vue';
 import Fetchable from '../Fetchable.vue';
 import ButtonLink from '../../ButtonLink.vue';
 import { DocumentIcon } from '@heroicons/vue/24/outline';
-import { string } from '../../../api/fields';
+import { $system, FieldDtoInterface, SystemDtoInterface } from '@plurali/api-client';
+import { wrapRequest } from '../../../utils/api';
+import { formatString, isVisibilityPublic, toggleVisibilityState } from '@plurali/common';
+import { flash, FlashType } from '../../../store';
+import { TinyEditorType } from '@plurali/editor';
 
 export default defineComponent({
   components: {
@@ -103,15 +105,19 @@ export default defineComponent({
 },
   props: {
     entity: {
-      type: Object as PropType<SystemDto>,
+      type: Object as PropType<SystemDtoInterface>,
       required: true,
     },
+    fields: {
+      type: [Array, () => null, () => false] as PropType<FieldDtoInterface[] | null | false>
+    }
   },
   emits: ['update:entity'],
   setup(props, { emit }) {
     const route = useRoute();
 
     const loading = ref(false);
+
 
     const system = computed({
       get() {
@@ -123,27 +129,32 @@ export default defineComponent({
     });
 
     const toggleVisibility = async () => {
-      if (loading.value) return;
+      if (loading.value || !system.value) return;
       loading.value = true;
 
-      const res = await wrapRequest(() =>
-        updateSystem({
-          visible: !system.value.data.visible,
+      const newVisibility = toggleVisibilityState(system.value.data.visibility);
+
+      const updatedSystem = await wrapRequest(() =>
+        $system.updateSystem({
+          visibility: newVisibility,
         })
       );
-
-      // fail??? refresh
-      if (!res) return (window.location.href = '');
-
-      system.value = res.system;
+   
       loading.value = false;
+
+      if (!updatedSystem) {
+        flash('An error has occurred while changing the visibility state.', FlashType.Danger);
+        return;
+      }
+
+      system.value = updatedSystem;
     };
 
-    const updateCustomDescription = async (editor: EditorType) => {
+    const updateCustomDescription = async (editor: TinyEditorType) => {
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest(() => {
+      const updatedSystem = await wrapRequest(() => {
         if (!system.value) return null;
 
         editor.readonly = true;
@@ -153,16 +164,19 @@ export default defineComponent({
           customDescription = null;
         }
 
-        return updateSystem({
-          customDescription,
+        return $system.updateSystem({
+          description: customDescription,
         });
       });
 
-      if (res) {
-        system.value = res.system;
+      loading.value = false;
+
+      if (!updatedSystem) {
+        flash('An error has occurred while updating the description.', FlashType.Danger);
+        return;
       }
 
-      loading.value = false;
+      system.value = updatedSystem;
     };
 
     return {
@@ -170,8 +184,9 @@ export default defineComponent({
       updateCustomDescription,
       loading,
       system,
-      string,
+      formatString,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isPublic: computed(() => system.value && isVisibilityPublic(system.value)),
     };
   },
 });

@@ -17,27 +17,26 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Title from '../../components/Title.vue';
 import Subtitle from '../../components/Subtitle.vue';
 import ButtonLink from '../../components/ButtonLink.vue';
 import Button from '../../components/Button.vue';
 import Spinner from '../../components/Spinner.vue';
-import { wrapRequest } from '../../api';
-import { createMemberPage, createSystemPage } from '../../api/page';
+import { wrapRequest } from '../../utils/api';
 import Color from '../../components/global/color/ColorCircle.vue';
 import { useGoBack } from '../../composables/goBack';
 import Fetchable from '../../components/global/Fetchable.vue';
 import CustomFields from '../../components/global/fields/CustomFields.vue';
 import ColorCircle from '../../components/global/color/ColorCircle.vue';
-import { getRouteParam } from '../../utils';
+import { getRouteParam } from '@plurali/common';
 import MemberSummary from '../../components/global/members/MemberSummary.vue';
 import UserContent from '../../components/global/UserContent.vue';
 import Editor from '../../components/dashboard/Editor.vue';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
 import type { Editor as EditorType } from 'tinymce';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
+import { $memberPage, $systemPage } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -76,7 +75,7 @@ export default defineComponent({
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<PageResponse>(() => {
+      const createdPage = await wrapRequest(() => {
         editor.readonly = true;
         let content: string = editor.getContent({ format: 'html' });
 
@@ -86,11 +85,11 @@ export default defineComponent({
           visible: visible.value,
         };
 
-        return isMember.value ? createMemberPage(memberId.value ?? '', data) : createSystemPage(data);
+        return isMember.value ? $memberPage.createMemberPage(memberId.value ?? '', data) : $systemPage.createSystemPage(data);
       });
 
-      if (res) {
-        router.push(`${parentRoute.value}/page-edit/${res.page.id}`);
+      if (createdPage) {
+        router.push(`${parentRoute.value}/page-edit/${createdPage.id}`);
       }
 
       loading.value = false;

@@ -8,31 +8,25 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto'
 import { flash, FlashType } from '../../../store'
-import { formatError } from '../../../api'
-import { getMembers } from '../../../api/system'
 import Fetchable from '../../../components/global/Fetchable.vue'
 import Color from '../../../components/global/color/ColorCircle.vue'
 import MemberSmallCard from '../../../components/global/members/MemberSmallCard.vue'
+import { $member, MemberDtoInterface } from '@plurali/api-client'
+import { wrapRequest } from '../../../utils/api'
 
 export default defineComponent({
   components: { MemberSmallCard, Color, Fetchable },
   setup() {
-    const members = ref<UserMemberDto[] | null | false>(false)
+    const members = ref<MemberDtoInterface[] | null | false>(false)
 
     const fetchMembers = async () => {
       if (members.value === null) return
       members.value = null
-      try {
-        const res = (await getMembers()).data
-        if (!res.success) throw new Error(res.error)
+     
+      const systemMembers = await wrapRequest(() => $member.getMembers());
 
-        members.value = res.data.members
-      } catch (e) {
-        members.value = false
-        flash(formatError(e), FlashType.Danger, true)
-      }
+      members.value = systemMembers;
     }
 
     onMounted(() => fetchMembers())

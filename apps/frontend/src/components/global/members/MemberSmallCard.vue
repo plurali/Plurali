@@ -1,25 +1,11 @@
 <template>
-  <router-link
-    :disabled="loading"
-    :aria-disabled="loading"
-    @click.ctrl.prevent="toggleVisibility"
-    :to="
-      isDashboard ? `/dashboard/member/${systemMember.id}` : `/${$route.params.systemId}/m/${systemMember.data.slug}`
-    "
-    class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4 transition"
-    :class="[
-      isDashboard ? (systemMember.data.visible ? 'border-l-green-500' : 'border-l-red-500') : '',
-      loading && 'bg-gray-200',
-    ]"
-    :style="!isDashboard && systemMember.color ? { borderLeftColor: systemMember.color } : {}"
-  >
-    <img
-      v-if="systemMember.avatar"
-      :src="systemMember.avatar"
-      :alt="systemMember.name"
-      class="w-16 h-16 rounded-full object-cover"
-      loading="lazy"
-    />
+  <router-link :disabled="loading" :aria-disabled="loading" @click.ctrl.prevent="toggleVisibility" :to="isDashboard ? `/dashboard/member/${systemMember.pluralId}` : `/${$route.params.systemId}/m/${systemMember.data.slug}`
+    " class="px-4 py-2 border border-l-4 rounded-2xl text-sm flex items-center gap-4 transition" :class="[
+    isDashboard ? (isPublic ? 'border-l-green-500' : 'border-l-red-500') : '',
+    loading && 'bg-gray-200',
+  ]" :style="!isDashboard && systemMember.color ? { borderLeftColor: systemMember.color } : {}">
+    <img v-if="systemMember.avatar" :src="systemMember.avatar" :alt="systemMember.name"
+      class="w-16 h-16 rounded-full object-cover" loading="lazy" />
     <Color v-else :color="systemMember.color ?? '#e2e8f0'" class="flex-shrink-0 !w-16 !h-16 opacity-25" />
     <div>
       <h2 class="text-xl font-medium">
@@ -35,13 +21,12 @@
 <script lang="ts">
 import Color from '../color/ColorCircle.vue';
 import { computed, defineComponent, PropType, ref } from 'vue';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { useRoute } from 'vue-router';
-import { updateMember } from '../../../api/system';
 import { flash, FlashType } from '../../../store';
-import { formatError } from '../../../api';
-import { string } from '../../../api/fields';
 import Sanitized from '../Sanitized.vue';
+import { $member, MemberDtoInterface } from '@plurali/api-client';
+import { formatString, isVisibilityPublic, toggleVisibilityState } from '@plurali/common';
+import { wrapRequest } from '../../../utils/api';
 
 export default defineComponent({
   components: {
@@ -50,7 +35,7 @@ export default defineComponent({
   },
   props: {
     member: {
-      type: Object as PropType<UserMemberDto>,
+      type: Object as PropType<MemberDtoInterface>,
       required: true,
     },
     modifiable: {
@@ -58,39 +43,42 @@ export default defineComponent({
       default: () => false,
     },
   },
-  setup({ member: _member, modifiable }) {
-    const systemMember = ref<UserMemberDto>(_member);
+  setup({ member: _member }) {
+    const systemMember = ref<MemberDtoInterface>(_member);
 
     const loading = ref(false);
 
     const route = useRoute();
 
     const toggleVisibility = async () => {
-      if (!modifiable || loading.value) return;
+      if (loading.value || !systemMember.value) return;
       loading.value = true;
 
-      try {
-        const res = (
-          await updateMember(systemMember.value.id, {
-            visible: !systemMember.value.data.visible,
-          })
-        ).data;
-        if (!res.success) throw new Error(res.error);
+      const newVisibility = toggleVisibilityState(systemMember.value.data.visibility);
 
-        systemMember.value = res.data.member;
-        loading.value = false;
-      } catch (e) {
-        flash(formatError(e), FlashType.Danger, true);
-        loading.value = false;
+      const updatedMember = await wrapRequest(() =>
+        $member.updateMember(systemMember.value.pluralId, {
+          visibility: newVisibility,
+        })
+      );
+
+      loading.value = false;
+
+      if (!updatedMember) {
+        flash('An error has occurred while changing the visibility state.', FlashType.Danger);
+        return;
       }
+
+      systemMember.value = updatedMember;
     };
 
     return {
       systemMember,
       toggleVisibility,
       loading,
-      string,
+      formatString,
       isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isPublic: computed(() => isVisibilityPublic(systemMember.value)),
     };
   },
 });

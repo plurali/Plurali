@@ -12,7 +12,7 @@
       <svg
         v-if="typeof bg !== 'string'"
         id="visual"
-        class="absolute w-screen h-screen h-full top-0 object-cover object-center -z-10 transition-all"
+        class="absolute w-screen h-screen top-0 object-cover object-center -z-10 transition-all"
         viewBox="0 0 900 600"
         xmlns="http://www.w3.org/2000/svg"
         @load="onLoad"
@@ -120,7 +120,7 @@
 import { computed, defineComponent, onBeforeUnmount, ref, watch } from 'vue';
 import { background, flashes, goBack } from '../store';
 import Flash from '../components/Flash.vue';
-import { isUrl, generateShades } from '../utils';
+import { isUrl, generateShades } from '@plurali/common';
 import Sanitized from '../components/global/Sanitized.vue';
 
 export default defineComponent({
