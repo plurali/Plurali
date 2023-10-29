@@ -6,6 +6,8 @@ export interface MemberDtoInterface extends IdentifiableEntityDtoInterface {
 
     systemRef: string;
 
+    pluralId: string;
+
     name: string;
 
     pronouns: string | null;

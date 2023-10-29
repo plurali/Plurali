@@ -18,6 +18,9 @@ export class MemberDto implements MemberDtoInterface {
   public systemId: string;
 
   @ApiProperty()
+  public pluralId: string;
+
+  @ApiProperty()
   public systemRef: string;
 
   @ApiProperty()
@@ -41,7 +44,8 @@ export class MemberDto implements MemberDtoInterface {
   constructor(
     id: string,
     systemId: string,
-    systemSlug: string,
+    systemRef: string,
+    pluralId: string,
     name: string,
     pronouns: string | null,
     color: string | null,
@@ -51,7 +55,8 @@ export class MemberDto implements MemberDtoInterface {
   ) {
     this.id = id;
     this.systemId = systemId;
-    this.systemRef = systemSlug;
+    this.systemRef = systemRef;
+    this.pluralId = pluralId;
     this.name = name;
     this.pronouns = pronouns;
     this.color = color;
@@ -65,6 +70,7 @@ export class MemberDto implements MemberDtoInterface {
       member.id,
       member.systemId,
       member.system.slug,
+      member.pluralId,
       plural.content.name,
       plural.content.pronouns,
       plural.content.color,
