@@ -18,9 +18,7 @@ import { NotificationDto } from '@app/v2/dto/notification/NotificationDto';
 @ApiSecurity('bearer')
 @ApiExtraModels(NotificationDto)
 export class NotificationController extends BaseController {
-  constructor(
-    private readonly notifications: NotificationService
-  ) {
+  constructor(private readonly notifications: NotificationService) {
     super();
   }
 
@@ -34,5 +32,4 @@ export class NotificationController extends BaseController {
 
     return this.data(notifications.map(NotificationDto.from));
   }
-
 }

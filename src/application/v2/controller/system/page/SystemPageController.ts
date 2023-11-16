@@ -55,7 +55,7 @@ export class SystemPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string
+    @Param('page') pageId: string,
   ): Promise<ApiDataResponse<PageDto>> {
     return this.data(PageDto.from(await this.findOrFail(system, user, pageId)));
   }
@@ -71,7 +71,7 @@ export class SystemPageController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('page') pageId: string,
-    @Body() data: UpdatePageRequest
+    @Body() data: UpdatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     let page = await this.findOrFail(system, user, pageId);
 
@@ -111,7 +111,7 @@ export class SystemPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string
+    @Param('page') pageId: string,
   ): Promise<ApiDataResponse<Ok>> {
     await this.pages.delete({
       where: {
@@ -128,7 +128,7 @@ export class SystemPageController extends BaseController {
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Body() data: CreatePageRequest
+    @Body() data: CreatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     const page = await this.pages.create({
       data: {

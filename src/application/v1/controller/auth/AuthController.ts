@@ -31,8 +31,8 @@ export class AuthController {
     private readonly userService: UserService,
     private readonly users: UserRepository,
     private readonly hasher: Hasher,
-    private readonly cache: CacheService
-  ) { }
+    private readonly cache: CacheService,
+  ) {}
 
   @Post('/login')
   @ApiResponse(ok(200, AuthResponse))
@@ -49,8 +49,8 @@ export class AuthController {
     return Status.ok(
       new AuthResponse(
         UserDto.from(user),
-        await this.signer.signAsync({ ...new JwtData(user.id) }, { secret: jwtConfig.secret })
-      )
+        await this.signer.signAsync({ ...new JwtData(user.id) }, { secret: jwtConfig.secret }),
+      ),
     );
   }
 
@@ -58,7 +58,11 @@ export class AuthController {
   @ApiResponse(ok(200, AuthResponse))
   @ApiResponse(error(400, StatusMap.UsernameAlreadyUsed))
   public async register(@Body() credentials: RegisterRequest): Promise<Ok<AuthResponse>> {
-    if (!!(await this.users.findFirst({ where: { OR: [{ username: credentials.username }, { email: credentials.email }] } }))) {
+    if (
+      !!(await this.users.findFirst({
+        where: { OR: [{ username: credentials.username }, { email: credentials.email }] },
+      }))
+    ) {
       throw new StatusException(StatusMap.UsernameAlreadyUsed);
     }
 
@@ -71,7 +75,7 @@ export class AuthController {
     });
 
     await this.userService.sendVerificationEmail(user);
-    
+
     return await this.login(credentials);
   }
 

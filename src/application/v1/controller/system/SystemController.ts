@@ -34,7 +34,7 @@ export class SystemController {
     private readonly systems: SystemRepository,
     private readonly fields: FieldRepository,
     private readonly rest: PluralRestService,
-    private readonly storage: StorageService
+    private readonly storage: StorageService,
   ) {}
 
   @UseGuards(SystemGuard)
@@ -54,7 +54,7 @@ export class SystemController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Body() data: UpdateSystemRequest
+    @Body() data: UpdateSystemRequest,
   ): Promise<Ok<SystemResponse>> {
     const update: Prisma.SystemUpdateInput = {};
 
@@ -108,7 +108,7 @@ export class SystemController {
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @UploadedFile() file: MemoryStorageFile
+    @UploadedFile() file: MemoryStorageFile,
   ) {
     if (!file.mimetype.startsWith('image/')) {
       throw new UnsupportedFileException();

@@ -22,7 +22,11 @@ import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 @ApiTags('SystemMemberPublicV1')
 @ApiExtraModels(SystemMembersResponse, SystemMemberResponse)
 export class PublicSystemMemberController {
-  constructor(private system: SystemRepository, private member: MemberRepository, private plural: PluralRestService) {}
+  constructor(
+    private system: SystemRepository,
+    private member: MemberRepository,
+    private plural: PluralRestService,
+  ) {}
 
   @Get('/')
   @ApiResponse(ok(200, SystemMembersResponse))
@@ -51,7 +55,7 @@ export class PublicSystemMemberController {
   @ApiResponse(error(400, StatusMap.InvalidRequest))
   public async view(
     @Param('systemId') systemId: string,
-    @Param('memberId') memberId: string
+    @Param('memberId') memberId: string,
   ): Promise<Ok<SystemMemberResponse>> {
     const system = await this.system.findPublic(systemId);
     if (!system) throw new ResourceNotFoundException();
@@ -70,7 +74,7 @@ export class PublicSystemMemberController {
   protected async makeDto(
     member: Member,
     system: SystemWithFields & SystemWithUser,
-    plural?: PluralMemberEntry[]
+    plural?: PluralMemberEntry[],
   ): Promise<UserMemberDto> {
     const extendedMember = assignSystem(member, system);
 

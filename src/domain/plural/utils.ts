@@ -27,7 +27,7 @@ export enum MemberFieldType {
 export const parseAvatar = (
   data: AvatarAttrs & {
     uid: string;
-  }
+  },
 ): string | null =>
   data.avatarUuid
     ? `https://spaces.apparyllis.com/avatars/${data.uid}/${data.avatarUuid}`

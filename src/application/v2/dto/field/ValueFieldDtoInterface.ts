@@ -1,5 +1,5 @@
-import { FieldDtoInterface } from "./FieldDtoInterface";
+import { FieldDtoInterface } from './FieldDtoInterface';
 
 export interface ValueFieldDtoInterface extends FieldDtoInterface {
-    value: string;
+  value: string;
 }

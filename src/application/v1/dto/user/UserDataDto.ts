@@ -27,7 +27,7 @@ export class UserDataDto implements HasBackground {
     backgroundColor: string | null,
     backgroundImage: string | null,
     lastTimeAssetChanged: Date,
-    visible: boolean
+    visible: boolean,
   ) {
     this.slug = slug;
     this.customDescription = customDescription;
@@ -46,7 +46,7 @@ export class UserDataDto implements HasBackground {
       system.backgroundColor,
       system.backgroundImage,
       system.assetsUpdatedAt,
-      system.visibility === Visibility.Public
+      system.visibility === Visibility.Public,
     );
   }
 }

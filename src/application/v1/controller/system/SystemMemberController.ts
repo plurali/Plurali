@@ -38,7 +38,7 @@ export class SystemMemberController {
     private readonly members: MemberRepository,
     private readonly fields: FieldRepository,
     private readonly rest: PluralRestService,
-    private readonly storage: StorageService
+    private readonly storage: StorageService,
   ) {}
 
   @UseGuards(SystemGuard)
@@ -76,12 +76,12 @@ export class SystemMemberController {
   public async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Ok<SystemMemberResponse>> {
     return Status.ok(
       new SystemMemberResponse(
-        await this.makeDto(await this.findOrFail(system, id), await this.makeExtendedSystem(system, user))
-      )
+        await this.makeDto(await this.findOrFail(system, id), await this.makeExtendedSystem(system, user)),
+      ),
     );
   }
 
@@ -94,7 +94,7 @@ export class SystemMemberController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('id') id: string,
-    @Body() data: UpdateSystemMemberRequest
+    @Body() data: UpdateSystemMemberRequest,
   ): Promise<Ok<SystemMemberResponse>> {
     let member = await this.findOrFail(system, id);
 
@@ -135,7 +135,7 @@ export class SystemMemberController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('id') id: string,
-    @UploadedFile() file: MemoryStorageFile
+    @UploadedFile() file: MemoryStorageFile,
   ) {
     let member = await this.findOrFail(system, id);
 
@@ -144,7 +144,7 @@ export class SystemMemberController {
     }
 
     const key = `${StoragePrefix.Userdata}/${user.id}/${system.id}/${member.id}/background.${mime.extension(
-      file.mimetype
+      file.mimetype,
     )}`;
 
     const result = await this.storage.store(key, file.buffer, true);
@@ -166,7 +166,7 @@ export class SystemMemberController {
     const warning = result.cacheFail ? StatusMap.CacheDemand : undefined;
 
     return Status.ok(
-      new SystemMemberResponse(await this.makeDto(member, await this.makeExtendedSystem(system, user)), warning)
+      new SystemMemberResponse(await this.makeDto(member, await this.makeExtendedSystem(system, user)), warning),
     );
   }
 
@@ -192,14 +192,14 @@ export class SystemMemberController {
         where: {
           systemId: system.id,
         },
-      })
+      }),
     );
   }
 
   protected async makeDto(
     member: Member,
     system: SystemWithFields & SystemWithUser,
-    plural?: PluralMemberEntry[]
+    plural?: PluralMemberEntry[],
   ): Promise<UserMemberDto> {
     const extendedMember = assignSystem(member, system);
 

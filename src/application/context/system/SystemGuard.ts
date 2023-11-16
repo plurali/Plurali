@@ -13,7 +13,11 @@ import { NotAuthenticatedException } from '@app/v1/exception/NotAuthenticatedExc
  */
 @Injectable()
 export class SystemGuard extends AuthGuard {
-  constructor(signer: JwtService, users: UserRepository, private readonly systems: SystemRepository) {
+  constructor(
+    signer: JwtService,
+    users: UserRepository,
+    private readonly systems: SystemRepository,
+  ) {
     super(signer, users);
   }
 

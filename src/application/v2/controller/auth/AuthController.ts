@@ -32,7 +32,7 @@ export class AuthController extends BaseController {
     private readonly userService: UserService,
     private readonly users: UserRepository,
     private readonly hasher: Hasher,
-    private readonly cache: CacheService
+    private readonly cache: CacheService,
   ) {
     super();
   }
@@ -51,7 +51,7 @@ export class AuthController extends BaseController {
     await this.cache.clearUser(user);
 
     return this.data(
-      new AuthDto(await this.signer.signAsync({ ...new JwtData(user.id) }, { secret: jwtConfig.secret }))
+      new AuthDto(await this.signer.signAsync({ ...new JwtData(user.id) }, { secret: jwtConfig.secret })),
     );
   }
 
@@ -60,7 +60,11 @@ export class AuthController extends BaseController {
   @ApiResponse(ok(200, AuthDto))
   @ApiResponse(error(400, ApiError.UsernameOrEmailTaken))
   public async register(@Body() credentials: RegisterRequest): Promise<ApiDataResponse<AuthDto>> {
-    if (!!(await this.users.findFirst({ where: { OR: [{ username: credentials.username }, { email: credentials.email }] } }))) {
+    if (
+      !!(await this.users.findFirst({
+        where: { OR: [{ username: credentials.username }, { email: credentials.email }] },
+      }))
+    ) {
       throw new UsernameOrEmailTakenException();
     }
 

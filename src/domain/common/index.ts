@@ -6,7 +6,7 @@ import { MemberFieldType } from '@domain/plural/utils';
 
 export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
-  key = 'id'
+  key = 'id',
 ): T => (typeof val === 'object' ? (val as any)[key] : val);
 
 export const safeStringify = (val: unknown) => {

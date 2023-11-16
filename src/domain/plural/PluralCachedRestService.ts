@@ -12,7 +12,10 @@ import { assignSystem } from '@domain/common';
 
 @Injectable()
 export class PluralCachedRestService extends PluralRestService {
-  constructor(config: ConfigService<Config>, private readonly cache: CacheRepository) {
+  constructor(
+    config: ConfigService<Config>,
+    private readonly cache: CacheRepository,
+  ) {
     super(config);
   }
 
@@ -29,7 +32,7 @@ export class PluralCachedRestService extends PluralRestService {
             await this.store(CacheNamespace.Member, `${k}_MemberSID${member.id}`, member, e);
           }
           return members;
-        }
+        },
       )
     ).data;
   }
@@ -43,7 +46,7 @@ export class PluralCachedRestService extends PluralRestService {
       Object.entries(
         (
           await this.cache.cache.store.mget(
-            ...members.map(m => CacheRepository.createKey(CacheNamespace.Member, key(m)))
+            ...members.map(m => CacheRepository.createKey(CacheNamespace.Member, key(m))),
           )
         )
           .map(data => {
@@ -53,8 +56,8 @@ export class PluralCachedRestService extends PluralRestService {
             return { [obj.id]: obj };
           })
           .filter(data => !!data)
-          .reduce((prev, curr) => Object.assign(prev, curr), {})
-      )
+          .reduce((prev, curr) => Object.assign(prev, curr), {}),
+      ),
     );
 
     (
@@ -69,7 +72,7 @@ export class PluralCachedRestService extends PluralRestService {
 
             return data;
           })
-          .filter(data => !!data)
+          .filter(data => !!data),
       )
     ).forEach(r => result.set(r.id, r));
 
@@ -81,7 +84,7 @@ export class PluralCachedRestService extends PluralRestService {
       await this.cache.lazy<PluralMemberEntry>(
         CacheNamespace.Member,
         `PluraliUser${member.system.user.id}_OwnerSID${member.pluralParentId}_MemberSID${member.pluralId}`,
-        () => super.findMember(member)
+        () => super.findMember(member),
       )
     ).data;
   }
@@ -91,7 +94,7 @@ export class PluralCachedRestService extends PluralRestService {
       await this.cache.lazy<PluralUserEntry>(
         CacheNamespace.System,
         `PluraliUser${userId}_Override${override ?? 'Unset'}`,
-        () => super.findUserForId(userId, Authorization, override)
+        () => super.findUserForId(userId, Authorization, override),
       )
     ).data;
   }

@@ -27,7 +27,7 @@ export class MemberDataDto implements MemberDataDtoInterface {
     description: string | null,
     assetsUpdatedAt: Date,
     visibility: Visibility,
-    background: BackgroundDataInterface
+    background: BackgroundDataInterface,
   ) {
     this.slug = slug;
     this.description = description;
@@ -45,7 +45,7 @@ export class MemberDataDto implements MemberDataDtoInterface {
       BackgroundData.from({
         ...member,
         backgroundType: convertBackgroundType(member.backgroundType),
-      })
+      }),
     );
   }
 }

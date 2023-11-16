@@ -1,3 +1,3 @@
 export interface VerifyUserEmailRequestInterface {
-    code: string;
+  code: string;
 }

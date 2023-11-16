@@ -51,7 +51,7 @@ export class MemberDto implements MemberDtoInterface {
     color: string | null,
     description: string | null,
     data: MemberDataDtoInterface,
-    avatar: string | null = null
+    avatar: string | null = null,
   ) {
     this.id = id;
     this.systemId = systemId;
@@ -76,7 +76,7 @@ export class MemberDto implements MemberDtoInterface {
       plural.content.color,
       plural.content.desc,
       MemberDataDto.from(member),
-      parseAvatar(plural.content)
+      parseAvatar(plural.content),
     );
   }
 }

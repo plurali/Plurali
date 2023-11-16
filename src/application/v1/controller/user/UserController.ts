@@ -30,8 +30,8 @@ export class UserController {
     private readonly cache: CacheService,
     private readonly userService: UserService,
     private readonly users: UserRepository,
-    private readonly systems: SystemRepository
-  ) { }
+    private readonly systems: SystemRepository,
+  ) {}
 
   @UseGuards(AuthGuard)
   @Get('/')
@@ -57,9 +57,9 @@ export class UserController {
           where: {
             pluralId: plural.id,
             NOT: {
-              userId: user.id
-            }
-          }
+              userId: user.id,
+            },
+          },
         }));
 
         if (alreadyAssociated) {

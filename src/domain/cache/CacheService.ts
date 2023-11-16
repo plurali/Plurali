@@ -22,7 +22,7 @@ export class CacheService {
     private readonly prisma: PrismaService,
     private readonly repository: CacheRepository,
     private readonly logger: ConsoleLogger,
-    @Inject('PluralRestServiceBase') private readonly plural: PluralRestService
+    @Inject('PluralRestServiceBase') private readonly plural: PluralRestService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -232,7 +232,7 @@ export class CacheService {
     if (useTransacction) {
       await this.prisma.$transaction(
         async tx => await this.rebuildMembers(Object.assign(user.system, { user }), tx),
-        txConfig
+        txConfig,
       );
       await this.prisma.$transaction(async tx => await this.rebuildFields(user.system, pluralUser, tx), txConfig);
     } else {
@@ -272,7 +272,7 @@ export class CacheService {
   static createMemberKey(member: Member) {
     return CacheRepository.createKey(
       CacheNamespace.Member,
-      `SystemSID${member.pluralParentId}_MemberSID${member.pluralId}`
+      `SystemSID${member.pluralParentId}_MemberSID${member.pluralId}`,
     );
   }
 
@@ -292,7 +292,7 @@ export class CacheService {
   async clearMember(member: Member): Promise<void> {
     await this.repository.delete(
       CacheNamespace.Member,
-      `SystemSID${member.pluralParentId}_MemberSID${member.pluralId}`
+      `SystemSID${member.pluralParentId}_MemberSID${member.pluralId}`,
     );
   }
 

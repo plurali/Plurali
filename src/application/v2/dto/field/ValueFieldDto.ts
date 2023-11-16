@@ -8,12 +8,19 @@ import { ValueFieldDtoInterface } from './ValueFieldDtoInterface';
 import { FieldDataDtoInterface } from './FieldDataDtoInterface';
 
 export class ValueFieldDto extends FieldDto implements ValueFieldDtoInterface {
-  public type = "field_value";
+  public type = 'field_value';
 
   @ApiProperty()
   public value: string;
 
-  constructor(id: string, name: string, value: string, position: number, type: MemberFieldType, data: FieldDataDtoInterface) {
+  constructor(
+    id: string,
+    name: string,
+    value: string,
+    position: number,
+    type: MemberFieldType,
+    data: FieldDataDtoInterface,
+  ) {
     super(id, name, position, type, data);
     this.value = value;
   }
@@ -25,7 +32,7 @@ export class ValueFieldDto extends FieldDto implements ValueFieldDtoInterface {
       value,
       field.position,
       convertFieldType(field.type),
-      new FieldDataDto(field.visibility)
+      new FieldDataDto(field.visibility),
     );
   }
 }

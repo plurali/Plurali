@@ -46,7 +46,7 @@ export class SystemFieldController {
   async update(
     @CurrentSystem() system: System,
     @Param('fieldId') id: string,
-    @Body() data: UpdateSystemFieldRequest
+    @Body() data: UpdateSystemFieldRequest,
   ): Promise<Ok<SystemFieldResponse>> {
     let field = await this.findOrFail(system, id);
     const update: Prisma.FieldUpdateInput = {};

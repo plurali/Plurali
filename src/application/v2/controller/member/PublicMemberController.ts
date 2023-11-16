@@ -27,7 +27,7 @@ export class PublicMemberController extends BaseController {
   constructor(
     private system: SystemRepository,
     private member: MemberRepository,
-    @Inject(PluralRestService) private plural: PluralCachedRestService
+    @Inject(PluralRestService) private plural: PluralCachedRestService,
   ) {
     super();
   }
@@ -42,7 +42,7 @@ export class PublicMemberController extends BaseController {
   public async list(
     @Param('system') systemId: string,
     @Page() page: number,
-    @Take() take: number
+    @Take() take: number,
   ): Promise<ApiPaginatedDataResponse<MemberDto>> {
     const query = this.createPaginationQuery(page, take);
 
@@ -56,7 +56,7 @@ export class PublicMemberController extends BaseController {
       await this.makeDtos(system.members, system),
       200,
       query,
-      await this.member.countPublic(system)
+      await this.member.countPublic(system),
     );
   }
 
@@ -67,7 +67,7 @@ export class PublicMemberController extends BaseController {
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async view(
     @Param('system') systemId: string,
-    @Param('member') memberId: string
+    @Param('member') memberId: string,
   ): Promise<ApiDataResponse<MemberDto>> {
     const system = await this.system.findPublicBase(systemId, {
       user: true,

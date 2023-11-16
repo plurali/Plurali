@@ -20,7 +20,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     private readonly queue: Queue<UpdateMemberQueueData>,
     private readonly db: PrismaService,
     private readonly logger: ConsoleLogger,
-    readonly config: ConfigService<ConfigInterface>
+    readonly config: ConfigService<ConfigInterface>,
   ) {
     this.logger.setContext(this.constructor.name);
     this.endpoint = config.get<PluralConfig>('plural').socketEndpoint;
@@ -78,7 +78,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
         },
         this.queue,
         this.endpoint,
-        this.logger
+        this.logger,
       );
       watcher.client.connect();
 
@@ -87,7 +87,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     } catch (e) {
       this.logger.error(
         `[watcher-bag] failed to create a watcher for ${user.id}:`,
-        (e as any)?.message ?? 'unknown cause'
+        (e as any)?.message ?? 'unknown cause',
       );
       return null;
     }

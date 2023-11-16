@@ -7,17 +7,17 @@ import { UserCredentials } from './types';
 
 @Injectable()
 export class UserAuthenticator extends Authenticator<UserCredentials, User> {
-  constructor(private users: UserRepository, private hasher: Hasher) {
+  constructor(
+    private users: UserRepository,
+    private hasher: Hasher,
+  ) {
     super();
   }
 
   async attempt({ username, password }: UserCredentials): Promise<User | null> {
     const user = await this.users.findFirst({
       where: {
-        OR: [
-          { username },
-          { email: username }
-        ]
+        OR: [{ username }, { email: username }],
       },
     });
 

@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export interface SuccessData extends Record<string, unknown> {
   warning?: string;
@@ -11,7 +11,7 @@ export const StatusMap = {
   PluralKeyNotSpecified: 'Plural key not specified',
   InvalidCredentials: 'Invalid credentials',
   UsernameAlreadyUsed: 'Username or email is already used',
-  EmailTaken: "The provided email address is already taken",
+  EmailTaken: 'The provided email address is already taken',
   InvalidOverride: 'Invalid Override Plural ID',
   ResourceNotFound: 'Resource not found',
   Unauthorized: 'Unauthorized',
@@ -20,7 +20,7 @@ export const StatusMap = {
   MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form',
   CacheDemand:
     'Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.',
-  SystemAlreadyAssociated: 'The provided system is already associated to another account.'
+  SystemAlreadyAssociated: 'The provided system is already associated to another account.',
 };
 
 export type StatusMapType = typeof StatusMap;

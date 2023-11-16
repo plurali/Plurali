@@ -16,7 +16,10 @@ import { BaseController } from '../../BaseController';
 })
 @ApiTags('SystemPagePublic')
 export class PublicSystemPageController extends BaseController {
-  constructor(private readonly pages: PageRepository, private readonly systems: SystemRepository) {
+  constructor(
+    private readonly pages: PageRepository,
+    private readonly systems: SystemRepository,
+  ) {
     super();
   }
 

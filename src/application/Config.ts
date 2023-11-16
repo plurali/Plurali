@@ -127,7 +127,7 @@ export class Config implements ConfigInterface {
   protected JWT_SECRET: string;
 
   @IsString()
-  protected EMAIL_FROM: string = "plurali@plurali.icu";
+  protected EMAIL_FROM: string = 'plurali@plurali.icu';
 
   @IsString()
   protected EMAIL_TRANSPORT: string;
@@ -154,7 +154,7 @@ export class Config implements ConfigInterface {
     return {
       from: this.EMAIL_FROM,
       transport: this.EMAIL_TRANSPORT,
-    }
+    };
   }
 
   get db(): string {

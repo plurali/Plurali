@@ -52,7 +52,7 @@ export class UserMemberDto {
     description: string | null,
     fields: UserValueFieldDto[],
     data: UserMemberDataDto,
-    avatar: string | null = null
+    avatar: string | null = null,
   ) {
     this.id = id;
     this.systemId = systemId;
@@ -86,7 +86,7 @@ export class UserMemberDto {
         })
         .filter(v => !!v),
       UserMemberDataDto.from(member),
-      parseAvatar(plural.content)
+      parseAvatar(plural.content),
     );
   }
 }

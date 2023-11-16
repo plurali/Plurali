@@ -41,7 +41,7 @@ export class SystemDto {
     color: string | null,
     description: string | null,
     avatar: string | null = null,
-    data: UserDataDto
+    data: UserDataDto,
   ) {
     this.id = id;
     this.lastModified = lastModified;
@@ -62,7 +62,7 @@ export class SystemDto {
       plural.content.color,
       plural.content.desc,
       parseAvatar(plural.content),
-      UserDataDto.from(system)
+      UserDataDto.from(system),
     );
   }
 }

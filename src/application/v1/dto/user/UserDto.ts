@@ -27,13 +27,13 @@ export class UserDto {
   public admin: boolean;
 
   constructor(
-    id: string, 
-    username: string, 
+    id: string,
+    username: string,
     email: string | null,
     verified: boolean,
-    pluralKey: string | null, 
-    overridePluralId: string | null, 
-    admin: boolean
+    pluralKey: string | null,
+    overridePluralId: string | null,
+    admin: boolean,
   ) {
     this.id = id;
     this.username = username;
@@ -52,7 +52,7 @@ export class UserDto {
       user.emailVerified,
       user.pluralAccessToken ?? null,
       user.pluralOverride ?? null,
-      user.role === UserRole.Admin
+      user.role === UserRole.Admin,
     );
   }
 }

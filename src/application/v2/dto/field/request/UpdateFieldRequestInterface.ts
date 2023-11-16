@@ -1,5 +1,5 @@
-import { Visibility } from "@prisma/client";
+import { Visibility } from '@prisma/client';
 
 export interface UpdateFieldRequestInterface {
-    visibility: Visibility | null;
+  visibility: Visibility | null;
 }

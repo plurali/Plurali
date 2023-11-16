@@ -37,7 +37,7 @@ export class PageDto {
       page.ownerId,
       page.name,
       page.content,
-      page.visibility === Visibility.Public
+      page.visibility === Visibility.Public,
     );
   }
 }

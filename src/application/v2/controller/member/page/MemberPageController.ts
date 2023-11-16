@@ -24,7 +24,10 @@ import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 @ApiTags('MemberPage')
 @ApiSecurity('bearer')
 export class MemberPageController extends BaseController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {
+  constructor(
+    private readonly pages: PageRepository,
+    private readonly members: MemberRepository,
+  ) {
     super();
   }
 
@@ -58,7 +61,7 @@ export class MemberPageController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('member') memberId: string,
-    @Param('page') pageId: string
+    @Param('page') pageId: string,
   ): Promise<ApiDataResponse<PageDto>> {
     return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, pageId)));
   }
@@ -75,7 +78,7 @@ export class MemberPageController extends BaseController {
     @CurrentUser() user: User,
     @Param('page') pageId: string,
     @Param('member') memberId: string,
-    @Body() data: UpdatePageRequest
+    @Body() data: UpdatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -118,7 +121,7 @@ export class MemberPageController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('member') memberId: string,
-    @Param('page') pageId: string
+    @Param('page') pageId: string,
   ): Promise<ApiDataResponse<Ok>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -142,7 +145,7 @@ export class MemberPageController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('member') memberId: string,
-    @Body() data: CreatePageRequest
+    @Body() data: CreatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
 

@@ -8,7 +8,10 @@ import { FastifyRequest } from 'fastify';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly signer: JwtService, private readonly users: UserRepository) {}
+  constructor(
+    private readonly signer: JwtService,
+    private readonly users: UserRepository,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();

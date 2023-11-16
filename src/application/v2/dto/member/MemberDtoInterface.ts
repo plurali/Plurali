@@ -1,22 +1,22 @@
-import { IdentifiableEntityDtoInterface } from "@app/v2/types/response";
-import { MemberDataDtoInterface } from "./MemberDataDtoInterface";
+import { IdentifiableEntityDtoInterface } from '@app/v2/types/response';
+import { MemberDataDtoInterface } from './MemberDataDtoInterface';
 
 export interface MemberDtoInterface extends IdentifiableEntityDtoInterface {
-    systemId: string;
+  systemId: string;
 
-    systemRef: string;
+  systemRef: string;
 
-    pluralId: string;
+  pluralId: string;
 
-    name: string;
+  name: string;
 
-    pronouns: string | null;
+  pronouns: string | null;
 
-    color: string | null;
+  color: string | null;
 
-    description: string | null;
+  description: string | null;
 
-    data: MemberDataDtoInterface;
+  data: MemberDataDtoInterface;
 
-    avatar: string | null;
+  avatar: string | null;
 }

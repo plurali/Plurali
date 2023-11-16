@@ -33,7 +33,7 @@ export class SystemController extends BaseController {
   constructor(
     private readonly systems: SystemRepository,
     private readonly rest: PluralRestService,
-    private readonly storage: StorageService
+    private readonly storage: StorageService,
   ) {
     super();
   }
@@ -57,7 +57,7 @@ export class SystemController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Body() data: UpdateSystemRequest
+    @Body() data: UpdateSystemRequest,
   ): Promise<ApiDataResponse<SystemDto>> {
     const update: Prisma.SystemUpdateInput = {};
 
@@ -106,7 +106,7 @@ export class SystemController extends BaseController {
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @UploadedFile() file: MemoryStorageFile
+    @UploadedFile() file: MemoryStorageFile,
   ) {
     if (!file.mimetype.startsWith('image/')) {
       throw new UnsupportedFileException();
@@ -133,7 +133,7 @@ export class SystemController extends BaseController {
     return this.data(
       await this.makeDto(system, user),
       200,
-      result.cacheFail ? { warning: ApiWarning.CacheDemand } : {}
+      result.cacheFail ? { warning: ApiWarning.CacheDemand } : {},
     );
   }
 }

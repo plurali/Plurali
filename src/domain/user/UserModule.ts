@@ -9,4 +9,4 @@ import { UserVerificationRepository } from './verification/UserVerificationRepos
   providers: [UserService],
   exports: [PrismaModule, UserService],
 })
-export class UserModule { }
+export class UserModule {}

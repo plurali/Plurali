@@ -39,7 +39,7 @@ export abstract class BaseController {
     statusCode = 200,
     query: PaginationQuery,
     count: number,
-    meta: ApiResponseMeta = {}
+    meta: ApiResponseMeta = {},
   ): ApiPaginatedDataResponse<I> {
     return {
       success: true,

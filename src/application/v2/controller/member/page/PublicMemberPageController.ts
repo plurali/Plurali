@@ -16,7 +16,10 @@ import { BaseController } from '../../BaseController';
 })
 @ApiTags('MemberPagePublic')
 export class PublicMemberPageController extends BaseController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {
+  constructor(
+    private readonly pages: PageRepository,
+    private readonly members: MemberRepository,
+  ) {
     super();
   }
 
@@ -24,7 +27,10 @@ export class PublicMemberPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async list(@Param('system') systemId: string, @Param('member') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
+  async list(
+    @Param('system') systemId: string,
+    @Param('member') memberId: string,
+  ): Promise<ApiDataResponse<PageDto[]>> {
     const member = await this.findMemberOrFail(systemId, memberId);
 
     const pages = await this.pages.findMany({
@@ -42,7 +48,11 @@ export class PublicMemberPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async view(@Param('system') systemId: string, @Param('member') memberId: string, @Param('page') pageId: string): Promise<ApiDataResponse<PageDto>> {
+  async view(
+    @Param('system') systemId: string,
+    @Param('member') memberId: string,
+    @Param('page') pageId: string,
+  ): Promise<ApiDataResponse<PageDto>> {
     return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(systemId, memberId), pageId)));
   }
 

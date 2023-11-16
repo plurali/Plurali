@@ -50,7 +50,7 @@ export class MemberController extends BaseController {
   constructor(
     private readonly members: MemberRepository,
     @Inject(PluralRestService) private readonly plural: PluralCachedRestService,
-    private readonly storage: StorageService
+    private readonly storage: StorageService,
   ) {
     super();
   }
@@ -65,7 +65,7 @@ export class MemberController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Page() page: number,
-    @Take() take: number
+    @Take() take: number,
   ): Promise<ApiPaginatedDataResponse<MemberDto>> {
     const query = this.createPaginationQuery(page, take);
 
@@ -82,7 +82,7 @@ export class MemberController extends BaseController {
       query,
       await this.members.count({
         where: { systemId: system.id },
-      })
+      }),
     );
   }
 
@@ -95,10 +95,10 @@ export class MemberController extends BaseController {
   public async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<ApiDataResponse<MemberDto>> {
     return this.data(
-      await this.makeDto(await this.findOrFail(system, id), await this.makeSystemWithUser(system, user))
+      await this.makeDto(await this.findOrFail(system, id), await this.makeSystemWithUser(system, user)),
     );
   }
 
@@ -112,7 +112,7 @@ export class MemberController extends BaseController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('member') memberId: string,
-    @Body() data: UpdateMemberRequest
+    @Body() data: UpdateMemberRequest,
   ): Promise<ApiDataResponse<MemberDto>> {
     let member = await this.findOrFail(system, memberId);
 
@@ -149,14 +149,14 @@ export class MemberController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(
-    error(400, ApiError.InvalidPluralKey, ApiError.InvalidRequest, ApiError.UnsupportedFile, ApiError.UploadFailed)
+    error(400, ApiError.InvalidPluralKey, ApiError.InvalidRequest, ApiError.UnsupportedFile, ApiError.UploadFailed),
   )
   @ApiResponse(error(401, ApiError.NotAuthenticated))
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('member') memberId: string,
-    @UploadedFile() file: MemoryStorageFile
+    @UploadedFile() file: MemoryStorageFile,
   ) {
     let member = await this.findOrFail(system, memberId);
 
@@ -165,7 +165,7 @@ export class MemberController extends BaseController {
     }
 
     const key = `${StoragePrefix.Userdata}/${user.id}/${system.id}/${member.id}/background.${mime.extension(
-      file.mimetype
+      file.mimetype,
     )}`;
 
     const result = await this.storage.store(key, file.buffer, true);
@@ -187,7 +187,7 @@ export class MemberController extends BaseController {
     return this.data(
       await this.makeDto(member, await this.makeSystemWithUser(system, user)),
       200,
-      result.cacheFail ? { warning: ApiWarning.CacheDemand } : {}
+      result.cacheFail ? { warning: ApiWarning.CacheDemand } : {},
     );
   }
 

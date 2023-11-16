@@ -13,7 +13,7 @@ export class PluralObserver extends EventEmitter2 {
     public readonly system: SystemWithUser,
     private readonly queue: Queue<UpdateMemberQueueData>,
     endpoint: string,
-    private readonly logger: ConsoleLogger
+    private readonly logger: ConsoleLogger,
   ) {
     super();
 
@@ -40,7 +40,7 @@ export class PluralObserver extends EventEmitter2 {
               userId: this.system.userId,
               operation,
             },
-          }))
+          })),
         );
       }
     });

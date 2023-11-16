@@ -35,7 +35,7 @@ export class UserMemberDataDto implements HasBackground {
     backgroundImage: string | null,
     customDescription: string | null,
     lastTimeAssetChanged: Date,
-    visible: boolean
+    visible: boolean,
   ) {
     this.slug = slug;
     this.backgroundType = backgroundType;
@@ -54,7 +54,7 @@ export class UserMemberDataDto implements HasBackground {
       systemMember.backgroundImage,
       systemMember.description,
       systemMember.assetsUpdatedAt,
-      systemMember.visibility === Visibility.Public
+      systemMember.visibility === Visibility.Public,
     );
   }
 }

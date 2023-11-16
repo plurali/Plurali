@@ -16,7 +16,10 @@ import { error, ok } from '@app/misc/swagger';
 @ApiTags('SystemPublicV1')
 @ApiExtraModels(SystemResponse)
 export class PublicSystemController {
-  constructor(private system: SystemRepository, private plural: PluralRestService) {}
+  constructor(
+    private system: SystemRepository,
+    private plural: PluralRestService,
+  ) {}
 
   @Get('/:systemId')
   @ApiResponse(ok(200, SystemResponse))

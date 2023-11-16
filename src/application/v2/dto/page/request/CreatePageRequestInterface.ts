@@ -1,5 +1,5 @@
 export interface CreatePageRequestInterface {
-    name: string;
-    content: string;
-    visible: boolean; // TODO
+  name: string;
+  content: string;
+  visible: boolean; // TODO
 }

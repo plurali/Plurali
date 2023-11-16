@@ -17,7 +17,10 @@ import { InvalidRequestException } from '@app/v2/exception/InvalidRequestExcepti
 @ApiTags('SystemPublicV1')
 @ApiExtraModels(SystemDto)
 export class PublicSystemController extends BaseController {
-  constructor(private system: SystemRepository, private plural: PluralRestService) {
+  constructor(
+    private system: SystemRepository,
+    private plural: PluralRestService,
+  ) {
     super();
   }
 
@@ -27,7 +30,7 @@ export class PublicSystemController extends BaseController {
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async view(@Param('system') systemId: string): Promise<ApiDataResponse<SystemDto>> {
     const system = await this.system.findPublicBase(systemId, {
-      user: true
+      user: true,
     });
 
     if (!system) {

@@ -8,4 +8,4 @@ import { NotificationService } from './NotificationService';
   providers: [NotificationService],
   exports: [PrismaModule, NotificationService],
 })
-export class NotificationModule { }
+export class NotificationModule {}

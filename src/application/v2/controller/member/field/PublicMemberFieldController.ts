@@ -17,7 +17,10 @@ import { BaseController } from '../../BaseController';
 @ApiTags('MemberFieldPublic')
 @ApiExtraModels(ValueFieldDto)
 export class PublicMemberFieldController extends BaseController {
-  constructor(private member: MemberRepository, private plural: PluralRestService) {
+  constructor(
+    private member: MemberRepository,
+    private plural: PluralRestService,
+  ) {
     super();
   }
 
@@ -26,7 +29,10 @@ export class PublicMemberFieldController extends BaseController {
   @ApiResponse(ok(200, [ValueFieldDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
-  public async list(@Param('system') systemId: string, @Param('member') memberId: string): Promise<ApiDataResponse<ValueFieldDto[]>> {
+  public async list(
+    @Param('system') systemId: string,
+    @Param('member') memberId: string,
+  ): Promise<ApiDataResponse<ValueFieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
         slug: memberId,
@@ -58,7 +64,7 @@ export class PublicMemberFieldController extends BaseController {
           const value = plural.content.info[f.pluralId];
           return value ? ValueFieldDto.fromValue(f, value) : null;
         })
-        .filter(f => !!f)
+        .filter(f => !!f),
     );
   }
 }

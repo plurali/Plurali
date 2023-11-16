@@ -35,7 +35,7 @@ export class SystemDto implements SystemDtoInterface {
     color: string | null,
     description: string | null,
     avatar: string | null,
-    data: SystemDataDtoInterface
+    data: SystemDataDtoInterface,
   ) {
     this.id = id;
     this.name = name;
@@ -52,7 +52,7 @@ export class SystemDto implements SystemDtoInterface {
       plural.content.color,
       plural.content.desc,
       parseAvatar(plural.content) ?? null,
-      SystemDataDto.from(system)
+      SystemDataDto.from(system),
     );
   }
 }

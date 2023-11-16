@@ -25,7 +25,10 @@ import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
 @ApiSecurity('bearer')
 @ApiExtraModels(PageResponse, PagesResponse, OkResponse)
 export class SystemMemberPageController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {}
+  constructor(
+    private readonly pages: PageRepository,
+    private readonly members: MemberRepository,
+  ) {}
 
   @UseGuards(SystemGuard)
   @Get('/')
@@ -55,10 +58,10 @@ export class SystemMemberPageController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Ok<PageResponse>> {
     return Status.ok(
-      new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id)))
+      new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id))),
     );
   }
 
@@ -73,7 +76,7 @@ export class SystemMemberPageController {
     @CurrentUser() user: User,
     @Param('id') id: string,
     @Param('memberId') memberId: string,
-    @Body() data: UpdatePageRequest
+    @Body() data: UpdatePageRequest,
   ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -115,7 +118,7 @@ export class SystemMemberPageController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Ok<OkResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -138,7 +141,7 @@ export class SystemMemberPageController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('memberId') memberId: string,
-    @Body() data: CreatePageRequest
+    @Body() data: CreatePageRequest,
   ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 

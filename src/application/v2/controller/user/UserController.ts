@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Inject, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Prisma, User, UserRole, UserVerificationType } from '@prisma/client';
 import { PluralRestService } from '@domain/plural/PluralRestService';
@@ -22,7 +22,7 @@ import { Ok } from '@app/v2/dto/response/Ok';
 import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
 import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
 import { VerifyUserEmailRequest } from '@app/v2/dto/user/request/VerifyUserEmailRequest';
-import {ObjectId} from 'bson';
+import { ObjectId } from 'bson';
 
 @Controller({
   path: '/user',
@@ -69,9 +69,9 @@ export class UserController extends BaseController {
           where: {
             pluralId: plural.id,
             NOT: {
-              userId: user.id
-            }
-          }
+              userId: user.id,
+            },
+          },
         }));
 
         if (alreadyAssociated) {
@@ -130,9 +130,9 @@ export class UserController extends BaseController {
       where: {
         id: code,
         type: UserVerificationType.Email,
-        userId: user.id
-      }
-    })
+        userId: user.id,
+      },
+    });
 
     if (!verification) {
       throw new InvalidVerificationException();
@@ -140,18 +140,18 @@ export class UserController extends BaseController {
 
     await this.users.update({
       where: {
-        id: user.id
+        id: user.id,
       },
       data: {
         email: user.email, // ensure another email isn't saved on parallel
         emailVerified: true,
-      }
-    })
+      },
+    });
 
     await this.verifications.delete({
       where: {
-        id: verification.id
-      }
+        id: verification.id,
+      },
     });
 
     return this.ok();

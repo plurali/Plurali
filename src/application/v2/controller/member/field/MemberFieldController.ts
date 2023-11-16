@@ -19,7 +19,10 @@ import { SystemGuard } from '@app/v2/context/system/SystemGuard';
 @ApiTags('MemberField')
 @ApiExtraModels(ValueFieldDto)
 export class MemberFieldController extends BaseController {
-  constructor(private member: MemberRepository, private plural: PluralRestService) {
+  constructor(
+    private member: MemberRepository,
+    private plural: PluralRestService,
+  ) {
     super();
   }
 
@@ -29,7 +32,10 @@ export class MemberFieldController extends BaseController {
   @ApiResponse(ok(200, [ValueFieldDto]))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
   @ApiResponse(error(400, ApiError.InvalidRequest, ApiError.InvalidPluralKey))
-  public async list(@CurrentSystem() system: System, @Param('member') memberId: string): Promise<ApiDataResponse<ValueFieldDto[]>> {
+  public async list(
+    @CurrentSystem() system: System,
+    @Param('member') memberId: string,
+  ): Promise<ApiDataResponse<ValueFieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
         slug: memberId,
@@ -61,7 +67,7 @@ export class MemberFieldController extends BaseController {
           const value = plural.content.info[f.pluralId];
           return value ? ValueFieldDto.fromValue(f, value) : null;
         })
-        .filter(f => !!f)
+        .filter(f => !!f),
     );
   }
 }

@@ -7,7 +7,7 @@ export class ApiException extends HttpException {
     error: ApiError = ApiError.InvalidRequest,
     status = 400,
     meta: ApiResponseMeta = {},
-    options?: HttpExceptionOptions
+    options?: HttpExceptionOptions,
   ) {
     super(
       {
@@ -20,7 +20,7 @@ export class ApiException extends HttpException {
         meta,
       } as ApiErrorResponse,
       status,
-      options
+      options,
     );
   }
 }

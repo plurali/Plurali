@@ -29,7 +29,11 @@ export class PluralSocketClient extends EventEmitter2 {
 
   private static readonly PING_TIMEOUT: number = 60;
 
-  constructor(private readonly system: SystemWithUser, private readonly endpoint: string, logger?: ConsoleLogger) {
+  constructor(
+    private readonly system: SystemWithUser,
+    private readonly endpoint: string,
+    logger?: ConsoleLogger,
+  ) {
     super();
 
     this.logger = logger ?? new ConsoleLogger(`${this.constructor.name}-${system.id}/SP${system.pluralId}`);
@@ -136,14 +140,14 @@ export class PluralSocketClient extends EventEmitter2 {
               this._emitter.emit('opened', socket);
             }
           },
-          { once: true }
+          { once: true },
         );
 
         socket.addEventListener('close', () => {
           this._emitter.emit('closed');
         });
       },
-      { once: true }
+      { once: true },
     );
 
     return (this._socket = socket);
@@ -196,7 +200,7 @@ export class PluralSocketClient extends EventEmitter2 {
           this._emitter.emit('authenticated', socket);
         }
       },
-      { once: true }
+      { once: true },
     );
 
     this._send({ op: 'authenticate', token: this.system.user.pluralAccessToken }, socket);

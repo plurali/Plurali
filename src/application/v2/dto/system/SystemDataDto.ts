@@ -21,7 +21,7 @@ export class SystemDataDto implements SystemDataDtoInterface {
     description: string | null,
     background: BackgroundData,
     assetsUpdatedAt: Date,
-    visibility: Visibility
+    visibility: Visibility,
   ) {
     this.slug = slug;
     this.description = description;
@@ -39,7 +39,7 @@ export class SystemDataDto implements SystemDataDtoInterface {
         backgroundType: convertBackgroundType(system.backgroundType),
       }),
       system.assetsUpdatedAt,
-      system.visibility
+      system.visibility,
     );
   }
 }

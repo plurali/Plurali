@@ -9,7 +9,10 @@ export class DigitalOceanService {
 
   protected readonly httpClient: AxiosInstance;
 
-  constructor(protected readonly logger: Logger, config: ConfigService) {
+  constructor(
+    protected readonly logger: Logger,
+    config: ConfigService,
+  ) {
     this.config = config.get<DigitalOceanConfig | null>('digitalocean');
     this.httpClient = axios.create({
       baseURL: 'https://api.digitalocean.com/v2',

@@ -13,7 +13,7 @@ export class SystemRepository extends PrismaRepository<'system'> {
 
   public async findPublic(
     slug: string,
-    memberQuery?: PaginationQuery
+    memberQuery?: PaginationQuery,
   ): Promise<SystemWithUser & SystemWithCollections> {
     if (!slug) return null;
 

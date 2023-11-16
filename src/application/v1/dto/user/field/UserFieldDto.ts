@@ -30,7 +30,7 @@ export class UserFieldDto {
     position: number,
     type: MemberFieldType,
     pluralVisibility: Visibility,
-    data: UserFieldDataDto
+    data: UserFieldDataDto,
   ) {
     this.fieldId = fieldId;
     this.name = name;
@@ -47,7 +47,7 @@ export class UserFieldDto {
       field.position,
       field.type,
       field.visibility,
-      new UserFieldDataDto(field.visibility === Visibility.Public)
+      new UserFieldDataDto(field.visibility === Visibility.Public),
     );
   }
 }

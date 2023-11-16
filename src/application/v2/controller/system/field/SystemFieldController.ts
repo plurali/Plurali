@@ -33,9 +33,9 @@ export class SystemFieldController extends BaseController {
   public async list(@CurrentSystem() system: System): Promise<ApiDataResponse<FieldDto[]>> {
     const fields = await this.fields.findMany({
       where: {
-        systemId: system.id
-      }
-    })
+        systemId: system.id,
+      },
+    });
     return this.data((fields ?? []).map(field => FieldDto.from(field)));
   }
 
@@ -45,13 +45,17 @@ export class SystemFieldController extends BaseController {
   @ApiResponse(ok(200, FieldDto))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
   @ApiResponse(error(400, ApiError.InvalidRequest, ApiError.InvalidPluralKey))
-  public async update(@CurrentSystem() system: System, @Param('field') fieldId: string, @Body() data: UpdateFieldRequest): Promise<ApiDataResponse<FieldDto>> {
+  public async update(
+    @CurrentSystem() system: System,
+    @Param('field') fieldId: string,
+    @Body() data: UpdateFieldRequest,
+  ): Promise<ApiDataResponse<FieldDto>> {
     let field = await this.fields.findFirst({
       where: {
         systemId: system.id,
         pluralId: fieldId,
       },
-    })
+    });
 
     if (!field) {
       throw new ResourceNotFoundException();
@@ -69,10 +73,9 @@ export class SystemFieldController extends BaseController {
           id: field.id,
         },
         data: update,
-      })
+      });
     }
 
     return this.data(FieldDto.from(field));
   }
-
 }

@@ -1,4 +1,4 @@
 export interface ResetPasswordRequestInterface {
-    code: string;
-    password: string;
+  code: string;
+  password: string;
 }

@@ -51,7 +51,7 @@ export class SystemPageController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Ok<PageResponse>> {
     return Status.ok(new PageResponse(PageDto.from(await this.findOrFail(system, user, id))));
   }
@@ -66,7 +66,7 @@ export class SystemPageController {
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
     @Param('id') id: string,
-    @Body() data: UpdatePageRequest
+    @Body() data: UpdatePageRequest,
   ): Promise<Ok<PageResponse>> {
     let page = await this.findOrFail(system, user, id);
 
@@ -105,7 +105,7 @@ export class SystemPageController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Ok<OkResponse>> {
     await this.pages.delete({
       where: {
@@ -121,7 +121,7 @@ export class SystemPageController {
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Body() data: CreatePageRequest
+    @Body() data: CreatePageRequest,
   ): Promise<Ok<PageResponse>> {
     const page = await this.pages.create({
       data: {

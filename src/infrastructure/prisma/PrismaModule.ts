@@ -36,7 +36,7 @@ export class PrismaModule {
   }
 
   public static createCustomRepositoryProvider<N extends PrismaModelName>(
-    entry: ForModuleCustomEntry<N>
+    entry: ForModuleCustomEntry<N>,
   ): Provider<typeof entry extends ExistingProvider<infer T> ? T : PrismaRepositoryType<N>> {
     if (typeof entry === 'function') {
       return {

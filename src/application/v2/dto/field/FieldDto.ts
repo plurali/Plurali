@@ -7,7 +7,7 @@ import { FieldDtoInterface } from './FieldDtoInterface';
 import { FieldDataDtoInterface } from './FieldDataDtoInterface';
 
 export class FieldDto implements FieldDtoInterface {
-  public type = "field";
+  public type = 'field';
 
   @ApiProperty()
   public id: string;
@@ -33,6 +33,12 @@ export class FieldDto implements FieldDtoInterface {
   }
 
   public static from(field: Field): FieldDto {
-    return new FieldDto(field.pluralId, field.name, field.position, convertFieldType(field.type), new FieldDataDto(field.visibility));
+    return new FieldDto(
+      field.pluralId,
+      field.name,
+      field.position,
+      convertFieldType(field.type),
+      new FieldDataDto(field.visibility),
+    );
   }
 }

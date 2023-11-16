@@ -54,9 +54,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService<Config>) => ({
-        transport: config.get("email").transport,
+        transport: config.get('email').transport,
         defaults: {
-          from: `"Plurali" <${config.get("email").from}>`,
+          from: `"Plurali" <${config.get('email').from}>`,
         },
       }),
     }),
@@ -99,7 +99,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
   providers: [CacheRepository, CacheService],
   exports: [BullModule, CacheRepository, CacheService],
 })
-export class Kernel { }
+export class Kernel {}
 
 /**
  * @internal
@@ -121,7 +121,7 @@ export const serverLogger = overrideLoggerPrefix(new ConsoleLogger());
   ],
   exports: [Kernel, ConsoleLogger, Logger],
 })
-export class ServerKernel { }
+export class ServerKernel {}
 
 @Global()
 @Module({
@@ -129,4 +129,4 @@ export class ServerKernel { }
   // microservices add their own logger
   exports: [Kernel],
 })
-export class MicroserviceKernel { }
+export class MicroserviceKernel {}

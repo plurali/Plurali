@@ -61,7 +61,7 @@ export class PluralRestService {
   async findUserForId(
     userId: string | 'me',
     Authorization: string,
-    override?: string
+    override?: string,
   ): Promise<PluralUserEntry | null> {
     try {
       const data = (

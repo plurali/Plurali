@@ -4,7 +4,7 @@ export enum ApiError {
   NotAuthenticated = 'not_authenticated',
   InvalidCredentials = 'invalid_credentials',
   UsernameOrEmailTaken = 'username_or_email_taken',
-  EmailAlreadyUsed = "email_already_used",
+  EmailAlreadyUsed = 'email_already_used',
   InvalidOverride = 'invalid_override',
   ResourceNotFound = 'resource_not_found',
   Unauthorized = 'unauthorized',
@@ -29,5 +29,5 @@ export const ApiErrorMessage: Record<ApiError, string> = {
   [ApiError.UploadFailed]: 'The file upload has failed, please try again',
   [ApiError.UnknownError]: 'An unknown error has occurred, please try again',
   [ApiError.SystemAlreadyAssociated]: 'This system is already associated with another account.',
-  [ApiError.InvalidVerification]: 'The verification code is either invalid or has expired.'
+  [ApiError.InvalidVerification]: 'The verification code is either invalid or has expired.',
 };

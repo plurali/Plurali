@@ -31,7 +31,7 @@ export class UserDto implements UserDtoInterface {
     verified: boolean,
     accessToken: string | null,
     systemIdOverride: string | null,
-    role: UserRole
+    role: UserRole,
   ) {
     this.id = id;
     this.username = username;
@@ -50,7 +50,7 @@ export class UserDto implements UserDtoInterface {
       user.emailVerified,
       user.pluralAccessToken ?? null,
       user.pluralOverride ?? null,
-      user.role
+      user.role,
     );
   }
 }

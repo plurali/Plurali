@@ -22,7 +22,10 @@ export class S3StorageService implements StorageService<S3Client> {
 
   public readonly root: string;
 
-  constructor(config: ConfigService<Config>, private readonly provider: DigitalOceanService) {
+  constructor(
+    config: ConfigService<Config>,
+    private readonly provider: DigitalOceanService,
+  ) {
     const s3 = config.get('storage', { infer: true });
 
     this.client = new S3Client({
@@ -42,7 +45,7 @@ export class S3StorageService implements StorageService<S3Client> {
     const res = await this.client.send(
       new HeadBucketCommand({
         Bucket: this.root,
-      })
+      }),
     );
 
     /**
@@ -73,7 +76,7 @@ export class S3StorageService implements StorageService<S3Client> {
         new ListObjectsV2Command({
           Bucket: this.root,
           Prefix: `${prefix}/`,
-        })
+        }),
       )
     ).Contents;
   }
@@ -86,7 +89,7 @@ export class S3StorageService implements StorageService<S3Client> {
             new HeadObjectCommand({
               Bucket: this.root,
               Key: path,
-            })
+            }),
           )
         ).$metadata.httpStatusCode === 200
       );
@@ -118,7 +121,7 @@ export class S3StorageService implements StorageService<S3Client> {
               ACL: acl,
               Body: body,
               ContentLength: body.byteLength,
-            })
+            }),
           )
         ).$metadata.httpStatusCode === 200,
       cacheFail,
@@ -132,7 +135,7 @@ export class S3StorageService implements StorageService<S3Client> {
           new DeleteObjectCommand({
             Bucket: this.root,
             Key: path,
-          })
+          }),
         )
       ).$metadata.httpStatusCode === 200
     );

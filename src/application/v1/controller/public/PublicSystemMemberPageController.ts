@@ -17,7 +17,10 @@ import { Member, Page, Visibility } from '@prisma/client';
 @ApiTags('SystemMemberPagePublicV1')
 @ApiExtraModels(PageResponse, PagesResponse)
 export class PublicSystemMemberPageController {
-  constructor(private readonly pages: PageRepository, private readonly members: MemberRepository) {}
+  constructor(
+    private readonly pages: PageRepository,
+    private readonly members: MemberRepository,
+  ) {}
 
   @Get('/')
   @ApiResponse(ok(200, PagesResponse))
