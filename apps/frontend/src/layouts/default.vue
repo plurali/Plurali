@@ -97,7 +97,7 @@
               <br />
               <span
                 >
-                Plurali is in a early beta, things <s>may</s> will break. Feel free to
+                Plurali is in a early beta, things <s>may</s> <s>will</s> did break. Feel free to
                 <a href="https://github.com/plurali/Plurali/issues" target="_blank" rel="noreferrer noopener"
                   ><u>report them</u></a
                 >.
