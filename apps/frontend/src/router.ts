@@ -115,6 +115,11 @@ export const isFront = (route: string | RouteLocationNormalized) => !isAuth(rout
 router.beforeEach(async to => {
   nextRedirect();
 
+  const accessibleWithoutPluralKey = [
+    "dashboard:index",
+    "dashboard:user"
+  ]
+
   // TODO: refactor this horrendous thing
   const promise = (async () => {
     try {
@@ -141,11 +146,10 @@ router.beforeEach(async to => {
           flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);
         }
 
-        if (!user.value.pluralKey) {
-          flash('You must setup your Simply Plural API key!', FlashType.Danger, false, true);
-          if (to.path !== '/dashboard/user') {
-            return '/dashboard/user';
-          }
+        flash('A Simply Plural API key is required before accessing the system dashboard!', FlashType.Warning, false, true);
+
+        if (!user.value.pluralKey && !accessibleWithoutPluralKey.includes((to.name ?? to.path).toString())) {
+          return '/dashboard/user';
         }
       }
 
