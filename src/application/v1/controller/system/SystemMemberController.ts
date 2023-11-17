@@ -2,7 +2,7 @@ import { CurrentUser } from '@app/context/auth/CurrentUser';
 import { CurrentSystem } from '@app/context/system/CurrentSystem';
 import { SystemGuard } from '@app/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
+import { Ok, PaginatedOk, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { UpdateSystemMemberRequest } from '@app/v1/dto/user/system/request/UpdateSystemMemberRequest';
 import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
@@ -10,12 +10,12 @@ import { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMe
 import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { assignFields, assignSystem, assignUser } from '@domain/common';
-import { SystemWithFields, SystemWithUser } from '@domain/common/types';
+import { FullSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Body, Controller, Get, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BackgroundType, Member, Prisma, System, User, Visibility } from '@prisma/client';
 import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { StorageService } from '@infra/storage/StorageService';
@@ -25,6 +25,10 @@ import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingF
 import * as mime from 'mime-types';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
+import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
+import { Page } from '@app/context/pagination/Page';
+import { Take } from '@app/context/pagination/Take';
+import { Pagination } from '@app/misc/pagination';
 
 @Controller({
   path: '/system/members',
@@ -37,8 +41,8 @@ export class SystemMemberController {
   constructor(
     private readonly members: MemberRepository,
     private readonly fields: FieldRepository,
-    private readonly rest: PluralRestService,
     private readonly storage: StorageService,
+    @Inject(PluralRestService) private plural: PluralCachedRestService,
   ) {}
 
   @UseGuards(SystemGuard)
@@ -46,26 +50,48 @@ export class SystemMemberController {
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
-  public async list(@CurrentSystem() system: System, @CurrentUser() user: User): Promise<Ok<SystemMembersResponse>> {
+  public async list(
+    @CurrentSystem() system: System,
+    @CurrentUser() user: User,
+    @Page() page: number,
+    @Take() take: number,
+  ): Promise<PaginatedOk<SystemMembersResponse>> {
+    const query = Pagination.createPaginationQuery(page, take);
+
     const members = await this.members.findMany({
       where: {
         systemId: system.id,
       },
+      ...query,
     });
 
-    const extendedSystem = await this.makeExtendedSystem(system, user);
+    const fullSystem = await this.makeFullSystem(system, user, members);
 
-    const plural = await this.rest.findMembers(extendedSystem);
+    const dtoMembers = await this.makeDtos(fullSystem);
+
+    return Pagination.paginated(
+      new SystemMembersResponse(dtoMembers),
+      query,
+      await this.members.count({
+        where: {
+          systemId: system.id,
+        },
+      }),
+    );
+  }
+
+  protected async makeDtos(system: FullSystem): Promise<UserMemberDto[]> {
+    const plural = await this.plural.findMembers(system);
 
     const dtoMembers: UserMemberDto[] = [];
 
-    for (const member of members) {
-      const dto = await this.makeDto(member, extendedSystem, plural);
+    for (const member of system.members) {
+      const dto = await this.makeDto(member, system, plural);
 
       dtoMembers.push(dto);
     }
 
-    return Status.ok(new SystemMembersResponse(dtoMembers));
+    return dtoMembers;
   }
 
   @UseGuards(SystemGuard)
@@ -196,6 +222,10 @@ export class SystemMemberController {
     );
   }
 
+  protected async makeFullSystem(system: System, user: User, members: Member[]): Promise<FullSystem> {
+    return Object.assign(await this.makeExtendedSystem(system, user), { members });
+  }
+
   protected async makeDto(
     member: Member,
     system: SystemWithFields & SystemWithUser,
@@ -206,7 +236,7 @@ export class SystemMemberController {
     let pluralMember = plural ? plural.find(m => m.id === member.pluralId) : null;
     if (!pluralMember) {
       // Attempt to fetch alone
-      pluralMember = await this.rest.findMember(extendedMember);
+      pluralMember = await this.plural.findMember(extendedMember);
 
       if (!pluralMember) {
         throw new InvalidRequestException();

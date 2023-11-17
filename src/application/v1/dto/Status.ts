@@ -4,6 +4,17 @@ export interface SuccessData extends Record<string, unknown> {
   warning?: string;
 }
 
+export interface PaginationQuery {
+  skip: number;
+  take: number;
+}
+
+export interface PaginationData {
+  current: number;
+  total: number;
+  max: number;
+}
+
 export const StatusMap = {
   InvalidRequest: 'Invalid request',
   InvalidPluralKey: 'Invalid plural key',
@@ -29,6 +40,8 @@ export type StatusMapKey = StatusMapType[keyof StatusMapType];
 
 export type Ok<D = SuccessData> = Status<D, undefined>;
 
+export type PaginatedOk<D = SuccessData> = PaginatedStatus<D>;
+
 export type Error<E extends StatusMapKey = StatusMapKey> = Status<undefined, E>;
 
 export class Status<D = SuccessData, E extends StatusMapKey = StatusMapKey> {
@@ -53,5 +66,15 @@ export class Status<D = SuccessData, E extends StatusMapKey = StatusMapKey> {
 
   public static error<E extends StatusMapKey = StatusMapKey>(error: E): Status<undefined, E> {
     return new Status<undefined, E>(undefined, error);
+  }
+}
+
+export class PaginatedStatus<D = SuccessData> extends Status<D, undefined> {
+  @ApiProperty()
+  public pagination: PaginationData;
+
+  constructor(data: D, pagination: PaginationData) {
+    super(data, undefined);
+    this.pagination = pagination;
   }
 }

@@ -1,6 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Inject, Param } from '@nestjs/common';
 import { PluralRestService } from '@domain/plural/PluralRestService';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
+import { Ok, PaginatedOk, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
 import { SystemRepository } from '@domain/system/SystemRepository';
@@ -12,8 +12,12 @@ import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMem
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/misc/swagger';
 import { Member } from '@prisma/client';
-import { SystemWithFields, SystemWithUser } from '@domain/common/types';
+import { FullSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
+import { Page } from '@app/context/pagination/Page';
+import { Take } from '@app/context/pagination/Take';
+import { Pagination } from '@app/misc/pagination';
+import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
 
 @Controller({
   path: '/public/system/:systemId/members',
@@ -25,17 +29,33 @@ export class PublicSystemMemberController {
   constructor(
     private system: SystemRepository,
     private member: MemberRepository,
-    private plural: PluralRestService,
+    @Inject(PluralRestService) private plural: PluralCachedRestService,
   ) {}
 
   @Get('/')
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  public async list(@Param('systemId') systemId: string): Promise<Ok<SystemMembersResponse>> {
-    // Query system once instead of multiple times for each member
-    const system = await this.system.findPublic(systemId);
-    if (!system) throw new ResourceNotFoundException();
+  public async list(
+    @Param('systemId') systemId: string,
+    @Page() page: number,
+    @Take() take: number,
+  ): Promise<PaginatedOk<SystemMembersResponse>> {
+    const query = Pagination.createPaginationQuery(page, take);
 
+    // Query system once instead of multiple times for each member
+    const system = await this.system.findPublic(systemId, query);
+    if (!system) {
+      throw new ResourceNotFoundException();
+    }
+
+    return Pagination.paginated(
+      new SystemMembersResponse(await this.makeDtos(system)),
+      query,
+      await this.member.countPublic(system),
+    );
+  }
+
+  protected async makeDtos(system: FullSystem): Promise<UserMemberDto[]> {
     const plural = await this.plural.findMembers(system);
 
     const dtoMembers: UserMemberDto[] = [];
@@ -46,7 +66,7 @@ export class PublicSystemMemberController {
       dtoMembers.push(dto);
     }
 
-    return Status.ok(new SystemMembersResponse(dtoMembers));
+    return dtoMembers;
   }
 
   @Get('/:memberId')
