@@ -162,10 +162,12 @@ router.beforeEach(async to => {
           flash('Your email address is not verified. Please check your mailbox.', FlashType.Warning, false, true);
         }
 
-        flash('A Simply Plural API key is required before accessing the system dashboard!', FlashType.Warning, false, true);
+        if (!user.value.pluralKey) {
+          flash('A Simply Plural API key is required before accessing the system dashboard!', FlashType.Warning, false, true);
 
-        if (!user.value.pluralKey && !accessibleWithoutPluralKey.includes((to.name ?? to.path).toString())) {
-          return '/dashboard/user';
+          if (!accessibleWithoutPluralKey.includes((to.name ?? to.path).toString())) {
+            return '/dashboard/user';
+          }
         }
       }
 
