@@ -9,10 +9,26 @@ export enum FlashType {
 }
 
 export interface Flash {
-  color: FlashType|string;
+  color: FlashType | string;
   message: string;
   removeOnNextRedirect: boolean;
 }
+
+export interface Meta {
+  title: string;
+  description: string;
+  imageUrl: string;
+  color: string;
+}
+
+export const defaultMeta: Meta = {
+  title: "", // defaults to Plurali
+  description: "Informative page about your system and it's members you can share with people!",
+  imageUrl: "https://plurali.icu/plurali.png",
+  color: "#6d28d9",
+}
+
+export const meta = ref<Meta>(defaultMeta);
 
 export const flashes = ref<Flash[]>([]);
 

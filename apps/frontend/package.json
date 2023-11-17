@@ -20,8 +20,8 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.17",
-    "@plurali/sanitizer": "workspace:^",
     "@plurali/editor": "workspace:^",
+    "@plurali/sanitizer": "workspace:^",
     "@simonwep/pickr": "^1.8.2",
     "@tinymce/tinymce-vue": "^5.1.1",
     "axios": "^1.3.5",

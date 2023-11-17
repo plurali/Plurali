@@ -16,6 +16,7 @@ import { defineComponent } from 'vue'
 import Title from '../components/Title.vue'
 import Subtitle from '../components/Subtitle.vue'
 import ButtonLink from '../components/ButtonLink.vue'
+import { useMeta } from '../utils/meta'
 
 export default defineComponent({
   components: {
@@ -23,5 +24,9 @@ export default defineComponent({
     Subtitle,
     ButtonLink,
   },
+  setup() {
+    const setMeta = useMeta();
+    setMeta({});
+  }
 })
 </script>

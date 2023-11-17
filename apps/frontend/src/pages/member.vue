@@ -8,16 +8,16 @@
       </UserContent>
 
       <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
-      
+
       <Fetchable :result="pages" :retry="fetchPages">
-        <PageFields v-if="pages" :pages="pages" :modifiable="false"/>
+        <PageFields v-if="pages" :pages="pages" :modifiable="false" />
       </Fetchable>
     </div>
   </Fetchable>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Title from '../components/Title.vue';
 import Subtitle from '../components/Subtitle.vue';
@@ -38,8 +38,9 @@ import UserContent from '../components/global/UserContent.vue';
 import Sanitized from '../components/global/Sanitized.vue';
 import { withBackground } from '../composables/background';
 import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PagesResponse } from '@app/v2/dto/page/response/PagesResponse';
+import { useMeta } from '../utils/meta';
+import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
+import { PageDto } from '@app/v1/dto/page/PageDto';
 
 export default defineComponent({
   components: {
@@ -68,6 +69,8 @@ export default defineComponent({
 
     useGoBack(`/${systemId.value}`);
 
+    const setMeta = useMeta();
+
     const fetchMember = async () => {
       if (member.value === null) return;
       member.value = null;
@@ -91,6 +94,17 @@ export default defineComponent({
     withBackground(member);
 
     onMounted(() => fetchMember());
+
+    const stopWatch = watch(member, (member) => {
+      setMeta({
+        title: member ? member.name : '',
+        description: member ? member.description ?? '' : '',
+        imageUrl: member ? member.avatar ?? '' : '',
+        color: member ? member.color ?? '' : '',
+      });
+    })
+
+    onBeforeUnmount(() => stopWatch());
 
     return {
       fetchMember,

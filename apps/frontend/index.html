@@ -1,10 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+    <meta name="robots" content="max-image-preview:large" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/plurali-180.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/plurali-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/plurali-16.png" />
+    <meta name="msapplication-TileColor" content="#6d28d9" />
+    <meta name="theme-color" content="#6d28d9" />
+
     <title>Plurali</title>
+
+    <meta
+    id="metaDescription"
+      name="description"
+      content="Informative page about your system and it's members you can share with people!"
+    />
+
+    <meta id="ogTitle" property="og:title" content="Plurali" />
+    <meta property="og:site_name" content="Plurali" />
+    <meta
+    id="ogDescription"
+      property="og:description"
+      content="Informative page about your system and it's members you can share with people!"
+    />
+    <meta property="og:url" content="https://plurali.icu" />
+    <meta
+      id="ogImage"
+      property="og:image"
+      content="https://plurali.icu/plurali.png"
+    />
+    <meta property="og:type" />
+
+    <meta id="twtiterTitle" name="twitter:title" content="" />
+    <meta
+    id="twitterDescription"
+      name="twitter:description"
+      content="Informative page about your system and it's members you can share with people!"
+    />
+    <meta
+      id="twitterImage"
+      name="twitter:image"
+      content="https://plurali.icu/plurali.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://plurali.icu"
+        },
+        "image": ["https://plurali.icu/plurali.png"],
+        "publisher": {
+          "@type": "Organization",
+          "name": "Mia Vališová & Plurali Community",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://plurali.icu/plurali.png"
+          }
+        }
+      }
+    </script>
   </head>
+
   <body>
     <div id="app"></div>
     <script type="module" src="/src/index.ts"></script>

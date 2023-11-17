@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import Title from '../components/Title.vue';
 import Subtitle from '../components/Subtitle.vue';
 import ButtonLink from '../components/ButtonLink.vue';
@@ -31,6 +31,7 @@ import { withBackground } from '../composables/background';
 import { getSystem, getSystemPages } from '../api/public';
 import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
 import type { PageDto } from '@app/v1/dto/page/PageDto';
+import { useMeta } from '../utils/meta';
 
 export default defineComponent({
   components: {
@@ -51,6 +52,8 @@ export default defineComponent({
     const pages = ref<PageDto[] | null | false>(false);
 
     const route = useRoute();
+
+    const setMeta = useMeta();
 
     const systemId = computed(() => getRouteParam(route.params.systemId));
 
@@ -77,6 +80,17 @@ export default defineComponent({
     withBackground(system);
 
     onMounted(() => fetchSystem());
+
+    const stopWatch = watch(system, (system) => {
+      setMeta({
+        title: system ? system.username : '',
+        description: system ? system.description ?? '' : '',
+        imageUrl: system ? system.avatar ?? '' : '',
+        color: system ? system.color ?? '' : '',
+      });
+    })
+
+    onBeforeUnmount(() => stopWatch());
 
     return {
       fetchSystem,
