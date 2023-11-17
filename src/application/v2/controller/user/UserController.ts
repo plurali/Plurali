@@ -22,7 +22,6 @@ import { Ok } from '@app/v2/dto/response/Ok';
 import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
 import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
 import { VerifyUserEmailRequest } from '@app/v2/dto/user/request/VerifyUserEmailRequest';
-import { ObjectId } from 'bson';
 
 @Controller({
   path: '/user',
@@ -119,20 +118,11 @@ export class UserController extends BaseController {
 
   @UseGuards(AuthGuard)
   @Post('/verify-email')
-  @ApiResponse(ok(200, UserDto))
-  @ApiResponse(error(401, ApiError.NotAuthenticated, ApiError.InvalidVerification))
+  @ApiResponse(ok(200, Ok))
+  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(error(400, ApiError.InvalidVerification))
   async verifyEmail(@CurrentUser() user: User, @Body() { code }: VerifyUserEmailRequest): Promise<ApiDataResponse<Ok>> {
-    if (!ObjectId.isValid(code)) {
-      throw new InvalidVerificationException();
-    }
-
-    const verification = await this.verifications.findFirst({
-      where: {
-        id: code,
-        type: UserVerificationType.Email,
-        userId: user.id,
-      },
-    });
+    const verification = await this.verifications.findVerification(code, UserVerificationType.Email, user);
 
     if (!verification) {
       throw new InvalidVerificationException();

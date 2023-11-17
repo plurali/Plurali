@@ -1,5 +1,5 @@
 import { UserAuthenticator } from '@domain/security/authenticator/user/UserAuthenticator';
-import { Body, Controller, HttpCode, Inject, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Inject, Post, Put, Query } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CacheService } from '@domain/cache/CacheService';
 import { UserRepository } from '@domain/user/UserRepository';
@@ -18,6 +18,11 @@ import { UsernameOrEmailTakenException } from '@app/v2/exception/UsernameOrEmail
 import { BaseController } from '../BaseController';
 import { RegisterRequest } from '@app/v2/dto/auth/request/RegisterRequest';
 import { UserService } from '@domain/user/UserService';
+import { Ok } from '@app/v2/dto/response/Ok';
+import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
+import { ResetPasswordRequest } from '@app/v2/dto/auth/request/ResetPasswordRequest';
+import { UserVerificationType } from '@prisma/client';
+import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
 
 @Controller({
   path: '/auth',
@@ -31,6 +36,7 @@ export class AuthController extends BaseController {
     private readonly signer: JwtService,
     private readonly userService: UserService,
     private readonly users: UserRepository,
+    private readonly verifications: UserVerificationRepository,
     private readonly hasher: Hasher,
     private readonly cache: CacheService,
   ) {
@@ -79,5 +85,63 @@ export class AuthController extends BaseController {
     await this.userService.sendVerificationEmail(user);
 
     return await this.login(credentials);
+  }
+
+  @Get('/reset-password')
+  @ApiResponse(ok(200, Ok))
+  async requestPasswordReset(@Query('email') email: string): Promise<ApiDataResponse<Ok>> {
+    const user = await this.users.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      // Mocks the timeout of sending a password reset email.
+      // This is to prevent users from checking if an email is registered for malicious purposes.
+      return await new Promise(resolve => setTimeout(() => resolve(this.ok()), 700));
+    }
+
+    await this.userService.sendPasswordResetEmail(user);
+
+    return this.ok();
+  }
+
+  @Put('/reset-password')
+  @ApiResponse(ok(200, Ok))
+  @ApiResponse(error(400, ApiError.InvalidVerification))
+  async processPasswordReset(@Body() { email, code, password }: ResetPasswordRequest): Promise<ApiDataResponse<Ok>> {
+    const user = await this.users.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new InvalidVerificationException();
+    }
+
+    const verification = await this.verifications.findVerification(code, UserVerificationType.PasswordReset, user);
+
+    if (!verification) {
+      throw new InvalidVerificationException();
+    }
+
+    await this.users.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        passwordHash: this.hasher.hash(password),
+      },
+    });
+
+    await this.verifications.delete({
+      where: {
+        id: verification.id,
+      },
+    });
+
+    return this.ok();
   }
 }
