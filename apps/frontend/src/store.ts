@@ -14,7 +14,9 @@ export interface Flash {
   removeOnNextRedirect: boolean;
 }
 
-export const flashes = ref<Flash[]>([])
+export const flashes = ref<Flash[]>([]);
+
+export const notifications = ref<Omit<Flash, "removeOnNextRedirect">[]>();
 
 export const flash = (message: string = 'An error has occurred, please refresh the site.', typeOrColor: FlashType | string = FlashType.Danger, clear = true, removeOnNextRedirect = true) => {
   const f: Flash = {

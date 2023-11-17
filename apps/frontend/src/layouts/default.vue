@@ -72,6 +72,11 @@
           </Flash>
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8" :class="typeof bg === 'string' && 'bg-opacity-60'">
+          <div v-if="notifications.length >= 1" class="inline-flex flex-col gap-4 w-full mb-12">
+            <Notification v-for="notification of notifications" :color="notification.color">
+              <Sanitized :value="notification.message"/>
+            </Notification>
+          </div>
           <div v-if="goBack" class="mb-5 inline-flex w-full justify-start items-center">
             <router-link :to="goBack" class="text-gray-500 hover:text-black transition">← Go back</router-link>
           </div>
@@ -118,10 +123,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, ref, watch } from 'vue';
-import { background, flashes, goBack } from '../store';
+import { background, flashes, goBack, notifications } from '../store';
 import Flash from '../components/Flash.vue';
 import { isUrl, generateShades } from '../utils';
 import Sanitized from '../components/global/Sanitized.vue';
+import Notification from '../components/Notification.vue';
 
 export default defineComponent({
   setup() {
@@ -161,8 +167,9 @@ export default defineComponent({
       onLoad,
       imageLoaded,
       arr: (...arrays: any[]) => arrays.find(val => Array.isArray(val)),
+      notifications,
     };
   },
-  components: { Flash, Sanitized },
+  components: { Flash, Sanitized, Notification },
 });
 </script>

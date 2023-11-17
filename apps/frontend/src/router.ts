@@ -1,5 +1,5 @@
 import { RouteLocationNormalized, RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
-import { flash, FlashType, nextRedirect, user } from './store';
+import { flash, FlashType, nextRedirect, notifications, user } from './store';
 import { getUser } from './api/user';
 import { StatusMap, formatError } from './api';
 import { getNotifications } from './api/notification';
@@ -120,6 +120,22 @@ router.beforeEach(async to => {
     "dashboard:user"
   ]
 
+  notifications.value = [];
+
+  try {
+    const apiNotifications = (await getNotifications()).data ?? { success: false };
+
+    if (apiNotifications.success && apiNotifications.data?.length >= 1) {
+      notifications.value = apiNotifications.data.map((n) => ({
+        color: n.color,
+        message: n.content,
+      })) ?? [];
+    }
+  } catch (e) {
+    console.warn("failed to fetch notifications", { e });
+  }
+
+
   // TODO: refactor this horrendous thing
   const promise = (async () => {
     try {
@@ -128,16 +144,6 @@ router.beforeEach(async to => {
 
       user.value = data.data.user;
       if (isAuth(to)) return '/dashboard';
-
-      try {
-        const notifications = (await getNotifications()).data ?? { success: false };
-
-        if (notifications.success && notifications.data.length >= 1) {
-          notifications.data.forEach((n) => flash(n.content, n.color, false, true));
-        }
-      } catch (e) {
-        console.warn("failed to fetch notifications", { e });
-      }
 
       if (isDashboard(to)) {
         if (!user.value.email) {

@@ -22,12 +22,11 @@ export class NotificationController extends BaseController {
     super();
   }
 
-  @UseGuards(AuthGuard)
   @Get('/')
   @HttpCode(200)
   @ApiResponse(ok(200, [NotificationDto]))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
-  async list(@CurrentUser() user: User): Promise<ApiDataResponse<NotificationDto[]>> {
+  async list(@CurrentUser() user?: User): Promise<ApiDataResponse<NotificationDto[]>> {
     const notifications = await this.notifications.getNotificationsAndClear(user);
 
     return this.data(notifications.map(NotificationDto.from));
