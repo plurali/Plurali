@@ -119,7 +119,7 @@ export default defineComponent({
           ? 'Password must be at least 4 characters long.'
           : null
 
-      return !formErrors.username && !formErrors.password
+      return !formErrors.username && !formErrors.password && !formErrors.email;
     }
 
     const submit = async () => {

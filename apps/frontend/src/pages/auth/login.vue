@@ -43,10 +43,14 @@
       <Spinner v-if="loading" class="!text-violet-700" />
     </Button>
 
-    <div class="inline-flex w-full justify-end items-center">
-      <router-link to="/auth/register" class="text-gray-500"
-        >Don't have an account yet?</router-link
-      >
+    <div class="inline-flex flex-col md:flex-row w-full justify-end md:justify-between gap-2 items-center">
+      <router-link to="/auth/forgotten-password" class="text-gray-500">
+        Forgot your password?
+      </router-link>
+
+      <router-link to="/auth/register" class="text-gray-500">
+        Don't have an account yet?
+      </router-link>
     </div>
   </form>
 </template>
