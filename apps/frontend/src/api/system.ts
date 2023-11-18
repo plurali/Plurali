@@ -5,7 +5,7 @@ import type { SystemMembersResponse } from '@app/v1/dto/user/system/response/Sys
 import type { UpdateSystemMemberRequest } from '@app/v1/dto/user/system/request/UpdateSystemMemberRequest';
 import type { UpdateSystemFieldRequest } from '@app/v1/dto/user/system/request/UpdateSystemFieldRequest';
 import type { SystemFieldResponse } from '@app/v1/dto/user/system/response/SystemFieldResponse';
-import type { Status } from '@app/v1/dto/Status';
+import type { PaginatedStatus, Status } from '@app/v1/dto/Status';
 import { AxiosResponse } from 'axios';
 import { $axios } from '.';
 
@@ -25,8 +25,8 @@ export const updateSystem = (data: Partial<UpdateSystemRequest>): Promise<AxiosR
 export const updateSystemBackgroundImage = (file: Blob): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.postForm<Status<SystemResponse>>('/v1/system/background', { file });
 
-export const getMembers = (): Promise<AxiosResponse<Status<SystemMembersResponse>>> =>
-  $axios.request<Status<SystemMembersResponse>>({
+export const getMembers = (): Promise<AxiosResponse<PaginatedStatus<SystemMembersResponse>>> =>
+  $axios.request<PaginatedStatus<SystemMembersResponse>>({
     url: '/v1/system/members',
     method: 'GET',
   });
