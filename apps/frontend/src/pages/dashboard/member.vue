@@ -1,7 +1,7 @@
 <template>
   <Fetchable :result="data.member" :retry="fetchAll">
     <div v-if="data.member && data.system">
-      <div class="mb-5 flex justify-between items-start">
+      <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
         <div class="flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
           <img
             v-if="data.member.avatar"
@@ -42,15 +42,8 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col sm:flex-row items-center gap-2">
           <BackgroundChooser v-model:entity="data.member" type="member" />
-          <ButtonLink
-            :to="{ name: 'dashboard:member:page:create', params: $route.params }"
-            class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
-          >
-            <DocumentIcon class="w-8 h-8 -ml-1" />
-            <span>New Page</span>
-          </ButtonLink>
         </div>
       </div>
 

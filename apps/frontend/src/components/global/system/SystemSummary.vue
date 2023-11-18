@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-start">
+  <div class="flex flex-col md:flex-row justify-center md:justify-between items-center md:items-start mb-8 md:mb-0">
     <div class="mb-5 flex flex-col text-center sm:flex-row sm:text-left justify-left items-center gap-4">
       <img
         v-if="system.avatar"
@@ -38,15 +38,8 @@
       </div>
     </div>
 
-    <div v-if="isDashboard" class="flex items-center gap-2">
+    <div v-if="isDashboard" class="flex flex-col sm:flex-row items-center gap-2 ">
       <BackgroundChooser v-model:entity="system" type="system" />
-      <ButtonLink
-        :to="{ name: 'dashboard:system:page:create', params: $route.params }"
-        class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
-      >
-        <DocumentIcon class="w-8 h-8 -ml-1" />
-        <span>New Page</span>
-      </ButtonLink>
     </div>
   </div>
 

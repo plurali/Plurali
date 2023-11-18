@@ -1,7 +1,7 @@
 <template>
   <Button
     @click="open = !open"
-    class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1"
+    class="border-[2.5px] text-violet-700 font-semibold inline-flex justify-center items-center gap-1"
   >
     <PhotoIcon class="w-8 h-8" />
     <span>Background</span>
@@ -57,7 +57,7 @@ import { PropType, computed, defineComponent, ref } from 'vue';
 import { PhotoIcon, SwatchIcon } from '@heroicons/vue/24/outline';
 import { wrapRequest } from '../../api';
 import { updateMember, updateSystem } from '../../api/system';
-import { flash } from '../../store'; 
+import { flash } from '../../store';
 import Button from '../Button.vue';
 import Modal from './Modal.vue';
 import Uploader from './Uploader.vue';
