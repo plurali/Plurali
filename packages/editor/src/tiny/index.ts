@@ -21,6 +21,11 @@ export const tinyInitConfig: EditorOptions = {
         'emoticons',
         'autosave',
     ],
+    content_style: `
+      body {
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif;
+      }
+    `,
     toolbar:
         'undo redo styles fontfamily fontsize | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | forecolor backcolor | emoticons image link restoredraft',
     menubar: 'edit insert format table',
@@ -32,6 +37,10 @@ export const tinyInitConfig: EditorOptions = {
     removed_menuitems: 'image',
     font_size_formats: '8pt 9pt 10pt 11pt 12pt 14pt 18pt 24pt 30pt 36pt 48pt 60pt 72pt 96pt',
     promotion: false,
+    mobile: {
+      toolbar_mode: "wrap",
+      inline: false,
+    },
     image_class_list: [
         { title: 'Default', value: '' },
         { title: 'Inline', value: 'inline' },
