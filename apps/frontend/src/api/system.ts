@@ -25,10 +25,13 @@ export const updateSystem = (data: Partial<UpdateSystemRequest>): Promise<AxiosR
 export const updateSystemBackgroundImage = (file: Blob): Promise<AxiosResponse<Status<SystemResponse>>> =>
   $axios.postForm<Status<SystemResponse>>('/v1/system/background', { file });
 
-export const getMembers = (): Promise<AxiosResponse<PaginatedStatus<SystemMembersResponse>>> =>
+export const getMembers = (page = 1): Promise<AxiosResponse<PaginatedStatus<SystemMembersResponse>>> =>
   $axios.request<PaginatedStatus<SystemMembersResponse>>({
     url: '/v1/system/members',
     method: 'GET',
+    params: {
+      page,
+    }
   });
 
 export const getMember = (id: string): Promise<AxiosResponse<Status<SystemMemberResponse>>> =>
