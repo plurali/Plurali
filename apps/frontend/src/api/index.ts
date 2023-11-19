@@ -3,15 +3,14 @@ import { clearFlashes, flash, FlashType } from '../store';
 import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
-const baseURL = "https://plurali.icu/api";/* (window.location.href.includes('.local') || window.location.href.includes("http://localhost:5173")) // hackaround
+const baseURL = (window.location.href.includes('.local') || window.location.href.includes("http://localhost:5173")) // hackaround
   ? 'http://localhost:8000'
   : window.location.href.includes('dev.')
   ? 'https://dev.plurali.icu/api'
-  : 'https://plurali.icu/api';*/
+  : 'https://plurali.icu/api';
 
 export const $axios = axios.create({
   baseURL,
- // withCredentials: true,
 });
 
 export const setAuth = (auth: string | null) => {
