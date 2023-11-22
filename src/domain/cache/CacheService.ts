@@ -10,6 +10,7 @@ import { PluralVisibility, parseFieldType, parseVisibility } from '@domain/plura
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { PrismaService } from 'nestjs-prisma';
 import { PrismaTx } from '@infra/prisma/types';
+import { captureException } from '@sentry/node';
 
 const txConfig = {
   maxWait: 50000000,
@@ -147,6 +148,7 @@ export class CacheService {
       try {
         pluralUser = await this.plural.findUserForId('me', user.pluralAccessToken);
       } catch (error) {
+        captureException(error);
         this.logger.error(`Failed to get data for ${user.id}`, error);
       }
     }

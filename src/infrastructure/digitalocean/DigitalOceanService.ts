@@ -2,6 +2,7 @@ import { DigitalOceanConfig } from '@app/Config';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
+import { captureException } from '@sentry/node';
 
 @Injectable()
 export class DigitalOceanService {
@@ -41,6 +42,7 @@ export class DigitalOceanService {
       const message =
         (typeof e === 'object' && ((e as any)?.response?.data?.error ?? (e as any)?.message)) ?? '(unknown)';
 
+      captureException(e);
       this.logger.warn(`Failed to purge cache for ${path}, cause: ${message}`);
 
       return false;

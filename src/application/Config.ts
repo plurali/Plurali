@@ -55,6 +55,7 @@ export interface ConfigInterface {
   digitalocean: DigitalOceanConfig | null;
   plural: PluralConfig;
   email: EmailConfig;
+  sentry: string;
 }
 
 export class Config implements ConfigInterface {
@@ -132,6 +133,10 @@ export class Config implements ConfigInterface {
   @IsString()
   protected EMAIL_TRANSPORT: string;
 
+  @IsString()
+  @IsOptional()
+  protected SENTRY_DSN: string | null = null;
+
   get env(): Environment {
     return this.NODE_ENV;
   }
@@ -204,5 +209,9 @@ export class Config implements ConfigInterface {
 
   get jwt(): string {
     return this.JWT_SECRET;
+  }
+
+  get sentry(): string | null {
+    return this.SENTRY_DSN;
   }
 }

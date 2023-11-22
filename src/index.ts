@@ -13,6 +13,9 @@ import { csp } from '@app/misc/csp';
 import { overrideLoggerPrefix } from './domain/common';
 import { CacheService } from '@domain/cache/CacheService';
 import fastifyMultipart from '@fastify/multipart';
+import * as Sentry from '@sentry/node';
+import { ProfilingIntegration } from '@sentry/profiling-node';
+import { createSentryInterceptor } from '@app/misc/sentry';
 
 async function bootstrap() {
   const logger = overrideLoggerPrefix(new ConsoleLogger());
@@ -25,6 +28,29 @@ async function bootstrap() {
 
   const isDev = config.get<boolean>('dev');
   // const plural = config.get<PluralConfig>('plural');
+
+  const sentryDsn = config.get<string>('sentry');
+
+  if (!!sentryDsn) {
+    logger.log('Enabling Sentry logging');
+
+    Sentry.init({
+      dsn: sentryDsn,
+      debug: isDev,
+      environment: config.get('env'),
+      tracesSampleRate: 1.5,
+      profilesSampleRate: 1.5,
+      integrations: [new ProfilingIntegration()],
+    });
+
+    ['uncaughtException', 'unhandledRejection'].forEach(eventName => {
+      process.addListener(eventName as any, e => {
+        Sentry.captureException(e);
+      });
+    });
+
+    app.useGlobalInterceptors(createSentryInterceptor());
+  }
 
   app.enableCors({
     credentials: true,
