@@ -1,14 +1,12 @@
-import { isBrowser } from './utils';
-
 export class TokenStorage {
   constructor(public readonly storageKey: string) {}
 
   get(): string | null {
-    return isBrowser ? localStorage.getItem(this.storageKey) ?? null : null;
+    return typeof window !== "undefined" ? localStorage.getItem(this.storageKey) ?? null : null;
   }
 
   set(value: string | null): void {
-    if (!isBrowser) return;
+    if (typeof window === "undefined") return;
 
     if (value) {
       localStorage.setItem(this.storageKey, value);
