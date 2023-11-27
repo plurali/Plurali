@@ -1,66 +1,35 @@
 <template>
-  <Fetchable :result="member" :retry="fetchMember">
-    <div v-if="member">
-      <MemberSummary :member="member" />
-
-      <UserContent class="mb-5 p-6" v-if="member.data.customDescription">
-        <Sanitized :value="member.data.customDescription" />
-      </UserContent>
-
-      <CustomFields :fields="member.fields" :modifiable="false" title="System-wide Custom Fields" />
-
-      <Fetchable :result="pages" :retry="fetchPages">
-        <PageFields v-if="pages" :pages="pages" :modifiable="false" />
-      </Fetchable>
-    </div>
+  <Fetchable :result="data.member" :retry="fetchMember">
+    <MemberSummary v-model="data" />
   </Fetchable>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import Title from '../components/Title.vue';
-import Subtitle from '../components/Subtitle.vue';
-import ButtonLink from '../components/ButtonLink.vue';
-import Button from '../components/Button.vue';
-import Spinner from '../components/Spinner.vue';
 import { wrapRequest } from '../api';
 import { getMember, getMemberPages } from '../api/public';
-import Color from '../components/global/color/ColorCircle.vue';
 import { useGoBack } from '../composables/goBack';
 import Fetchable from '../components/global/Fetchable.vue';
-import CustomFields from '../components/global/fields/CustomFields.vue';
-import PageFields from '../components/global/page/PageFields.vue';
-import ColorCircle from '../components/global/color/ColorCircle.vue';
 import { getRouteParam } from '../utils';
-import MemberSummary from '../components/global/members/MemberSummary.vue';
-import UserContent from '../components/global/UserContent.vue';
-import Sanitized from '../components/global/Sanitized.vue';
 import { withBackground } from '../composables/background';
 import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { useMeta } from '../utils/meta';
 import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
 import { PageDto } from '@app/v1/dto/page/PageDto';
+import MemberSummary from '../components/global/members/MemberSummary.vue';
 
 export default defineComponent({
   components: {
-    MemberSummary,
-    ColorCircle,
-    CustomFields,
-    PageFields,
     Fetchable,
-    Spinner,
-    Title,
-    Subtitle,
-    ButtonLink,
-    Button,
-    Color,
-    UserContent,
-    Sanitized,
-  },
+    MemberSummary,
+},
   setup() {
-    const member = ref<UserMemberDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const data = reactive({
+      member: false as UserMemberDto | null | false,
+      pages: false as PageDto[] | null | false,
+      system: null,
+    });
 
     const route = useRoute();
 
@@ -72,30 +41,30 @@ export default defineComponent({
     const setMeta = useMeta();
 
     const fetchMember = async () => {
-      if (member.value === null) return;
-      member.value = null;
+      if (data.member === null) return;
+      data.member = null;
 
       const res = await wrapRequest(() => getMember(systemId.value, memberId.value));
-      member.value = res ? res.member : res;
+      data.member = res ? res.member : res;
 
-      if (member.value) {
+      if (data.member) {
         await fetchPages();
       }
     };
 
     const fetchPages = async () => {
-      if (pages.value === null) return;
-      pages.value = null;
+      if (data.pages === null) return;
+      data.pages = null;
 
       const res = await wrapRequest<PagesResponse>(() => getMemberPages(memberId.value));
-      pages.value = res ? res.pages : res;
+      data.pages = res ? res.pages : res;
     };
 
-    withBackground(member);
+    withBackground(() => data.member);
 
     onMounted(() => fetchMember());
 
-    const stopWatch = watch(member, (member) => {
+    const stopWatch = watch(() => data.member, (member) => {
       setMeta({
         title: member ? member.name : '',
         description: member ? member.description ?? '' : '',
@@ -109,8 +78,7 @@ export default defineComponent({
     return {
       fetchMember,
       fetchPages,
-      member,
-      pages,
+      data,
       systemId,
     };
   },

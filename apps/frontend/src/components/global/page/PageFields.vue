@@ -8,11 +8,11 @@
       </p>
       <ButtonLink
         v-if="modifiable"
-        :to="{ name: 'dashboard:system:page:create', params: $route.params }"
+        :to="{ name: `dashboard:${ownerType}:page:create`, params: $route.params }"
         class="border-[2.5px] text-violet-700 font-semibold inline-flex justify-center items-center gap-1"
       >
-        <PlusCircleIcon class="w-6 h-6 -ml-1" />
-        <span>New Page</span>
+        <PlusCircleIcon class="w-6 h-6 sm:-ml-1" />
+        <span class="hidden sm:inline">New Page</span>
       </ButtonLink>
     </div>
 
@@ -42,6 +42,10 @@ export default defineComponent({
     title: {
       type: String,
     },
+    ownerType: {
+      type: String as PropType<"system" | "member">,
+      default: "system",
+    }
   },
   components: {
     PageField,

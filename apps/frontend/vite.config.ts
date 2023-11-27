@@ -11,8 +11,8 @@ const caddyHead = `
 
 export default defineConfig({
   plugins: [
-    vue(),
     tsconfigPaths(),
+    vue(),  
     // csp is a mess atm, let's disable it for now
     // {
     //   name: '@plurali/frontend-csp',
