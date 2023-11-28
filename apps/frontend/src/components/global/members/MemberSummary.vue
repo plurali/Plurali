@@ -7,7 +7,7 @@
             class="flex-shrink-0 w-32 h-32 rounded-full object-cover" />
           <Color v-else :color="data.member.color ?? '#e2e8f0'" class="flex-shrink-0 w-32 h-32 opacity-25" />
           <div>
-            <p class="text-sm text-gray-700">SID: {{ data.member.id }}</p>
+            <p v-if="isDashboard" class="text-sm text-gray-700">SID: {{ data.member.id }}</p>
             <PageTitle class="text-violet-700 inline-flex flex-col sm:flex-row items-center justify-center gap-3">
               {{ data.member.name }}
               <span v-if="isDashboard" class="inline-flex flex-col sm:flex-row sm:items-center justify-center gap-3">
