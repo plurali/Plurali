@@ -5,9 +5,11 @@ import { $topbar } from '../utils/topbar';
 
 const prodApiUrl = 'https://plurali.icu/api';
 
+const pubdevApiUrl = "https://pubdev.plurali.icu/api";
+
 const apiUrls = {
   "https://localhost:8000": (window.location.href.includes('.local') || window.location.href.startsWith("http://localhost:5173")),
-  "https://pubdev.plurali.icu/api": window.location.href.startsWith("https://pubdev.plurali.icu"),
+  [pubdevApiUrl]: window.location.href.startsWith("https://pubdev.plurali.icu"),
   "https://dev.plurali.icu/api": window.location.href.startsWith("https://dev.plurali.icu"),
   [prodApiUrl]: window.location.href.startsWith("https://plurali.icu"),
 }
@@ -24,6 +26,8 @@ const getApiUrl = () => {
 }
 
 const baseURL = getApiUrl();
+
+export const isPubDev = baseURL === pubdevApiUrl;
 
 export const $axios = axios.create({
   baseURL,

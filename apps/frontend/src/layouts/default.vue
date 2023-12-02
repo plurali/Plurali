@@ -85,7 +85,7 @@
 
           <div class="pt-5 mt-5 inline-flex w-full justify-start items-center font-normal text-gray-700 border-t">
             <p>
-              <router-link to="/" class="text-violet-700 font-medium">Plurali</router-link>
+              <router-link to="/" class="text-violet-700 font-medium">Plurali <b v-if="isPubDev"><u>Public Beta</u></b></router-link>
               by
               <a
                 href="https://github.com/lilianalillyy"
@@ -102,7 +102,7 @@
                   ><u>report them</u></a
                 >.
               </span>
-              <br />
+              <span v-if="isPubDev"><br />This is a public <b>beta instance</b> and uses data from the <b>Simply Plural Beta</b>.<br /></span>
               <span class="text-sm text-gray-500"
                 >Not affiliated with Apparyllis/Simply Plural |
                 <a
@@ -128,6 +128,7 @@ import Flash from '../components/Flash.vue';
 import { isUrl, generateShades } from '../utils';
 import Sanitized from '../components/global/Sanitized.vue';
 import Notification from '../components/Notification.vue';
+import { isPubDev } from "../api";
 
 export default defineComponent({
   setup() {
@@ -168,6 +169,7 @@ export default defineComponent({
       imageLoaded,
       arr: (...arrays: any[]) => arrays.find(val => Array.isArray(val)),
       notifications,
+      isPubDev,
     };
   },
   components: { Flash, Sanitized, Notification },
