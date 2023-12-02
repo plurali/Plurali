@@ -4,8 +4,11 @@ import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
 import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto';
 import { MemberFieldType } from '../../../../src/domain/plural/utils';
 
-export const string = (string: string, useMd = true): string =>
-  useMd
+export const string = (string: string, useMd = true): string => {
+  // hotfix-ish
+  string = string.replaceAll(/\<###@(.*)###\>/g, "@unavailable");
+
+  return useMd
     ? markdown({
       html: true,
       linkify: true,
@@ -13,6 +16,7 @@ export const string = (string: string, useMd = true): string =>
       typographer: true,
     }).render(xss(string))
     : xss(string);
+}
 
 const color = (string: string): string | null => {
   if (string && string.length >= 1) {
