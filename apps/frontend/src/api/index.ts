@@ -3,11 +3,27 @@ import { clearFlashes, flash, FlashType } from '../store';
 import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 
-const baseURL = (window.location.href.includes('.local') || window.location.href.includes("http://localhost:5173")) // hackaround
-  ? 'http://localhost:8000'
-  : window.location.href.includes('dev.')
-  ? 'https://dev.plurali.icu/api'
-  : 'https://plurali.icu/api';
+const prodApiUrl = 'https://plurali.icu/api';
+
+const apiUrls = {
+  "https://localhost:8000": (window.location.href.includes('.local') || window.location.href.startsWith("http://localhost:5173")),
+  "https://pubdev.plurali.icu/api": window.location.href.startsWith("https://pubdev.plurali.icu"),
+  "https://dev.plurali.icu/api": window.location.href.startsWith("https://dev.plurali.icu"),
+  [prodApiUrl]: window.location.href.startsWith("https://plurali.icu"),
+}
+
+const getApiUrl = () => {
+  for (const apiUrl in apiUrls) {
+    const matches = apiUrls[apiUrl as keyof typeof apiUrls];
+    if (matches) {
+      return apiUrl;
+    }
+  }
+
+  return prodApiUrl;
+}
+
+const baseURL = getApiUrl();
 
 export const $axios = axios.create({
   baseURL,
