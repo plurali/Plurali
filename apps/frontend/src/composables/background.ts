@@ -3,12 +3,13 @@ import { background } from '../store';
 import type { HasBackground } from '@domain/common/types';
 import { onBeforeRouteLeave } from 'vue-router';
 import { BackgroundType } from '../../../../src/domain/common';
+import { isPubDev } from '../api';
 
 export interface Assetable {
   lastTimeAssetChanged: Date;
 }
 
-export const cdnBaseUrl = (import.meta as any).env?.DEV ? 'http://127.0.0.1:8001/plurali' : 'https://cdn.plurali.icu/v1';
+export const cdnBaseUrl = (import.meta as any).env?.DEV ? 'http://127.0.0.1:8001/plurali' : `https://cdn.plurali.icu/${isPubDev ? "pubdev" : "v1"}`;
 
 export const parseBackground = (data: HasBackground & Assetable): string | null => {
   if (!data.backgroundImage) return null;
