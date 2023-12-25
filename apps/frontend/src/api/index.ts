@@ -8,7 +8,7 @@ const prodApiUrl = 'https://plurali.icu/api';
 const pubdevApiUrl = "https://pubdev.plurali.icu/api";
 
 const apiUrls = {
-  "https://localhost:8000": (window.location.href.includes('.local') || window.location.href.startsWith("http://localhost:5173")),
+  "http://localhost:8000": (window.location.href.includes('.local') || window.location.href.startsWith("http://localhost:5173")),
   [pubdevApiUrl]: window.location.href.startsWith("https://pubdev.plurali.icu"),
   "https://dev.plurali.icu/api": window.location.href.startsWith("https://dev.plurali.icu"),
   [prodApiUrl]: window.location.href.startsWith("https://plurali.icu"),
