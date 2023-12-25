@@ -1,4 +1,4 @@
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
 import { PageDto } from '@app/v1/dto/page/PageDto';

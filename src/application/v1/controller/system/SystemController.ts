@@ -1,6 +1,6 @@
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/context/system/CurrentSystem';
-import { SystemGuard } from '@app/context/system/SystemGuard';
+import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
+import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
+import { SystemGuard } from '@app/v1/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { SystemDto } from '@app/v1/dto/user/system/SystemDto';
@@ -20,7 +20,7 @@ import { StoragePrefix } from '@infra/storage/StoragePrefix';
 import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
 import * as mime from 'mime-types';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 
 @Controller({
   path: '/system',

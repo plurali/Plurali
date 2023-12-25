@@ -14,7 +14,7 @@ import { Authenticator } from '@domain/security/authenticator/Authenticator';
 import { StatusException } from '@app/v1/exception/StatusException';
 import { jwtConfig } from '@app/misc/jwt';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { RegisterRequest } from '@app/v1/dto/auth/request/RegisterRequest';
 import { UserService } from '@domain/user/UserService';
 

@@ -7,7 +7,7 @@ import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundExc
 import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 
 @Controller({
   path: '/public/system',

@@ -1,5 +1,5 @@
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { AuthGuard } from '@app/context/auth/AuthGuard';
+import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
+import { AuthGuard } from '@app/v1/context/auth/AuthGuard';
 import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserResponse } from '@app/v1/dto/user/response/UserResponse';
 import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
@@ -11,7 +11,7 @@ import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { CacheService } from '@domain/cache/CacheService';
 import { UserDto } from '@app/v1/dto/user/UserDto';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { StatusException } from '@app/v1/exception/StatusException';
 import { UserService } from '@domain/user/UserService';
 import { SystemAlreadyAssociatedException } from '@app/v1/exception/SystemAlreadyAssociatedException';

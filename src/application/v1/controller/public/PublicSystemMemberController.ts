@@ -10,13 +10,13 @@ import { assignSystem } from '@domain/common';
 import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
 import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { Member } from '@prisma/client';
 import { FullSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { Page } from '@app/context/pagination/Page';
-import { Take } from '@app/context/pagination/Take';
-import { Pagination } from '@app/misc/pagination';
+import { Page } from '@app/v1/context/pagination/Page';
+import { Take } from '@app/v1/context/pagination/Take';
+import { Pagination } from '@app/v1/misc/pagination';
 import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
 
 @Controller({

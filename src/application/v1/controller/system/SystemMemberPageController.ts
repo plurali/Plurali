@@ -1,8 +1,8 @@
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/context/system/CurrentSystem';
-import { SystemGuard } from '@app/context/system/SystemGuard';
+import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
+import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
+import { SystemGuard } from '@app/v1/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { OkResponse } from '@app/v1/dto/OkResponse';
 import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
 import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';

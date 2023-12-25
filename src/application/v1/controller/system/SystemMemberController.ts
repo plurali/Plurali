@@ -1,6 +1,6 @@
-import { CurrentUser } from '@app/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/context/system/CurrentSystem';
-import { SystemGuard } from '@app/context/system/SystemGuard';
+import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
+import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
+import { SystemGuard } from '@app/v1/context/system/SystemGuard';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { Ok, PaginatedOk, Status, StatusMap } from '@app/v1/dto/Status';
 import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
@@ -24,11 +24,11 @@ import { StoragePrefix } from '@infra/storage/StoragePrefix';
 import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
 import * as mime from 'mime-types';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/misc/swagger';
+import { error, ok } from '@app/v1/misc/swagger';
 import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
-import { Page } from '@app/context/pagination/Page';
-import { Take } from '@app/context/pagination/Take';
-import { Pagination } from '@app/misc/pagination';
+import { Page } from '@app/v1/context/pagination/Page';
+import { Take } from '@app/v1/context/pagination/Take';
+import { Pagination } from '@app/v1/misc/pagination';
 
 @Controller({
   path: '/system/members',
