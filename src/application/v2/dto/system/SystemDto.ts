@@ -47,7 +47,7 @@ export class SystemDto implements SystemDtoInterface {
 
   public static from(system: System, plural: PluralUserEntry): SystemDto {
     return new SystemDto(
-      system.pluralId,
+      system.id,
       plural.content.username,
       plural.content.color,
       plural.content.desc,

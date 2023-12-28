@@ -8,7 +8,7 @@
       </p>
       <ButtonLink
         v-if="modifiable"
-        :to="{ name: `dashboard:${ownerType}:page:create`, params: $route.params }"
+        :to="{ name: `dashboard:${ownerType}:page:create`, params: ownerType === 'member' ? {memberId: $route.params.id } : {} }"
         class="border-[2.5px] text-violet-700 font-semibold inline-flex justify-center items-center gap-1"
       >
         <PlusCircleIcon class="w-6 h-6 sm:-ml-1" />
@@ -23,11 +23,12 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import type { PageDto } from '@app/v1/dto/page/PageDto';
 import PageField from './PageField.vue';
 import { DocumentIcon, PlusCircleIcon, PlusIcon } from '@heroicons/vue/24/outline';
 import ButtonLink from '../../ButtonLink.vue';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   props: {
@@ -52,7 +53,7 @@ export default defineComponent({
     DocumentIcon,
     PlusIcon,
     ButtonLink,
-    PlusCircleIcon
-},
+    PlusCircleIcon,
+  },
 });
 </script>

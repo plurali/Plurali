@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
+import { Member, OwnerType, Page, Prisma, System, User } from '@prisma/client';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
@@ -16,6 +16,7 @@ import { Ok } from '@app/v2/dto/response/Ok';
 import { SystemGuard } from '@app/v2/context/system/SystemGuard';
 import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
+import { createSlug } from '@domain/common';
 
 @Controller({
   path: '/member/:member/page',
@@ -42,7 +43,7 @@ export class MemberPageController extends BaseController {
 
     const pages = await this.pages.findMany({
       where: {
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
       },
     });
@@ -63,7 +64,10 @@ export class MemberPageController extends BaseController {
     @Param('member') memberId: string,
     @Param('page') pageId: string,
   ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, pageId)));
+    const member = await this.findMemberOrFail(system, memberId);
+    const page = await this.findOrFail(member, user, pageId);
+
+    return this.data(PageDto.from(page));
   }
 
   @UseGuards(SystemGuard)
@@ -86,16 +90,17 @@ export class MemberPageController extends BaseController {
 
     const update: Prisma.PageUpdateInput = {};
 
-    if (notEmpty(data.name)) {
+    if (notEmpty(data.name) && page.name !== data.name) {
       update.name = data.name;
+      update.slug = createSlug(page.name);
     }
 
     if (notEmpty(data.content)) {
       update.content = data.content;
     }
 
-    if (notEmpty(data.visible)) {
-      update.visibility = data.visible ? Visibility.Public : Visibility.Private;
+    if (notEmpty(data.visibility)) {
+      update.visibility = data.visibility;
     }
 
     if (shouldUpdate(data)) {
@@ -151,12 +156,13 @@ export class MemberPageController extends BaseController {
 
     const page = await this.pages.create({
       data: {
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
         name: data.name,
+        slug: createSlug(data.name),
         content: data.content,
         userId: user.id,
-        visibility: data.visible ? Visibility.Public : Visibility.Private,
+        visibility: data.visibility,
       },
     });
 
@@ -164,11 +170,8 @@ export class MemberPageController extends BaseController {
   }
 
   protected async findMemberOrFail(system: System, memberId: string): Promise<Member> {
-    const member = await this.members.findFirst({
-      where: {
-        pluralId: memberId,
-        systemId: system.id,
-      },
+    const member = await this.members.findByIdentifier(memberId, {
+      systemId: system.id,
     });
 
     if (!member) {
@@ -179,13 +182,8 @@ export class MemberPageController extends BaseController {
   }
 
   protected async findOrFail(member: Member, user: User, id: string): Promise<Page> {
-    const page = await this.pages.findFirst({
-      where: {
-        id,
-        ownerId: member.pluralId,
-        ownerType: 'Member',
-        userId: user.id,
-      },
+    const page = await this.pages.findForOwner(id, member, OwnerType.Member, {
+      userId: user.id,
     });
 
     if (!page) {

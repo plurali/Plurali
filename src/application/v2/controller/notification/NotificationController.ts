@@ -1,11 +1,10 @@
-import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { error, ok } from '@app/v2/misc/swagger';
 import { ApiError } from '@app/v2/dto/response/errors';
 import { ApiDataResponse } from '@app/v2/types/response';
 import { BaseController } from '../BaseController';
-import { AuthGuard } from '@app/v2/context/auth/AuthGuard';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 import { NotificationService } from '@domain/notification/NotificationService';
 import { NotificationDto } from '@app/v2/dto/notification/NotificationDto';

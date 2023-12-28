@@ -43,12 +43,9 @@ enum NotificationType {
   Global
 }
 
-// this is just a dummy model for Prisma to generate a dummy delegate that
-// the PrismaRepository can extend
-model BaseModel {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  @@map("_internal")
+enum OwnerType {
+  Member
+  System
 }
 
 model User {
@@ -154,16 +151,11 @@ model Member {
   @@map("pluraliapp_systems_members")
 }
 
-enum OwnerType {
-  Member
-  System
-}
-
 model Page {
   id   String  @id @default(auto()) @map("_id") @db.ObjectId
   slug String?
 
-  ownerId   String // attach to pluralId to bind to member/system
+  ownerId   String
   ownerType OwnerType
 
   name    String
@@ -188,7 +180,11 @@ model Notification {
   userId String? @db.ObjectId
 
   createdAt DateTime  @default(now())
+
+  // Notification expiration date
   expiresAt DateTime?
+
+  // Stays after shown once (only applies to user notifications without expiration)
   permanent Boolean   @default(false)
 
   @@map("pluraliapp_notifications")

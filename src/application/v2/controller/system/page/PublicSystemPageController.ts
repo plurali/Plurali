@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { System, Page, Visibility } from '@prisma/client';
+import { System, Page, Visibility, OwnerType } from '@prisma/client';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { PageRepository } from '@domain/page/PageRepository';
 import { SystemRepository } from '@domain/system/SystemRepository';
@@ -27,15 +27,11 @@ export class PublicSystemPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async list(@Param('system') systemId: string): Promise<ApiDataResponse<PageDto[]>> {
-    const system = await this.findSystemOrFail(systemId);
+  async list(@Param('system') systemSlug: string): Promise<ApiDataResponse<PageDto[]>> {
+    const system = await this.findSystemOrFail(systemSlug);
 
-    const pages = await this.pages.findMany({
-      where: {
-        ownerId: system.pluralId,
-        ownerType: 'System',
-        visibility: Visibility.Public,
-      },
+    const pages = await this.pages.findAllByOwner(system, OwnerType.System, {
+      visibility: Visibility.Public,
     });
 
     return this.data(pages.map(PageDto.from));
@@ -45,16 +41,12 @@ export class PublicSystemPageController extends BaseController {
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
-  async view(@Param('system') systemId: string, @Param('page') pageId: string): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemId), pageId)));
+  async view(@Param('system') systemSlug: string, @Param('page') slug: string): Promise<ApiDataResponse<PageDto>> {
+    return this.data(PageDto.from(await this.findOrFail(await this.findSystemOrFail(systemSlug), slug)));
   }
 
-  protected async findSystemOrFail(systemId: string): Promise<System> {
-    const system = await this.systems.findFirst({
-      where: {
-        slug: systemId,
-      },
-    });
+  protected async findSystemOrFail(systemSlug: string): Promise<System> {
+    const system = await this.systems.findPublicBase(systemSlug);
 
     if (!system) {
       throw new ResourceNotFoundException();
@@ -64,13 +56,8 @@ export class PublicSystemPageController extends BaseController {
   }
 
   protected async findOrFail(system: System, id: string): Promise<Page> {
-    const page = await this.pages.findFirst({
-      where: {
-        id,
-        ownerId: system.pluralId,
-        ownerType: 'System',
-        visibility: Visibility.Public,
-      },
+    const page = await this.pages.findForOwner(id, system, OwnerType.System, {
+      visibility: Visibility.Public,
     });
 
     if (!page) {

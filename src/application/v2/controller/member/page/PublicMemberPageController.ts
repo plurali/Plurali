@@ -1,6 +1,6 @@
 import { Controller, Get, HttpCode, Param } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Visibility } from '@prisma/client';
+import { Member, OwnerType, Page, Visibility } from '@prisma/client';
 import { PageDto } from '@app/v2/dto/page/PageDto';
 import { PageRepository } from '@domain/page/PageRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
@@ -35,8 +35,8 @@ export class PublicMemberPageController extends BaseController {
 
     const pages = await this.pages.findMany({
       where: {
-        ownerId: member.pluralId,
-        ownerType: 'Member',
+        ownerId: member.id,
+        ownerType: OwnerType.Member,
         visibility: Visibility.Public,
       },
     });
@@ -51,19 +51,13 @@ export class PublicMemberPageController extends BaseController {
   async view(
     @Param('system') systemId: string,
     @Param('member') memberId: string,
-    @Param('page') pageId: string,
+    @Param('page') id: string,
   ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(systemId, memberId), pageId)));
+    return this.data(PageDto.from(await this.findOrFail(await this.findMemberOrFail(systemId, memberId), id)));
   }
 
   protected async findMemberOrFail(systemId: string, memberId: string): Promise<Member> {
-    const member = await this.members.findFirst({
-      where: {
-        slug: memberId,
-        systemId,
-        visibility: Visibility.Public,
-      },
-    });
+    const member = await this.members.findPublic(memberId, systemId);
 
     if (!member) {
       throw new ResourceNotFoundException();
@@ -73,13 +67,8 @@ export class PublicMemberPageController extends BaseController {
   }
 
   protected async findOrFail(member: Member, id: string): Promise<Page> {
-    const page = await this.pages.findFirst({
-      where: {
-        id,
-        ownerId: member.pluralId,
-        ownerType: 'Member',
-        visibility: Visibility.Public,
-      },
+    const page = await this.pages.findForOwner(id, member, OwnerType.Member, {
+      visibility: Visibility.Public,
     });
 
     if (!page) {

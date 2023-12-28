@@ -55,7 +55,7 @@ export class SystemDto {
 
   public static from(system: SystemWithFields, plural: PluralUserEntry): SystemDto {
     return new SystemDto(
-      system.pluralId,
+      system.id,
       new Date(plural.content.lastOperationTime),
       plural.content.username,
       system.fields.map(UserFieldDto.from),

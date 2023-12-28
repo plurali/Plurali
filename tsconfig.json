@@ -27,6 +27,6 @@
       "@observer/*": ["./src/observer/*"],
     }
   },
-  "include": ["src"],
+  "include": ["src", "bin"],
   "exclude": ["packages"]
 }

@@ -52,8 +52,8 @@ export class SystemFieldController extends BaseController {
   ): Promise<ApiDataResponse<FieldDto>> {
     let field = await this.fields.findFirst({
       where: {
+        id: fieldId,
         systemId: system.id,
-        pluralId: fieldId,
       },
     });
 

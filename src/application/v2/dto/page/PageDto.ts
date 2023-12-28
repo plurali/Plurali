@@ -1,5 +1,4 @@
-import { Page, Visibility } from '@prisma/client';
-import { OwnerType } from '@domain/common';
+import { OwnerType, Page, Visibility } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { PageDtoInterface } from './PageDtoInterface';
 
@@ -20,28 +19,33 @@ export class PageDto implements PageDtoInterface {
   public name: string;
 
   @ApiProperty()
+  public slug: string;
+
+  @ApiProperty()
   public content: string;
 
   @ApiProperty()
-  public visible: boolean;
+  public visibility: Visibility;
 
-  constructor(id: string, ownerType: OwnerType, ownerId: string, name: string, content: string, visible: boolean) {
+  constructor(
+    id: string,
+    ownerType: OwnerType,
+    ownerId: string,
+    name: string,
+    slug: string,
+    content: string,
+    visibility: Visibility,
+  ) {
     this.id = id;
     this.ownerType = ownerType;
     this.ownerId = ownerId;
     this.name = name;
+    this.slug = slug;
     this.content = content;
-    this.visible = visible;
+    this.visibility = visibility;
   }
 
   public static from(page: Page): PageDto {
-    return new PageDto(
-      page.id,
-      page.ownerType.toLowerCase() as OwnerType,
-      page.ownerId,
-      page.name,
-      page.content,
-      page.visibility === Visibility.Public,
-    );
+    return new PageDto(page.id, page.ownerType, page.ownerId, page.name, page.slug, page.content, page.visibility);
   }
 }

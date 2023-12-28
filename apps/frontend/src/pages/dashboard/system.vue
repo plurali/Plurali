@@ -19,7 +19,7 @@ import Subtitle from '../../components/Subtitle.vue';
 import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
 import { wrapRequest } from '../../api';
 import { getSystem } from '../../api/system';
-import { getSystemPages } from '../../api/page';
+import { $systemPage, PageDtoInterface } from '@plurali/api-client';
 import ColorCircle from '../../components/global/color/ColorCircle.vue';
 import CustomFields from '../../components/global/fields/CustomFields.vue';
 import Members from '../../components/dashboard/members/Members.vue';
@@ -28,7 +28,6 @@ import { useGoBack } from '../../composables/goBack';
 import Color from '../../components/global/color/ColorCircle.vue';
 import SystemSummary from '../../components/global/system/SystemSummary.vue';
 import { withBackground } from '../../composables/background';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
 import PageFields from '../../components/global/page/PageFields.vue';
 
 export default defineComponent({
@@ -42,10 +41,10 @@ export default defineComponent({
     Subtitle,
     ColorCircle,
     PageFields
-},
+  },
   setup() {
     const system = ref<SystemDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const pages = ref<PageDtoInterface[] | null | false>(false);
 
     useGoBack('/dashboard');
 
@@ -65,8 +64,7 @@ export default defineComponent({
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest(() => getSystemPages());
-      pages.value = res ? res.pages : res;
+      pages.value = await wrapRequest(() => $systemPage.getSystemPages());
     };
 
     withBackground(system);

@@ -1,4 +1,4 @@
-import { RequestWithSystem } from '@app/v2/http/RequestWithSystem';
+import { RequestWithSystem } from '@app/v2/types/request';
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 import { System } from '@prisma/client';
 

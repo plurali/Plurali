@@ -40,7 +40,7 @@ export class SystemMemberPageController {
 
     const pages = await this.pages.findMany({
       where: {
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
       },
     });
@@ -147,7 +147,7 @@ export class SystemMemberPageController {
 
     const page = await this.pages.create({
       data: {
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
         name: data.name,
         content: data.content,
@@ -160,11 +160,8 @@ export class SystemMemberPageController {
   }
 
   protected async findMemberOrFail(system: System, memberId: string): Promise<Member> {
-    const member = await this.members.findFirst({
-      where: {
-        pluralId: memberId,
-        systemId: system.id,
-      },
+    const member = await this.members.findByIdentifier(memberId, {
+      systemId: system.id,
     });
 
     if (!member) {
@@ -178,7 +175,7 @@ export class SystemMemberPageController {
     const page = await this.pages.findFirst({
       where: {
         id,
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
         userId: user.id,
       },

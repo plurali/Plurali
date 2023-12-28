@@ -34,7 +34,7 @@ export class FieldDto implements FieldDtoInterface {
 
   public static from(field: Field): FieldDto {
     return new FieldDto(
-      field.pluralId,
+      field.id,
       field.name,
       field.position,
       convertFieldType(field.type),

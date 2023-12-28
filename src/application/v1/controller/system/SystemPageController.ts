@@ -35,7 +35,7 @@ export class SystemPageController {
   async list(@CurrentSystem() system: System): Promise<Ok<PagesResponse>> {
     const pages = await this.pages.findMany({
       where: {
-        ownerId: system.pluralId,
+        ownerId: system.id,
         ownerType: 'System',
       },
     });
@@ -125,7 +125,7 @@ export class SystemPageController {
   ): Promise<Ok<PageResponse>> {
     const page = await this.pages.create({
       data: {
-        ownerId: system.pluralId,
+        ownerId: system.id,
         ownerType: 'System',
         name: data.name,
         content: data.content,
@@ -141,7 +141,7 @@ export class SystemPageController {
     const page = await this.pages.findFirst({
       where: {
         id,
-        ownerId: system.pluralId,
+        ownerId: system.id,
         ownerType: 'System',
         userId: user.id,
       },

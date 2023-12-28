@@ -8,16 +8,15 @@
 import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { wrapRequest } from '../api';
-import { getMember, getMemberPages } from '../api/public';
+import { getMember } from '../api/public';
 import { useGoBack } from '../composables/goBack';
 import Fetchable from '../components/global/Fetchable.vue';
 import { getRouteParam } from '../utils';
 import { withBackground } from '../composables/background';
 import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { useMeta } from '../utils/meta';
-import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import { PageDto } from '@app/v1/dto/page/PageDto';
 import MemberSummary from '../components/global/members/MemberSummary.vue';
+import { $memberPage, PageDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -27,7 +26,7 @@ export default defineComponent({
   setup() {
     const data = reactive({
       member: false as UserMemberDto | null | false,
-      pages: false as PageDto[] | null | false,
+      pages: false as PageDtoInterface[] | null | false,
       system: null,
     });
 
@@ -56,8 +55,7 @@ export default defineComponent({
       if (data.pages === null) return;
       data.pages = null;
 
-      const res = await wrapRequest<PagesResponse>(() => getMemberPages(memberId.value));
-      data.pages = res ? res.pages : res;
+      data.pages = await wrapRequest(() => $memberPage.getPublicMemberPages(systemId.value, memberId.value));
     };
 
     withBackground(() => data.member);

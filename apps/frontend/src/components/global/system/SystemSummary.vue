@@ -9,7 +9,7 @@
       />
       <Color v-else :color="system.color ?? '#e2e8f0'" class="flex-shrink-0 !w-32 !h-32 opacity-25" />
       <div>
-        <p class="text-sm text-gray-700" v-if="isDashboard">SID: {{ system.id }}</p>
+        <p class="text-sm text-gray-700" v-if="isDashboard">ID: {{ system.id }}</p>
         <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
           {{ system.username }}
           <VisibilityTag

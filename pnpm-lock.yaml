@@ -65,6 +65,9 @@ importers:
       '@nestjs/websockets':
         specifier: ^10.2.2
         version: 10.2.2(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@plurali/common':
+        specifier: workspace:^
+        version: link:packages/common
       '@plurali/editor':
         specifier: workspace:^
         version: link:packages/editor
@@ -255,6 +258,9 @@ importers:
       '@heroicons/vue':
         specifier: ^2.0.17
         version: 2.0.17(vue@3.2.47)
+      '@plurali/api-client':
+        specifier: workspace:^
+        version: link:../../packages/api-client
       '@plurali/editor':
         specifier: workspace:^
         version: link:../../packages/editor

@@ -4,7 +4,7 @@ import { Notification, NotificationType, User } from '@prisma/client';
 
 @Injectable()
 export class NotificationService {
-  constructor(private readonly notifications: NotificationRepository) { }
+  constructor(private readonly notifications: NotificationRepository) {}
 
   public async clearNotificationsForUser(user: User): Promise<void> {
     await this.notifications.deleteMany({
@@ -20,6 +20,8 @@ export class NotificationService {
     const notifications = await this.notifications.findMany({
       where: {
         OR: [
+          { expiresAt: null },
+          { expiresAt: { gt: new Date() } },
           ...(includeGlobal ? [{ type: NotificationType.Global }] : []),
           ...(user ? [{ type: NotificationType.User, userId: user.id }] : []),
         ],

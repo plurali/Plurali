@@ -30,7 +30,7 @@ export class PublicSystemMemberPageController {
 
     const pages = await this.pages.findMany({
       where: {
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
         visibility: Visibility.Public,
       },
@@ -65,7 +65,7 @@ export class PublicSystemMemberPageController {
     const page = await this.pages.findFirst({
       where: {
         id,
-        ownerId: member.pluralId,
+        ownerId: member.id,
         ownerType: 'Member',
         visibility: Visibility.Public,
       },

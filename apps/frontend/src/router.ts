@@ -72,12 +72,12 @@ const routes: RouteRecordRaw[] = [
       },
       {
         name: 'dashboard:member:page:create',
-        path: '/dashboard/member/:id/page-create',
+        path: '/dashboard/member/:memberId/page-create',
         component: () => import('./pages/dashboard/page-create.vue' as string),
       },
       {
         name: 'dashboard:member:page:edit',
-        path: '/dashboard/member/:id/page-edit/:pageId',
+        path: '/dashboard/member/:memberId/page-edit/:pageId',
         component: () => import('./pages/dashboard/page-edit.vue' as string),
       },
       {
@@ -129,8 +129,6 @@ router.beforeEach(async to => {
     "dashboard:index",
     "dashboard:user"
   ]
-
-  notifications.value = [];
 
   try {
     const apiNotifications = (await getNotifications()).data ?? { success: false };

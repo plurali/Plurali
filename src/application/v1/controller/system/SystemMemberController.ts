@@ -91,6 +91,8 @@ export class SystemMemberController {
       dtoMembers.push(dto);
     }
 
+    // TECHDEBT: as member names are not saved in the db, they can't be sorted in a query
+    // FIXME: save names in db?
     return dtoMembers.sort(function (a, b) {
       if (a.name < b.name) {
         return -1;
@@ -205,11 +207,8 @@ export class SystemMemberController {
   }
 
   protected async findOrFail(system: System, id: string): Promise<Member> {
-    const member = await this.members.findFirst({
-      where: {
-        systemId: system.id,
-        pluralId: id,
-      },
+    const member = await this.members.findByIdentifier(id, {
+      systemId: system.id,
     });
 
     if (!member) {

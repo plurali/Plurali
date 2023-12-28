@@ -23,6 +23,7 @@ export const swagger = new DocumentBuilder()
 
   // V2
   .addTag('System')
+  .addTag('SystemPublic')
   .addTag('SystemField')
   .addTag('SystemPage')
   .addTag('SystemFieldPublic')

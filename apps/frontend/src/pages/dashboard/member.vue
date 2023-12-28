@@ -12,14 +12,12 @@ import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
 import { getRouteParam } from '../../utils';
 import { wrapRequest } from '../../api';
 import { getMember, getSystem } from '../../api/system';
-import { getMemberPages } from '../../api/page';
 import { useGoBack } from '../../composables/goBack';
 import { withBackground } from '../../composables/background';
 import Fetchable from '../../components/global/Fetchable.vue';
 import { string } from '../../api/fields';
-import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import { PageDto } from '@app/v1/dto/page/PageDto';
 import MemberSummary from '../../components/global/members/MemberSummary.vue';
+import { $memberPage, PageDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -31,7 +29,7 @@ export default defineComponent({
     const data = reactive({
       system: false as SystemDto | null | false,
       member: false as UserMemberDto | null | false,
-      pages: false as PageDto[] | null | false,
+      pages: false as PageDtoInterface[] | null | false,
     });
 
     const route = useRoute();
@@ -50,9 +48,9 @@ export default defineComponent({
         data.member = mem ? mem.member : mem;
 
         if (data.member) {
-          const id = data.member.id; // stupid ts
-          const res = await wrapRequest<PagesResponse>(() => getMemberPages(id));
-          data.pages = res ? res.pages : res;
+          // TECHDEBT: v1 API does not return Plurali IDs, only the Simply Plural ID.
+          const id = data.member.data.slug!; // stupid ts
+          data.pages = await wrapRequest(() => $memberPage.getMemberPages(id));
         }
       }
     };

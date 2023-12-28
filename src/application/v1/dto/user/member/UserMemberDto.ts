@@ -69,8 +69,8 @@ export class UserMemberDto {
 
   public static from(member: MemberWithSystem<SystemWithFields>, plural: PluralMemberEntry): UserMemberDto {
     return new UserMemberDto(
-      member.pluralId,
-      member.pluralParentId,
+      member.id,
+      member.systemId,
       plural.content.name,
       plural.content.pronouns,
       parseVisibility(plural.content),

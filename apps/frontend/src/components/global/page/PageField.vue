@@ -1,43 +1,21 @@
 <template>
-  <router-link
-    v-if="page"
-    :to="{
-      name: isDashboard
-        ? isMember
-          ? 'dashboard:member:page:edit'
-          : 'dashboard:system:page:edit'
-        : isMember
-        ? 'public:member:page'
-        : 'public:system:page',
-      params: {
-        pageId: page.id,
-        ...(isDashboard
-          ? isMember
-            ? { id: $route.params.id }
-            : {}
-          : isMember
-          ? { memberId: $route.params.memberId }
-          : { systemId: $route.params.systemId }),
-      },
-    }"
-    @click.ctrl.prevent="toggleVisibility"
-    class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25"
-    :class="[
-      isDashboard ? (page.visible ? 'border-l-green-500' : 'border-l-red-500') : '',
+  <router-link v-if="page" :to="routerTo" @click.ctrl.prevent="toggleVisibility"
+    class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25" :class="[
+      isDashboard ? (page.visibility === Visibility.Public ? 'border-l-green-500' : 'border-l-red-500') : '',
       loading && '!bg-gray-100 bg-opacity-10',
-    ]"
-  >
+    ]">
     <p class="font-medium">{{ page.name }}</p>
   </router-link>
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import type { PageDto } from '@app/v1/dto/page/PageDto';
-import { wrapRequest } from '../../../api/';
-import { updateSystemPage, updateMemberPage } from '../../../api/page';
+import { wrapRequest } from '../../../api';
 import ColorCircle from '../color/ColorCircle.vue';
 import { getRouteParam } from '../../../utils';
+import { $memberPage, $systemPage, PageDtoInterface } from '@plurali/api-client';
+import { toggleVisibilityState } from '@plurali/common';
+import { OwnerType, Visibility } from '@prisma/client';
 
 export default defineComponent({
   components: { ColorCircle },
@@ -47,7 +25,7 @@ export default defineComponent({
   },
   props: {
     page: {
-      type: Object as PropType<PageDto>,
+      type: Object as PropType<PageDtoInterface>,
       required: true,
     },
     modifiable: {
@@ -56,7 +34,7 @@ export default defineComponent({
     },
   },
   setup: function ({ page: _page, modifiable }) {
-    const page = ref<PageDto>(_page);
+    const page = ref<PageDtoInterface>(_page);
 
     const loading = ref(false);
 
@@ -64,11 +42,33 @@ export default defineComponent({
 
     const isDashboard = computed(() => String(route.name).includes('dashboard'));
 
-    const isMember = computed(() => String(route.name).includes('member'));
+    const isMember = computed(() => page.value.ownerType === OwnerType.Member);
 
     const memberId = computed(() =>
       isMember.value ? getRouteParam(isDashboard.value ? route.params.id : route.params.memberId) : null
     );
+
+    const routerTo = computed(() => {
+      let name: string;
+      let params: Record<string, unknown> = { pageId: isDashboard.value ? page.value.id : page.value.slug };
+
+      if (isMember.value) {
+        name = isDashboard.value ? 'dashboard:member:page:edit' : 'public:member:page';
+        // Use owner id in dashboard, slug otherwise
+        params.memberId = isDashboard.value ? page.value.ownerId : route.params.memberId;
+      } else {
+        name = isDashboard.value ? 'dashboard:system:page:edit' : 'public:system:page';
+        // Only public view requires system id
+        if (!isDashboard.value) {
+          params.systemId = route.params.systemId;
+        }
+      }
+
+      return {
+        name,
+        params,
+      }
+    })
 
     const toggleVisibility = async () => {
       if (!modifiable || loading.value) return;
@@ -78,12 +78,12 @@ export default defineComponent({
         if (!page.value) return null;
 
         return isMember.value
-          ? updateMemberPage(memberId.value ?? '', page.value.id, { visible: page.value.visible })
-          : updateSystemPage(page.value.id, { visible: page.value.visible });
+          ? $memberPage.updateMemberPage(memberId.value ?? '', page.value.id, { visibility: toggleVisibilityState(page.value.visibility) })
+          : $systemPage.updateSystemPage(page.value.id, { visibility: toggleVisibilityState(page.value.visibility) });
       });
 
       if (res) {
-        page.value = res.page;
+        page.value = res;
       }
 
       loading.value = false;
@@ -95,6 +95,8 @@ export default defineComponent({
       loading,
       isMember,
       isDashboard,
+      Visibility,
+      routerTo,
     };
   },
 });

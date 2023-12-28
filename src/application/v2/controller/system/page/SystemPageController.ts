@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
 import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Page, Prisma, System, User, Visibility } from '@prisma/client';
+import { OwnerType, Page, Prisma, System, User } from '@prisma/client';
 import { notEmpty, shouldUpdate } from '@app/misc/request';
 import { error, ok } from '@app/v2/misc/swagger';
 import { PageDto } from '@app/v2/dto/page/PageDto';
@@ -15,6 +15,7 @@ import { SystemGuard } from '@app/v2/context/system/SystemGuard';
 import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
 import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
 import { BaseController } from '../../BaseController';
+import { createSlug } from '@domain/common';
 
 @Controller({
   path: '/system/page',
@@ -35,12 +36,7 @@ export class SystemPageController extends BaseController {
   @ApiResponse(error(400, ApiError.InvalidPluralKey))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
   async list(@CurrentSystem() system: System): Promise<ApiDataResponse<PageDto[]>> {
-    const pages = await this.pages.findMany({
-      where: {
-        ownerId: system.pluralId,
-        ownerType: 'System',
-      },
-    });
+    const pages = await this.pages.findAllByOwner(system, OwnerType.System);
 
     return this.data(pages.map(PageDto.from));
   }
@@ -55,9 +51,9 @@ export class SystemPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string,
+    @Param('page') id: string,
   ): Promise<ApiDataResponse<PageDto>> {
-    return this.data(PageDto.from(await this.findOrFail(system, user, pageId)));
+    return this.data(PageDto.from(await this.findOrFail(system, user, id)));
   }
 
   @UseGuards(SystemGuard)
@@ -70,23 +66,24 @@ export class SystemPageController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string,
+    @Param('page') id: string,
     @Body() data: UpdatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
-    let page = await this.findOrFail(system, user, pageId);
+    let page = await this.findOrFail(system, user, id);
 
     const update: Prisma.PageUpdateInput = {};
 
-    if (notEmpty(data.name)) {
+    if (notEmpty(data.name) && page.name !== data.name) {
       update.name = data.name;
+      update.slug = createSlug(data.name);
     }
 
     if (notEmpty(data.content)) {
       update.content = data.content;
     }
 
-    if (notEmpty(data.visible)) {
-      update.visibility = data.visible ? Visibility.Public : Visibility.Private;
+    if (notEmpty(data.visibility)) {
+      update.visibility = data.visibility;
     }
 
     if (shouldUpdate(data)) {
@@ -111,11 +108,11 @@ export class SystemPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string,
+    @Param('page') id: string,
   ): Promise<ApiDataResponse<Ok>> {
     await this.pages.delete({
       where: {
-        id: (await this.findOrFail(system, user, pageId)).id,
+        id: (await this.findOrFail(system, user, id)).id,
       },
     });
 
@@ -132,12 +129,13 @@ export class SystemPageController extends BaseController {
   ): Promise<ApiDataResponse<PageDto>> {
     const page = await this.pages.create({
       data: {
-        ownerId: system.pluralId,
-        ownerType: 'System',
+        ownerId: system.id,
+        ownerType: OwnerType.System,
         name: data.name,
         content: data.content,
         userId: user.id,
-        visibility: data.visible ? Visibility.Public : Visibility.Private,
+        slug: createSlug(data.name),
+        visibility: data.visibility,
       },
     });
 
@@ -145,13 +143,8 @@ export class SystemPageController extends BaseController {
   }
 
   protected async findOrFail(system: System, user: User, id: string): Promise<Page> {
-    const page = await this.pages.findFirst({
-      where: {
-        id,
-        ownerId: system.pluralId,
-        ownerType: 'System',
-        userId: user.id,
-      },
+    const page = await this.pages.findForOwner(id, system, OwnerType.System, {
+      userId: user.id,
     });
 
     if (!page) {

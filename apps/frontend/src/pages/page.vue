@@ -29,7 +29,7 @@ import MemberSummary from '../components/global/members/MemberSummary.vue';
 import UserContent from '../components/global/UserContent.vue';
 import Sanitized from '../components/global/Sanitized.vue';
 import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
+import { $memberPage, $systemPage } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -52,10 +52,8 @@ export default defineComponent({
     const route = useRoute();
 
     const ownerType = computed(() => (String(route.name).includes('public:system') ? 'system' : 'member'));
-    const memberId = computed(() =>
-      getRouteParam(ownerType.value === 'member' ? route.params.memberId : null)
-    );
-    const systemId = computed(() => route.params.systemId ?? null)
+    const memberId = computed(() => getRouteParam(route.params.memberId));
+    const systemId = computed(() => getRouteParam(route.params.systemId))
     const pageId = computed(() => getRouteParam(route.params.pageId));
 
     useGoBack(ownerType.value === 'member' ? `/${systemId.value}/m/${memberId.value}` : `/${systemId.value}`);
@@ -64,12 +62,11 @@ export default defineComponent({
       if (page.value === null) return;
       page.value = null;
 
-      const res = await wrapRequest<PageResponse>(() =>
+      page.value = await wrapRequest(() =>
         ownerType.value === 'system'
-          ? getSystemPage(systemId.value, pageId.value)
-          : getMemberPage(memberId.value, pageId.value)
+          ? $systemPage.getPublicSystemPage(systemId.value, pageId.value)
+          : $memberPage.getPublicMemberPage(systemId.value, memberId.value, pageId.value)
       );
-      page.value = res ? res.page : res;
     };
 
     onMounted(() => fetchPage());

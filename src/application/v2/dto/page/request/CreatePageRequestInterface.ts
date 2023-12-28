@@ -1,5 +1,7 @@
+import { Visibility } from '@prisma/client';
+
 export interface CreatePageRequestInterface {
   name: string;
   content: string;
-  visible: boolean; // TODO
+  visibility: Visibility;
 }

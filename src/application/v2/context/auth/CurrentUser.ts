@@ -1,4 +1,4 @@
-import { RequestWithUser } from '@app/v2/http/RequestWithUser';
+import { RequestWithUser } from '@app/v2/types/request';
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 import { User } from '@prisma/client';
 

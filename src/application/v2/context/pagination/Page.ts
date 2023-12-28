@@ -1,4 +1,4 @@
-import { RequestWithUser } from '@app/v2/http/RequestWithUser';
+import { RequestWithUser } from '@app/v2/types/request';
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 
 export const Page = createParamDecorator((_: unknown, ctx: ExecutionContext): number => {

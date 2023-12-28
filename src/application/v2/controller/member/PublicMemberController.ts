@@ -40,14 +40,14 @@ export class PublicMemberController extends BaseController {
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async list(
-    @Param('system') systemId: string,
+    @Param('system') id: string,
     @Page() page: number,
     @Take() take: number,
   ): Promise<ApiPaginatedDataResponse<MemberDto>> {
     const query = this.createPaginationQuery(page, take);
 
     // Query system once instead of multiple times for each member
-    const system = await this.system.findPublic(systemId, query);
+    const system = await this.system.findPublic(id, query);
     if (!system) {
       throw new ResourceNotFoundException();
     }

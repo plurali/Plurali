@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { CreatePageRequestInterface } from './CreatePageRequestInterface';
+import { Visibility } from '@prisma/client';
 
 export class CreatePageRequest implements CreatePageRequestInterface {
   @IsString()
@@ -13,7 +14,8 @@ export class CreatePageRequest implements CreatePageRequestInterface {
   @ApiProperty()
   public content: string;
 
-  @IsBoolean()
+  @IsEnum(Visibility)
+  @IsNotEmpty()
   @ApiProperty()
-  public visible: boolean; // TODO
+  public visibility: Visibility;
 }

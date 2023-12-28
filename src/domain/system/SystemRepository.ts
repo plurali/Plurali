@@ -4,6 +4,7 @@ import { PrismaRepository } from '@infra/prisma/PrismaRepository';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { PaginationQuery } from '@app/v2/controller/BaseController';
+import { isObjectId } from '@domain/common';
 
 @Injectable()
 export class SystemRepository extends PrismaRepository<'system'> {
@@ -12,12 +13,12 @@ export class SystemRepository extends PrismaRepository<'system'> {
   }
 
   public async findPublic(
-    slug: string,
+    identifier: string,
     memberQuery?: PaginationQuery,
   ): Promise<SystemWithUser & SystemWithCollections> {
-    if (!slug) return null;
+    if (!identifier) return null;
 
-    const data = await this.findPublicBase(slug, {
+    const data = await this.findPublicBase(identifier, {
       user: true,
       fields: {
         where: {
@@ -41,12 +42,12 @@ export class SystemRepository extends PrismaRepository<'system'> {
     return data as SystemWithUser & SystemWithCollections;
   }
 
-  public async findPublicBase(slug: string, include: Prisma.SystemInclude = undefined) {
-    if (!slug) return null;
+  public async findPublicBase(identifier: string, include: Prisma.SystemInclude = undefined) {
+    if (!identifier) return null;
 
     const data = await this.findFirst({
       where: {
-        slug,
+        ...(isObjectId(identifier) ? { id: identifier } : { slug: identifier }),
         visibility: Visibility.Public,
       },
       include,

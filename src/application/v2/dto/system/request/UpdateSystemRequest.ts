@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Visibility } from '@prisma/client';
-import { IsBoolean, IsEnum, IsHexColor, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsHexColor, IsOptional, IsString } from 'class-validator';
 import { UpdateSystemRequestInterface } from './UpdateSystemRequestInterface';
 
 export class UpdateSystemRequest implements UpdateSystemRequestInterface {
-  @IsBoolean()
   @IsEnum(Visibility)
   @IsOptional()
   @ApiProperty()

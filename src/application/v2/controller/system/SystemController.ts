@@ -86,16 +86,6 @@ export class SystemController extends BaseController {
     return this.data(await this.makeDto(system, user));
   }
 
-  protected async makeDto(system: System, user: User) {
-    const plural = await this.rest.findUserForId(system.pluralId, user.pluralAccessToken);
-
-    if (!plural) {
-      throw new InvalidRequestException();
-    }
-
-    return SystemDto.from(system, plural);
-  }
-
   @Post('/background')
   @HttpCode(200)
   @UseGuards(SystemGuard)
@@ -135,5 +125,15 @@ export class SystemController extends BaseController {
       200,
       result.cacheFail ? { warning: ApiWarning.CacheDemand } : {},
     );
+  }
+
+  protected async makeDto(system: System, user: User) {
+    const plural = await this.rest.findUserForId(system.pluralId, user.pluralAccessToken);
+
+    if (!plural) {
+      throw new InvalidRequestException();
+    }
+
+    return SystemDto.from(system, plural);
   }
 }

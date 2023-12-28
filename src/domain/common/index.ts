@@ -3,6 +3,7 @@ import { Field, MemberFieldType as PrismaFieldType, System, User } from '@prisma
 import slugify from 'slugify';
 import { BackgroundType as PrismaBackgroundType } from '@prisma/client';
 import { MemberFieldType } from '@domain/plural/utils';
+import { ObjectId } from 'bson';
 
 export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
@@ -83,3 +84,11 @@ export enum OwnerType {
 export const convertBackgroundType = (type: PrismaBackgroundType): BackgroundType => BackgroundType[type];
 
 export const convertFieldType = (type: PrismaFieldType): MemberFieldType => MemberFieldType[type];
+
+export const isObjectId = (value: string) => {
+  try {
+    return new ObjectId(value).toString() === value;
+  } catch {
+    return false;
+  }
+};

@@ -32,6 +32,7 @@ import { getSystem, getSystemPages } from '../api/public';
 import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
 import type { PageDto } from '@app/v1/dto/page/PageDto';
 import { useMeta } from '../utils/meta';
+import { $systemPage, PageDtoInterface } from '@plurali/api-client';
 
 export default defineComponent({
   components: {
@@ -49,7 +50,7 @@ export default defineComponent({
   },
   setup() {
     const system = ref<SystemDto | null | false>(false);
-    const pages = ref<PageDto[] | null | false>(false);
+    const pages = ref<PageDtoInterface[] | null | false>(false);
 
     const route = useRoute();
 
@@ -73,8 +74,7 @@ export default defineComponent({
       if (pages.value === null) return;
       pages.value = null;
 
-      const res = await wrapRequest<PagesResponse>(() => getSystemPages(systemId.value));
-      pages.value = res ? res.pages : res;
+      pages.value = await wrapRequest(() => $systemPage.getPublicSystemPages(systemId.value));
     };
 
     withBackground(system);

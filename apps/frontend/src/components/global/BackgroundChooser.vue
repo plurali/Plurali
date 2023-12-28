@@ -64,9 +64,9 @@ import Uploader from './Uploader.vue';
 import Palette from './Palette.vue';
 import Spinner from '../Spinner.vue';
 import { updateMemberBackgroundImage, updateSystemBackgroundImage } from '../../api/system';
-import { BackgroundType } from '../../../../../src/domain/common';
 import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
+import { BackgroundType } from '@prisma/client';
 
 export default defineComponent({
   props: {

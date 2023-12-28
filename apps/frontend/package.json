@@ -20,6 +20,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.13",
     "@heroicons/vue": "^2.0.17",
+    "@plurali/api-client": "workspace:^",
     "@plurali/editor": "workspace:^",
     "@plurali/sanitizer": "workspace:^",
     "@simonwep/pickr": "^1.8.2",

@@ -3,13 +3,8 @@
     <h1 class="text-2xl font-medium">Create new {{ isMember ? 'member' : 'system' }} content page</h1>
     <VisibilityTag :visible="visible" @click="visible = !visible" />
   </div>
-  <input
-    :disabled="loading"
-    type="text"
-    class="w-full p-6 py-3 border rounded-xl border-gray-400 mb-5"
-    v-model="name"
-    placeholder="Enter page name..."
-  />
+  <input :disabled="loading" type="text" class="w-full p-6 py-3 border rounded-xl border-gray-400 mb-5" v-model="name"
+    placeholder="Enter page name..." />
 
   <UserContent>
     <Editor id="page--content" :placeholder="`Enter page content...`" initial-value="" @save="createPage" />
@@ -17,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Title from '../../components/Title.vue';
 import Subtitle from '../../components/Subtitle.vue';
@@ -35,9 +30,10 @@ import { getRouteParam } from '../../utils';
 import MemberSummary from '../../components/global/members/MemberSummary.vue';
 import UserContent from '../../components/global/UserContent.vue';
 import Editor from '../../components/dashboard/Editor.vue';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
-import type { Editor as EditorType } from 'tinymce';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
+import { TinyEditorType } from '@plurali/editor';
+import { $memberPage, $systemPage } from '@plurali/api-client';
+import { parseVisibility } from '@plurali/common';
 
 export default defineComponent({
   components: {
@@ -66,31 +62,33 @@ export default defineComponent({
 
     const isMember = computed(() => String(route.name).includes('dashboard:member'));
 
-    const memberId = computed(() => (isMember.value ? getRouteParam(route.params.id) : null));
+    const memberId = computed(() => getRouteParam(route.params.memberId));
 
     const parentRoute = computed(() => (isMember.value ? `/dashboard/member/${memberId.value}` : `/dashboard/system`));
 
     useGoBack(parentRoute.value);
 
-    const createPage = async (editor: EditorType) => {
+    const createPage = async (editor: TinyEditorType) => {
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<PageResponse>(() => {
-        editor.readonly = true;
-        let content: string = editor.getContent({ format: 'html' });
+      editor.readonly = true;
+      let content: string = editor.getContent({ format: 'html' });
 
-        const data = {
-          name: name.value,
-          content,
-          visible: visible.value,
-        };
+      const data = {
+        name: name.value,
+        content,
+        visibility: parseVisibility(visible.value),
+      };
 
-        return isMember.value ? createMemberPage(memberId.value ?? '', data) : createSystemPage(data);
-      });
+      const page = await wrapRequest(() =>
+        isMember.value
+          ? $memberPage.createMemberPage(memberId.value ?? '', data)
+          : $systemPage.createSystemPage(data)
+        );
 
-      if (res) {
-        router.push(`${parentRoute.value}/page-edit/${res.page.id}`);
+      if (page) {
+        router.push(`${parentRoute.value}/page-edit/${page.id}`);
       }
 
       loading.value = false;

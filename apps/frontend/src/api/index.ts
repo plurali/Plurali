@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { clearFlashes, flash, FlashType } from '../store';
 import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
+import { $api, ApiResponse } from '@plurali/api-client';
 
 const prodApiUrl = 'https://plurali.icu/api';
 
@@ -60,7 +61,7 @@ export const formatError = (e: any) => {
 }
 
 export const wrapRequest = async <T extends object = SuccessData>(
-  fn: () => Promise<AxiosResponse<Status<T>>> | null
+  fn: () => Promise<AxiosResponse<Status<T>> | ApiResponse<T>> | null
 ): Promise<T | false> => {
   clearFlashes();
 
@@ -69,15 +70,20 @@ export const wrapRequest = async <T extends object = SuccessData>(
 
   try {
     const res = await $topbar.promised(promise);
-    if (!res.data.success) throw new Error(res.data.error);
 
-    if ('warning' in res.data.data) {
-      flash(String(res.data.data.warning), FlashType.Warning, false, true);
+    // support @plurali/api-client as well as standard axios response
+    const data = 'success' in res ? res : res.data;
+
+    // hackaround for 200 errors (should not happen)
+    if (!data.success) throw new Error($api.handleException({ response: { data } }).error.message);
+
+    if ('warning' in data.data) {
+      flash(String(data.data.warning), FlashType.Warning, false, true);
     }
 
-    return res.data.data;
+    return data.data;
   } catch (e) {
-    flash(formatError(e), FlashType.Danger, true);
+    flash($api.handleException(e).error.message, FlashType.Danger, true);
     return false;
   }
 };

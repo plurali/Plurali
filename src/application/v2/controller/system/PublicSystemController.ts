@@ -14,7 +14,7 @@ import { InvalidRequestException } from '@app/v2/exception/InvalidRequestExcepti
   path: '/public/system/:system',
   version: '2',
 })
-@ApiTags('SystemPublicV1')
+@ApiTags('SystemPublic')
 @ApiExtraModels(SystemDto)
 export class PublicSystemController extends BaseController {
   constructor(

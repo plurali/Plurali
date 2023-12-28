@@ -3,7 +3,7 @@
     <div v-if="page">
       <div class="flex items-center gap-2 my-5">
         <h1 class="text-2xl font-medium">Edit {{ isMember ? 'member' : 'system' }} content page</h1>
-        <VisibilityTag :visible="page.visible" @click="toggleVisibility" />
+        <VisibilityTag :visible="page.visibility === Visibility.Public" @click="toggleVisibility" />
         <Button
           @click="deletePage"
           class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1 ml-4"
@@ -40,7 +40,6 @@ import ButtonLink from '../../components/ButtonLink.vue';
 import Button from '../../components/Button.vue';
 import Spinner from '../../components/Spinner.vue';
 import { wrapRequest } from '../../api';
-import { getSystemPage, getMemberPage, updateMemberPage, updateSystemPage, deleteSystemPage, deleteMemberPage } from '../../api/page';
 import Color from '../../components/global/color/ColorCircle.vue';
 import { useGoBack } from '../../composables/goBack';
 import Fetchable from '../../components/global/Fetchable.vue';
@@ -51,11 +50,12 @@ import MemberSummary from '../../components/global/members/MemberSummary.vue';
 import UserContent from '../../components/global/UserContent.vue';
 import Editor from '../../components/dashboard/Editor.vue';
 import type { PageDto } from '@app/v2/dto/page/PageDto';
-import type { PageResponse } from '@app/v2/dto/page/response/PageResponse';
-import type { Editor as EditorType } from 'tinymce';
 import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
 import { TrashIcon } from '@heroicons/vue/24/outline';
 import type { OkResponse } from '@app/v1/dto/OkResponse';
+import { toggleVisibilityState } from '@plurali/common';
+import { $memberPage, $systemPage, Visibility } from '@plurali/api-client';
+import { TinyEditorType } from '@plurali/editor';
 
 export default defineComponent({
   components: {
@@ -87,7 +87,7 @@ export default defineComponent({
 
     const isMember = computed(() => String(route.name).includes('dashboard:member'));
 
-    const memberId = computed(() => (isMember.value ? getRouteParam(route.params.id) : null));
+    const memberId = computed(() => getRouteParam(route.params.memberId));
 
     const parentRoute = computed(() => (isMember.value ? `/dashboard/member/${memberId.value}` : `/dashboard/system`));
 
@@ -99,10 +99,10 @@ export default defineComponent({
       if (page.value === null) return;
       page.value = null;
 
-      const res = await wrapRequest<PageResponse>(() =>
-        memberId.value ? getMemberPage(memberId.value, pageId.value) : getSystemPage(pageId.value)
+      page.value = await wrapRequest(() =>
+        isMember.value ? $memberPage.getMemberPage(memberId.value, pageId.value) : $systemPage.getSystemPage(pageId.value)
       );
-      page.value = res ? res.page : res;
+
       if (page.value) {
         name.value = page.value.name;
       }
@@ -116,22 +116,22 @@ export default defineComponent({
         if (!page.value) return null;
 
         const data = {
-          visible: !page.value.visible,
+          visibility: toggleVisibilityState(page.value.visibility),
         };
 
         return isMember.value
-          ? updateMemberPage(memberId.value ?? '', pageId.value, data)
-          : updateSystemPage(pageId.value, data);
+          ? $memberPage.updateMemberPage(memberId.value, pageId.value, data)
+          : $systemPage.updateSystemPage(pageId.value, data);
       });
 
       if (res && page.value) {
-        page.value.visible = res.page.visible;
+        page.value.visibility = res.visibility;
       }
 
       loading.value = false;
     };
 
-    const updatePage = async (editor: EditorType) => {
+    const updatePage = async (editor: TinyEditorType) => {
       if (loading.value) return;
       loading.value = true;
 
@@ -144,16 +144,15 @@ export default defineComponent({
         const data = {
           name: name.value,
           content,
-          visible: page.value.visible,
         };
 
         return isMember.value
-          ? updateMemberPage(memberId.value ?? '', pageId.value, data)
-          : updateSystemPage(pageId.value, data);
+          ? $memberPage.updateMemberPage(memberId.value, pageId.value, data)
+          : $systemPage.updateSystemPage(pageId.value, data);
       });
 
       if (res) {
-        page.value = res.page;
+        page.value = res;
       }
 
       editor.readonly = false;
@@ -166,8 +165,8 @@ export default defineComponent({
       loading.value = true;
 
       const res = await wrapRequest<OkResponse>(() => isMember.value
-          ? deleteMemberPage(memberId.value ?? '', pageId.value)
-          : deleteSystemPage(pageId.value));
+          ? $memberPage.deleteMemberPage(memberId.value, pageId.value)
+          : $systemPage.deleteSystemPage(pageId.value));
 
       if (res) {
         router.push(parentRoute.value);
@@ -187,6 +186,7 @@ export default defineComponent({
       loading,
       isMember,
       toggleVisibility,
+      Visibility
     };
   },
 });
