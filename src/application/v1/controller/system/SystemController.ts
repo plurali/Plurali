@@ -11,7 +11,7 @@ import { assignFields } from '@domain/common';
 import { PluralRestService } from '@domain/plural/PluralRestService';
 import { SystemRepository } from '@domain/system/SystemRepository';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BackgroundType, Prisma, System, User, Visibility } from '@prisma/client';
 import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { StorageService } from '@infra/storage/StorageService';
@@ -21,6 +21,7 @@ import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingF
 import * as mime from 'mime-types';
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/v1/misc/swagger';
+import { SearchService } from '@domain/search/SearchService';
 
 @Controller({
   path: '/system',

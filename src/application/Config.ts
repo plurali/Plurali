@@ -45,6 +45,13 @@ export interface EmailConfig {
   transport: string;
 }
 
+export interface MeiliConfig {
+  host: string;
+  port: number;
+  masterKey: string;
+  fullHost: string;
+}
+
 export interface ConfigInterface {
   env: Environment;
   dev: boolean;
@@ -55,6 +62,7 @@ export interface ConfigInterface {
   digitalocean: DigitalOceanConfig | null;
   plural: PluralConfig;
   email: EmailConfig;
+  meili: MeiliConfig;
   sentry: string;
 }
 
@@ -134,6 +142,15 @@ export class Config implements ConfigInterface {
   protected EMAIL_TRANSPORT: string;
 
   @IsString()
+  protected MEILI_HOST: string = "meilisearch";
+
+  @IsNumber()
+  protected MEILI_PORT: number = 7700;
+  
+  @IsString()
+  protected MEILI_MASTER_KEY: string;
+
+  @IsString()
   @IsOptional()
   protected SENTRY_DSN: string | null = null;
 
@@ -205,6 +222,15 @@ export class Config implements ConfigInterface {
         port: this.PLURAL_OBSERVER_PORT,
       },
     };
+  }
+
+  get meili(): MeiliConfig {
+    return {
+      host: this.MEILI_HOST,
+      port: this.MEILI_PORT,
+      masterKey: this.MEILI_MASTER_KEY,
+      fullHost: `${this.MEILI_HOST}:${this.MEILI_PORT}`,
+    }
   }
 
   get jwt(): string {

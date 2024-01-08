@@ -30,7 +30,23 @@ services:
     ports:
       - "${MINIO_PORT:-9000}:9000"
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.5
+    environment:
+      - http_proxy
+      - https_proxy
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      - MEILI_ENV=${MEILI_ENV:-development}
+      - MEILI_LOG_LEVEL
+    ports:
+      - ${MEILI_PORT:-7700}:7700
+    volumes:
+      - meili:/meili_data
+    restart: unless-stopped
+
 volumes:
   redis:
   # database:
   data:
+  meili:

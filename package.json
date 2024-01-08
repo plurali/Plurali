@@ -12,7 +12,7 @@
   "packageManager": "pnpm@8.1.1",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nest start --watch",
-    "prod": "cross-env NODE_ENV=production node dist/index",
+    "prod": "cross-env NODE_ENV=production node dist/src/index",
     "format": "prettier --write 'src/**/*.ts' '*.{js,json,yml}'",
     "lint": "eslint 'src/**/*.ts' --fix",
     "build": "nest build",
@@ -60,6 +60,7 @@
     "install": "^0.13.0",
     "ioredis": "^5.3.2",
     "joi": "^17.10.0",
+    "meilisearch": "^0.36.0",
     "mime-types": "^2.1.35",
     "nest-raven": "^10.0.0",
     "nestjs-prisma": "^0.22.0",

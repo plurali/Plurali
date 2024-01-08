@@ -15,7 +15,7 @@ import { PluralRestService } from '@domain/plural/PluralRestService';
 import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { FieldRepository } from '@domain/system/field/FieldRepository';
 import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Body, Controller, Get, Inject, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BackgroundType, Member, Prisma, System, User, Visibility } from '@prisma/client';
 import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { StorageService } from '@infra/storage/StorageService';
@@ -23,12 +23,14 @@ import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileExcep
 import { StoragePrefix } from '@infra/storage/StoragePrefix';
 import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
 import * as mime from 'mime-types';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiQuery, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { error, ok } from '@app/v1/misc/swagger';
 import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
 import { Page } from '@app/v1/context/pagination/Page';
 import { Take } from '@app/v1/context/pagination/Take';
 import { Pagination } from '@app/v1/misc/pagination';
+import { SearchService } from '@domain/search/SearchService';
+import { MemberMeiliDoc } from '@domain/search/documents/MemberMeiliDoc';
 
 @Controller({
   path: '/system/members',
@@ -42,11 +44,13 @@ export class SystemMemberController {
     private readonly members: MemberRepository,
     private readonly fields: FieldRepository,
     private readonly storage: StorageService,
+    private readonly search: SearchService,
     @Inject(PluralRestService) private plural: PluralCachedRestService,
-  ) {}
+  ) { }
 
   @UseGuards(SystemGuard)
   @Get('/')
+  @ApiQuery({ name: 'search', required: false })
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
@@ -55,19 +59,24 @@ export class SystemMemberController {
     @CurrentUser() user: User,
     @Page() page: number,
     @Take() take: number,
+    @Query('search') search?: string,
   ): Promise<PaginatedOk<SystemMembersResponse>> {
+    const hasSearch = !!search?.length && search.length >= 1;
+    const searchMembers = hasSearch ? await this.search.findSystemMembers(system, search) : (await this.search.findAllMembers(system)).results;
+    const searchMembersWhere = searchMembers ? { id: { in: searchMembers.map(m => m.id) } } : {};
     const query = Pagination.createPaginationQuery(page, take);
 
     const members = await this.members.findMany({
       where: {
         systemId: system.id,
+        ...searchMembersWhere,
       },
       ...query,
     });
 
     const fullSystem = await this.makeFullSystem(system, user, members);
 
-    const dtoMembers = await this.makeDtos(fullSystem);
+    const dtoMembers = await this.makeDtos(fullSystem, searchMembers);
 
     return Pagination.paginated(
       new SystemMembersResponse(dtoMembers),
@@ -75,12 +84,13 @@ export class SystemMemberController {
       await this.members.count({
         where: {
           systemId: system.id,
+          ...searchMembersWhere,
         },
       }),
     );
   }
 
-  protected async makeDtos(system: FullSystem): Promise<UserMemberDto[]> {
+  protected async makeDtos(system: FullSystem, searchMembers: MemberMeiliDoc[] = null): Promise<UserMemberDto[]> {
     const plural = await this.plural.findMembers(system);
 
     const dtoMembers: UserMemberDto[] = [];
@@ -91,9 +101,24 @@ export class SystemMemberController {
       dtoMembers.push(dto);
     }
 
+    // If searchMembers are present, sort by them
+    if (searchMembers) {
+      const searchIndexMap = new Map();
+      searchMembers.forEach((user, index) => {
+        searchIndexMap.set(user.id, index);
+      });
+      
+      return dtoMembers.sort((a, b) => {
+        const indexA = searchIndexMap.get(a.id);
+        const indexB = searchIndexMap.get(b.id);
+        
+        return indexA - indexB;
+      });
+    }
+
     // TECHDEBT: as member names are not saved in the db, they can't be sorted in a query
     // FIXME: save names in db?
-    return dtoMembers.sort(function (a, b) {
+    return dtoMembers.sort((a, b) => {
       if (a.name < b.name) {
         return -1;
       }

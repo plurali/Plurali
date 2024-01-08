@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -131,6 +127,9 @@ importers:
       joi:
         specifier: ^17.10.0
         version: 17.10.0
+      meilisearch:
+        specifier: ^0.36.0
+        version: 0.36.0
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35
@@ -173,7 +172,7 @@ importers:
         version: 10.1.16
       '@nestjs/schematics':
         specifier: ^10.0.2
-        version: 10.0.2(typescript@5.3.3)
+        version: 10.0.2(chokidar@3.5.3)(typescript@5.1.6)
       '@types/bcrypt':
         specifier: ^5.0.0
         version: 5.0.0
@@ -544,7 +543,7 @@ importers:
         version: 10.9.1(@types/node@20.10.0)(typescript@5.3.3)
       vite:
         specifier: ^4.3.3
-        version: 4.3.3(@types/node@20.10.0)
+        version: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
       vite-plugin-dts:
         specifier: ^3.6.1
         version: 3.6.1(@types/node@20.10.0)(typescript@5.3.3)(vite@4.3.3)
@@ -2128,7 +2127,7 @@ packages:
       detect-libc: 2.0.1
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
@@ -2629,21 +2628,6 @@ packages:
       - chokidar
     dev: true
 
-  /@nestjs/schematics@10.0.2(typescript@5.3.3):
-    resolution: {integrity: sha512-DaZZjymYoIfRqC5W62lnYXIIods1PDY6CGc8+IpRwyinzffjKxZ3DF3exu+mdyvllzkXo9DTXkoX4zOPSJHCkw==}
-    peerDependencies:
-      typescript: '>=4.8.2'
-    dependencies:
-      '@angular-devkit/core': 16.1.8(chokidar@3.5.3)
-      '@angular-devkit/schematics': 16.1.8(chokidar@3.5.3)
-      comment-json: 4.2.3
-      jsonc-parser: 3.2.0
-      pluralize: 8.0.0
-      typescript: 5.3.3
-    transitivePeerDependencies:
-      - chokidar
-    dev: true
-
   /@nestjs/swagger@7.1.10(@fastify/static@6.10.2)(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13):
     resolution: {integrity: sha512-qreCcxgHFyFX1mOfK36pxiziy4xoa/XcxC0h4Zr9yH54WuqMqO9aaNFhFyuQ1iyd/3YBVQB21Un4gQnh9iGm0w==}
     peerDependencies:
@@ -2822,7 +2806,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       consola: 2.15.3
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
     dev: false
@@ -2917,7 +2901,7 @@ packages:
       '@octokit/request-error': 3.0.3
       '@octokit/types': 9.3.2
       is-plain-object: 5.0.0
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       universal-user-agent: 6.0.0
     transitivePeerDependencies:
       - encoding
@@ -5895,6 +5879,14 @@ packages:
       cross-spawn: 7.0.3
     dev: true
 
+  /cross-fetch@3.1.8:
+    resolution: {integrity: sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==}
+    dependencies:
+      node-fetch: 2.7.0
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /cross-inspect@1.0.0:
     resolution: {integrity: sha512-4PFfn4b5ZN6FMNGSZlyb7wUhuN8wvj8t/VQHZdM4JsDcruGJ8L2kf9zao98QIrBPFCpdk27qst/AGTl7pL3ypQ==}
     engines: {node: '>=16.0.0'}
@@ -8584,6 +8576,14 @@ packages:
       cssom: 0.5.0
     dev: false
 
+  /meilisearch@0.36.0:
+    resolution: {integrity: sha512-swcvEYrct0/zsGj3jlbPm1OYxbH14IURnlysKlXywNicIQ5EMkSYLYCLCwOuBKAaGcdISWdgdylH9TXVLegmOQ==}
+    dependencies:
+      cross-fetch: 3.1.8
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /memfs@3.5.3:
     resolution: {integrity: sha512-UERzLsxzllchadvbPs5aolHh65ISpKpM+ccLbOJ8/vvpBKmAWf+la7dXFy7Mr0ySHbdHrFv5kGFCUHHe6GFEmw==}
     engines: {node: '>= 4.0.0'}
@@ -9378,8 +9378,8 @@ packages:
       web-streams-polyfill: 3.2.1
     dev: false
 
-  /node-fetch@2.6.9:
-    resolution: {integrity: sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==}
+  /node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
     engines: {node: 4.x || >=6.0.0}
     peerDependencies:
       encoding: ^0.1.0
@@ -12568,7 +12568,7 @@ packages:
       debug: 4.3.4
       kolorist: 1.8.0
       typescript: 5.3.3
-      vite: 4.3.3(@types/node@20.10.0)
+      vite: 4.3.3(@types/node@18.15.11)(sass@1.62.0)
       vue-tsc: 1.8.21(typescript@5.3.3)
     transitivePeerDependencies:
       - '@types/node'
@@ -12641,39 +12641,6 @@ packages:
       sass: 1.62.0
     optionalDependencies:
       fsevents: 2.3.2
-
-  /vite@4.3.3(@types/node@20.10.0):
-    resolution: {integrity: sha512-MwFlLBO4udZXd+VBcezo3u8mC77YQk+ik+fbc0GZWGgzfbPP+8Kf0fldhARqvSYmtIWoAJ5BXPClUbMTlqFxrA==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.10.0
-      esbuild: 0.17.18
-      postcss: 8.4.23
-      rollup: 3.21.0
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
 
   /vm2@3.9.19:
     resolution: {integrity: sha512-J637XF0DHDMV57R6JyVsTak7nIL8gy5KH4r1HiwWLf/4GBbb5MKL5y7LpmF4A8E2nR6XmzpmMFQ7V7ppPTmUQg==}
@@ -12759,7 +12726,7 @@ packages:
       escape-goat: 3.0.0
       htmlparser2: 5.0.1
       mime: 2.6.0
-      node-fetch: 2.6.9
+      node-fetch: 2.7.0
       valid-data-url: 3.0.1
     transitivePeerDependencies:
       - encoding
@@ -13055,3 +13022,7 @@ packages:
   /zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

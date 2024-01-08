@@ -11,6 +11,8 @@ import { PluralMemberEntry } from '@domain/plural/types/rest/members';
 import { PrismaService } from 'nestjs-prisma';
 import { PrismaTx } from '@infra/prisma/types';
 import { captureException } from '@sentry/node';
+import { SearchService } from '@domain/search/SearchService';
+import { MemberMeiliDoc } from '@domain/search/documents/MemberMeiliDoc';
 
 const txConfig = {
   maxWait: 50000000,
@@ -22,6 +24,7 @@ export class CacheService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly repository: CacheRepository,
+    private readonly search: SearchService,
     private readonly logger: ConsoleLogger,
     @Inject('PluralRestServiceBase') private readonly plural: PluralRestService,
   ) {
@@ -43,9 +46,15 @@ export class CacheService {
 
     const members = [];
 
+    const meiliMembers = [];
+
     for (const plural of pluralMembers) {
-      members.push(await this.rebuildMember(system, plural, tx));
+      const updatedMember = await this.rebuildMember(system, plural, tx);
+      members.push(updatedMember);
+      meiliMembers.push(MemberMeiliDoc.from(updatedMember, plural));
     }
+
+    await this.search.reindexMembers(system, meiliMembers);
 
     return members;
   }

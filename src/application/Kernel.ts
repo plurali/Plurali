@@ -20,6 +20,7 @@ import { SecurityModule } from '@domain/security/SecurityModule';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConfig } from './misc/jwt';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SearchModule } from '@domain/search/SearchModule';
 
 @Global()
 @Module({
@@ -40,6 +41,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
       },
       isGlobal: true,
     }),
+
+    SearchModule,
 
     CacheModule.registerAsync<RedisOptions>({
       imports: [ConfigModule],

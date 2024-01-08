@@ -18,6 +18,7 @@ import { SecurityModule } from '@domain/security/SecurityModule';
 import { CacheModule } from '@domain/cache/CacheModule';
 import { StorageModule } from '@infra/storage/StorageModule';
 import { PageModule } from '@domain/page/PageModule';
+import { SearchModule } from '@domain/search/SearchModule';
 
 // @deprecated
 @Module({
@@ -27,6 +28,7 @@ import { PageModule } from '@domain/page/PageModule';
     UserModule,
     SecurityModule,
     CacheModule,
+    SearchModule,
     JwtModule,
     PluralModule,
     StorageModule,
