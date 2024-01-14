@@ -47,7 +47,7 @@
     "@types/dompurify": "^3.0.2",
     "@types/dropzone": "^5.7.4",
     "@types/markdown-it": "^12.2.3",
-    "@types/node": "^20.10.0",
+    "@types/node": "^20.11.0",
     "@types/node-fetch": "^2.6.3",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
