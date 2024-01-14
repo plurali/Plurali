@@ -409,8 +409,8 @@ importers:
         specifier: ^5.9.1
         version: 5.9.1(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
       tinymce:
-        specifier: ^6.4.1
-        version: 6.4.1
+        specifier: ^6.7.3
+        version: 6.7.3
       topbar:
         specifier: ^2.0.1
         version: 2.0.1
@@ -511,8 +511,8 @@ importers:
         specifier: ^6.1.10
         version: 6.1.10
       tinymce:
-        specifier: ^6.4.1
-        version: 6.4.1
+        specifier: ^6.7.3
+        version: 6.7.3
     devDependencies:
       '@prisma/client':
         specifier: ^5.2.0
@@ -4055,7 +4055,7 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tinymce: 6.4.1
+      tinymce: 6.7.3
     dev: false
 
   /@tinymce/tinymce-vue@5.1.1(vue@3.2.47):
@@ -4063,7 +4063,7 @@ packages:
     peerDependencies:
       vue: ^3.0.0
     dependencies:
-      tinymce: 6.4.1
+      tinymce: 6.7.3
       vue: 3.2.47
     dev: false
 
@@ -11942,8 +11942,8 @@ packages:
     resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
     dev: false
 
-  /tinymce@6.4.1:
-    resolution: {integrity: sha512-+/cS2AM9l6p72IBs2uolHbGsBUztLs0WslqNgFaTXtmMksTNUOhh8p08xtA/fa03UGlWEC6/EJoeV95/QDXa2A==}
+  /tinymce@6.7.3:
+    resolution: {integrity: sha512-J7WmYIi/gt1RvZ6Ap2oQiUjzAoiS9pfV+d4GnKuZuPu8agmlAEAInNmMvMjfCNBzHv4JnZXY7qlHUAI0IuYQVA==}
     dev: false
 
   /titleize@3.0.0:
