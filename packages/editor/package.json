@@ -33,6 +33,6 @@
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
     "node-html-parser": "^6.1.10",
-    "tinymce": "^6.4.1"
+    "tinymce": "^6.7.3"
   }
 }
