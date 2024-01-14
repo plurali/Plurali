@@ -24,7 +24,7 @@
     "@plurali/sanitizer": "workspace:^",
     "@simonwep/pickr": "^1.8.2",
     "@tinymce/tinymce-react": "^4.3.0",
-    "axios": "^1.6.0",
+    "axios": "^1.6.5",
     "dompurify": "^3.0.6",
     "framer-motion": "^10.12.16",
     "markdown-it": "^13.0.1",
