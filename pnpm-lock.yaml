@@ -30,7 +30,7 @@ importers:
         version: 3.0.0(@nestjs/common@10.2.2)(axios@1.6.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/bull':
         specifier: ^10.0.1
-        version: 10.0.1(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(bull@4.11.3)
+        version: 10.0.1(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(bull@4.12.0)
       '@nestjs/cache-manager':
         specifier: ^2.1.0
         version: 2.1.0(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(cache-manager@5.2.3)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -95,8 +95,8 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0
       bull:
-        specifier: ^4.11.3
-        version: 4.11.3
+        specifier: ^4.12.0
+        version: 4.12.0
       cache-manager:
         specifier: ^5.2.3
         version: 5.2.3
@@ -2276,7 +2276,7 @@ packages:
       tslib: 2.6.0
     dev: false
 
-  /@nestjs/bull@10.0.1(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(bull@4.11.3):
+  /@nestjs/bull@10.0.1(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)(bull@4.12.0):
     resolution: {integrity: sha512-1GcJ8BkHDgQdBMZ7SqAqgUHiFnISXmpGvewFeTc8wf87JLk2PweiKv9j9/KQKU+NI237pCe82XB0bXzTnsdxSw==}
     peerDependencies:
       '@nestjs/common': ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -2286,7 +2286,7 @@ packages:
       '@nestjs/bull-shared': 10.0.1(@nestjs/common@10.2.2)(@nestjs/core@10.2.2)
       '@nestjs/common': 10.2.2(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
       '@nestjs/core': 10.2.2(@nestjs/common@10.2.2)(@nestjs/microservices@10.2.2)(@nestjs/websockets@10.2.2)(reflect-metadata@0.1.13)(rxjs@7.8.1)
-      bull: 4.11.3
+      bull: 4.12.0
       tslib: 2.6.0
     dev: false
 
@@ -5345,8 +5345,8 @@ packages:
     engines: {node: '>=0.2.0'}
     dev: false
 
-  /bull@4.11.3:
-    resolution: {integrity: sha512-DhS0XtiAuejkAY08iGOdDK35eex/yGNoezlWqGJTu9FqWFF/oBjUhpsusE9SXiI4culyDbOoFs+l3ar0VXhFqQ==}
+  /bull@4.12.0:
+    resolution: {integrity: sha512-+GCM3KayIZvgiwAq5YC1qDcuncQbRLusLULOBZYRky7a7ttf4tlKWaFxTFtOfRrcb0erzFw6aWy73waorvR5pw==}
     engines: {node: '>=12'}
     dependencies:
       cron-parser: 4.8.1
@@ -10184,7 +10184,7 @@ packages:
       p-event: 4.2.0
       p-wait-for: 3.2.0
       pug: 3.0.2
-      uuid: 9.0.0
+      uuid: 9.0.1
     dev: false
 
   /prisma@5.2.0:
@@ -12371,7 +12371,6 @@ packages:
     hasBin: true
     requiresBuild: true
     dev: false
-    optional: true
 
   /v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
