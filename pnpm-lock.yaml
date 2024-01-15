@@ -403,8 +403,8 @@ importers:
         specifier: ^0.94.2
         version: 0.94.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1)
       slate-serializers:
-        specifier: ^0.0.32
-        version: 0.0.32
+        specifier: ^2.1.6
+        version: 2.1.6
       swagger-ui-react:
         specifier: ^5.9.1
         version: 5.9.1(@types/react-dom@18.2.18)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
@@ -3292,6 +3292,56 @@ packages:
     dependencies:
       core-js: 3.30.2
       nanopop: 2.3.0
+    dev: false
+
+  /@slate-serializers/dom@2.1.6:
+    resolution: {integrity: sha512-07jjh2gIuyBzcYT79MHxroTvKN39Ng/wbfGOEdIfqvSMDbTTSSy0UhxvSbBFABN8113ngv8l9zHU1ExYsCYcGQ==}
+    dependencies:
+      '@slate-serializers/utilities': 2.1.5
+      css-select: 5.1.0
+      dom-serializer: 2.0.0
+      domhandler: 5.0.3
+      domutils: 3.1.0
+      html-entities: 2.4.0
+      htmlparser2: 7.2.0
+      postcss: 8.4.31
+      postcss-js: 4.0.1(postcss@8.4.31)
+      slate: 0.94.1
+      tslib: 2.5.0
+    dev: false
+
+  /@slate-serializers/html@2.1.6:
+    resolution: {integrity: sha512-OrQvIrE2jCYOWnlE5MCKff6MjkTSqzu8lEl9+Zrddenxs35xwAoAenPiuUM5kmsiep5hpy9gyCgGKFk7P8retQ==}
+    dependencies:
+      '@slate-serializers/dom': 2.1.6
+      '@slate-serializers/utilities': 2.1.5
+      css-select: 5.1.0
+      dom-serializer: 2.0.0
+      domhandler: 5.0.3
+      domutils: 3.1.0
+      html-entities: 2.4.0
+      htmlparser2: 7.2.0
+      postcss: 8.4.31
+      postcss-js: 4.0.1(postcss@8.4.31)
+      slate: 0.94.1
+      slate-hyperscript: 0.77.0(slate@0.94.1)
+      tslib: 2.5.0
+    dev: false
+
+  /@slate-serializers/utilities@2.1.5:
+    resolution: {integrity: sha512-Sq156nb2tdDrP+nCsJyj0uSQY0bDUcKR27oGI2XVNR/k37VQESbXAr6gVzSrobd7Xgjl3CN99RjsD4p3Qqv2HA==}
+    dependencies:
+      postcss: 8.4.31
+      postcss-js: 4.0.1(postcss@8.4.31)
+      tslib: 2.5.0
+    dev: false
+
+  /@slate-serializers/utilities@2.1.6:
+    resolution: {integrity: sha512-oZdnq7H9Ms5JSsjiZJUph54maexiA1dw+agqkx4MMvyABu8FZ8OqHeszJiynSiaY276908yfcTL6WyKXgajxVw==}
+    dependencies:
+      postcss: 8.4.31
+      postcss-js: 4.0.1(postcss@8.4.31)
+      tslib: 2.5.0
     dev: false
 
   /@smithy/abort-controller@2.0.5:
@@ -9999,7 +10049,6 @@ packages:
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.4.31
-    dev: true
 
   /postcss-load-config@3.1.4(postcss@8.4.21)(ts-node@10.9.1):
     resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
@@ -11174,13 +11223,13 @@ packages:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
 
-  /slate-hyperscript@0.77.0(slate@0.88.1):
+  /slate-hyperscript@0.77.0(slate@0.94.1):
     resolution: {integrity: sha512-M6uRpttwKnosniQORNPYQABHQ9XWC7qaSr/127LWWPjTOR5MSSwrHGrghN81BhZVqpICHrI7jkPA2813cWdHNA==}
     peerDependencies:
       slate: '>=0.65.3'
     dependencies:
       is-plain-object: 5.0.0
-      slate: 0.88.1
+      slate: 0.94.1
     dev: false
 
   /slate-react@0.94.2(react-dom@18.2.0)(react@18.2.0)(slate@0.94.1):
@@ -11204,24 +11253,23 @@ packages:
       tiny-invariant: 1.0.6
     dev: false
 
-  /slate-serializers@0.0.32:
-    resolution: {integrity: sha512-Y8Rar/zPs9CwsAT2zz+pHXxgHNUP1QC/C+p11swOfXcLzB61W/XJEzC0l5uY/olHIl+6va4MV/FlRDifL9M+Rg==}
+  /slate-serializers@2.1.6:
+    resolution: {integrity: sha512-vji4V/h8HQGP5DNRBpskBIBxIHGQO26aQUCzJjd1kqvhoUetkpZfMZCN1ybUptvDttQUEDw5jBQNlckbdO3/eQ==}
     dependencies:
+      '@slate-serializers/dom': 2.1.6
+      '@slate-serializers/html': 2.1.6
+      '@slate-serializers/utilities': 2.1.6
+      css-select: 5.1.0
       dom-serializer: 2.0.0
       domhandler: 5.0.3
       domutils: 3.1.0
       html-entities: 2.4.0
       htmlparser2: 7.2.0
-      slate: 0.88.1
-      slate-hyperscript: 0.77.0(slate@0.88.1)
-    dev: false
-
-  /slate@0.88.1:
-    resolution: {integrity: sha512-DEj9RpkNwPfdh3zbE9eGpeOVGWdS8BYQt754S0Lk6IvJXOkYaxza7WEZLZl/vnp7vloMdTe24zccyxywA3XK8g==}
-    dependencies:
-      immer: 9.0.21
-      is-plain-object: 5.0.0
-      tiny-warning: 1.0.3
+      postcss: 8.4.31
+      postcss-js: 4.0.1(postcss@8.4.31)
+      slate: 0.94.1
+      slate-hyperscript: 0.77.0(slate@0.94.1)
+      tslib: 2.5.0
     dev: false
 
   /slate@0.94.1:
@@ -12118,6 +12166,10 @@ packages:
 
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+    dev: false
+
+  /tslib@2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
     dev: false
 
   /tslib@2.5.3:
