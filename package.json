@@ -37,7 +37,7 @@
     "@nestjs/microservices": "^10.2.2",
     "@nestjs/platform-fastify": "^10.2.2",
     "@nestjs/swagger": "^7.1.10",
-    "@nestjs/websockets": "^10.2.2",
+    "@nestjs/websockets": "^10.3.0",
     "@plurali/common": "workspace:^",
     "@plurali/editor": "workspace:^",
     "@prisma/client": "^5.2.0",
