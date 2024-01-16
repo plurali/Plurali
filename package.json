@@ -49,7 +49,7 @@
     "axios": "^1.6.0",
     "bcrypt": "^5.1.1",
     "bson": "^5.4.0",
-    "bull": "^4.11.3",
+    "bull": "^4.12.1",
     "cache-manager": "^5.2.3",
     "cache-manager-ioredis-yet": "^1.2.2",
     "class-transformer": "^0.5.1",
