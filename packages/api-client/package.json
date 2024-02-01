@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
-    "axios": "^1.6.0",
+    "axios": "^1.6.7",
     "vite-tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
