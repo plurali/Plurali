@@ -7,7 +7,7 @@
 
 Plurali is developed as a non-profit application in it's maintainers' free time - therefore we ask for patience for new features to be implemented or bugs to be fixed. We appreciate every issue report. PRs are welcomed, as long as they are structured and discussed with maintainer(s) beforehand (eg. in an issue, on Discord or via other communication channels).
 
-Currently, Plurali is overseen and maintained by it's creator, Liliana (@lilianalillyy). If you're interested in joining the maintainer team, write an email to `valisova@lilianaa.dev`.
+Currently, Plurali is overseen and maintained by it's creator, Liliana (@lilianalillyy). If you're interested in joining the maintainer team, write an email to `pilchova@lilianaa.dev`.
 
 We would also love to recognize some of it's users who frequently contribute to Plurali's development, eg. testing new features, reporting bugs or coming up with ideas for new features or improving the existing ones: 
 - **SeraphimValley** - Reporting of bugs brainstorming fixes + ideas for improving/implementing new/exsting features   
@@ -17,7 +17,7 @@ We would also love to recognize some of it's users who frequently contribute to 
 We welcome issue reports, however to make sure we can efficiently fix the issue you're experiencing we need details about how to get to the issue at hand.
 
 - Please provide steps to reproduce, for example: `in dashboard click to user settings -> click on update settings -> page crashes`
-- If this is a per-user bug, provide us with the Simply Plural ID or your User ID. If you don't want this information shared publicly, create the issue without it and contact `liliana1110` on Discord or email `valisova@lilianaa.dev`.
+- If this is a per-user bug, provide us with the Simply Plural ID or your User ID. If you don't want this information shared publicly, create the issue without it and contact `liliana1110` on Discord or email `pilchova@lilianaa.dev`.
 
 ## Self-hosting
 
