@@ -37,7 +37,7 @@
     "react-tracked": "^1.7.11",
     "slate": "^0.94.1",
     "slate-react": "^0.94.2",
-    "slate-serializers": "^0.0.32",
+    "slate-serializers": "^2.1.6",
     "swagger-ui-react": "^5.9.1",
     "tinymce": "^6.7.3",
     "topbar": "^2.0.1",
