@@ -36,7 +36,7 @@
     "@nestjs/jwt": "^10.1.0",
     "@nestjs/microservices": "^10.2.2",
     "@nestjs/platform-fastify": "^10.2.2",
-    "@nestjs/swagger": "^7.1.10",
+    "@nestjs/swagger": "^7.3.0",
     "@nestjs/websockets": "^10.2.2",
     "@plurali/common": "workspace:^",
     "@plurali/editor": "workspace:^",
