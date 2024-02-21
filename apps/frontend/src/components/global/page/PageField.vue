@@ -15,7 +15,7 @@ import ColorCircle from '../color/ColorCircle.vue';
 import { getRouteParam } from '../../../utils';
 import { $memberPage, $systemPage, PageDtoInterface } from '@plurali/api-client';
 import { toggleVisibilityState } from '@plurali/common';
-import { OwnerType, Visibility } from '@prisma/client';
+import { OwnerType, Visibility } from '@plurali/api-client';
 
 export default defineComponent({
   components: { ColorCircle },

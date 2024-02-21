@@ -3,7 +3,7 @@ import { background } from '../store';
 import type { HasBackground } from '@domain/common/types';
 import { onBeforeRouteLeave } from 'vue-router';
 import { isPubDev } from '../api';
-import { BackgroundType } from '@prisma/client';
+import { BackgroundType } from '@plurali/api-client';
 
 export interface Assetable {
   lastTimeAssetChanged: Date;

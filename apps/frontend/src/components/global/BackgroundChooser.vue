@@ -66,7 +66,7 @@ import Spinner from '../Spinner.vue';
 import { updateMemberBackgroundImage, updateSystemBackgroundImage } from '../../api/system';
 import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
 import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
-import { BackgroundType } from '@prisma/client';
+import { BackgroundType } from '@plurali/api-client';
 
 export default defineComponent({
   props: {
