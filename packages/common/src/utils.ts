@@ -1,4 +1,4 @@
-import { Visibility } from '@prisma/client';
+import { Visibility } from '@plurali/api-client';
 
 export const getRouteParam = (val: unknown | string | string[]): string => String(Array.isArray(val) ? val[0] : val);
 

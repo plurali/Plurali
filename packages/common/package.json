@@ -20,6 +20,7 @@
     "vite-plugin-dts": "^3.6.1"
   },
   "dependencies": {
+    "@plurali/api-client": "workspace:^",
     "@plurali/pluraliapp": "workspace:^",
     "markdown-it": "^13.0.1",
     "topbar": "^2.0.1",
