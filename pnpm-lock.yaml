@@ -365,8 +365,8 @@ importers:
         specifier: ^1.8.2
         version: 1.8.2
       '@tinymce/tinymce-react':
-        specifier: ^4.3.0
-        version: 4.3.0(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.3.2
+        version: 4.3.2(react-dom@18.2.0)(react@18.2.0)
       axios:
         specifier: ^1.6.0
         version: 1.6.0
@@ -4068,8 +4068,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tinymce/tinymce-react@4.3.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-iB4cUsYfcJL4NGuKhqCGYuTmFTje3nPxyPv1HxprTsp/YMGuuiiSNWrv3zwI31QX5Cn8qeq9MrMDnbxuRugHyg==}
+  /@tinymce/tinymce-react@4.3.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-wJHZhPf2Mk3yTtdVC/uIGh+kvDgKuTw/qV13uzdChTNo68JI1l7jYMrSQOpyimDyn5LHAw0E1zFByrm1WHAVeA==}
     peerDependencies:
       react: ^18.0.0 || ^17.0.1 || ^16.7.0
       react-dom: ^18.0.0 || ^17.0.1 || ^16.7.0
