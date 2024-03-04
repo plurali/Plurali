@@ -72,7 +72,7 @@
           </Flash>
         </div>
         <div class="bg-white rounded-2xl shadow-2xl p-8" :class="typeof bg === 'string' && 'bg-opacity-60'">
-          <div v-if="notifications.length >= 1" class="inline-flex flex-col gap-4 w-full mb-12">
+          <div v-if="!!notifications && notifications.length >= 1" class="inline-flex flex-col gap-4 w-full mb-12">
             <Notification v-for="notification of notifications" :color="notification.color">
               <Sanitized :value="notification.message"/>
             </Notification>
