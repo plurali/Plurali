@@ -8,12 +8,21 @@ import { apiError } from './utils';
 export class ApiService {
   public readonly client: AxiosInstance;
 
-  constructor(public readonly baseUrl: string, public readonly token: TokenStorage) {
+  constructor(private _baseUrl: string, public readonly token: TokenStorage) {
     this.client = axios.create({
-      baseURL: baseUrl,
+      baseURL: _baseUrl,
     });
 
     this.updateAuth();
+  }
+
+  get baseUrl(): string {
+    return this._baseUrl;
+  }
+
+  set baseUrl(value: string) {
+    this._baseUrl = value;
+    this.client.defaults.baseURL = value;
   }
 
   public handleException(e: any): ApiErrorResponse {
