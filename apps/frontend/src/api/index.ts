@@ -28,6 +28,9 @@ const getApiUrl = () => {
 
 const baseURL = getApiUrl();
 
+// Set the same base URL for @plurali/api-client
+$api.baseUrl = baseURL;
+
 export const isPubDev = baseURL === pubdevApiUrl;
 
 export const $axios = axios.create({
