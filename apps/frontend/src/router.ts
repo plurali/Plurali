@@ -83,6 +83,11 @@ const routes: RouteRecordRaw[] = [
       {
         name: 'public:system',
         path: '/:systemId/',
+        beforeEnter: (to) => {
+          if (to.params.systemId === "index.html") {
+            return "/";
+          }
+        },
         component: () => import('./pages/system.vue' as string),
       },
       {
