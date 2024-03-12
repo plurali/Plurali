@@ -43,6 +43,7 @@ export const setAuth = (auth: string | null) => {
   } else {
     localStorage.removeItem("_plurali_auth");
   }
+  $api.updateAuth(auth);
   $axios.defaults.headers.common.Authorization = `Bearer ${auth}`;
 };
 
