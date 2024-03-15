@@ -1,0 +1,30 @@
+{
+  "name": "@plurali/plural-api",
+  "version": "1.0.0",
+  "description": "Simply Plural API client",
+  "author": "Mia Pilchová <pilchova@lilianaa.dev>",
+  "private": true,
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@8.1.1",
+  "main": "src/index.ts",
+  "files": [
+    "./src"
+  ],
+  "scripts": {
+    "build": "vite build"
+  },
+  "peerDependencies": {
+    "axios": "^1"
+  },
+  "dependencies": {
+    "eventemitter2": "^6.4.9"
+  },
+  "devDependencies": {
+    "vite": "^5.1.6",
+    "vite-plugin-dts": "^3.7.3"
+  }
+}

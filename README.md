@@ -36,11 +36,12 @@ The codebase is structured in a monorepo. Common packages, like the API client o
 | Package                           |               Description                |
 | :-------------------------------- | :--------------------------------------: |
 | - root -                          |             The backend API              |
-|                                   |
+|                                   |                                          |
 | [frontend](apps/frontend)         |         Vue 3 frontend (current)         |
 | [frontend-v2](apps/frontend-v2)   |      React rewrite of the frontend       |
-|                                   |
+|                                   |                                          |
 | [api-client](packages/api-client) |     Client for the backend REST API      |
+| [plural-api](packages/plural-api) |         Simply Plural API client         |
 | [editor](packages/editor)         | Text Editor configuration and utilities* |
 | [sanitizer](packages/sanitizer)   |       Sanitizer of HTML content**        |
 | [common](packages/common)         |             Common utilities             |
