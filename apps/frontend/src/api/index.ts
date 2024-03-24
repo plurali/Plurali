@@ -4,7 +4,7 @@ import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
 import { $topbar } from '../utils/topbar';
 import { $api, ApiResponse } from '@plurali/api-client';
 
-const prodApiUrl = 'https://plurali.icu/api';
+const prodApiUrl = 'https://api.plurali.icu';
 
 const pubdevApiUrl = "https://pubdev.plurali.icu/api";
 
