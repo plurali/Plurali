@@ -8,6 +8,7 @@ import {
   DeleteObjectCommand,
   NotFound,
   _Object as Obj,
+  ObjectCannedACL,
 } from '@aws-sdk/client-s3';
 import { StoreResult } from '../StoreResult';
 import { Injectable } from '@nestjs/common';
@@ -102,7 +103,12 @@ export class S3StorageService implements StorageService<S3Client> {
     }
   }
 
-  public async store(path: string, body: Buffer, replaceIfExists = false, acl = 'public-read'): Promise<StoreResult> {
+  public async store(
+    path: string,
+    body: Buffer,
+    replaceIfExists = false,
+    acl: ObjectCannedACL = 'public-read',
+  ): Promise<StoreResult> {
     let cacheFail = false;
     if (await this.exists(path)) {
       if (!replaceIfExists) throw new Error(`'${path}' already exists`);
