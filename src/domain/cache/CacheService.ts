@@ -282,13 +282,10 @@ export class CacheService {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async clearSystem(system: System): Promise<void> {
-    const keys = await this.repository.cache.store.keys(`*SystemSID${system.pluralId}*`);
-    const t = this.repository.cache.store.client.multi();
-
-    keys.forEach(key => t.del(key));
-
-    await t.exec();
+    const keys = await this.repository.keys(`*SystemSID${system.pluralId}*`);
+    await this.repository.cache.mdel(keys);
   }
 
   async clearMemberList(system: System): Promise<void> {

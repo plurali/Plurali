@@ -44,11 +44,7 @@ export class PluralCachedRestService extends PluralRestService {
 
     const result = new Map(
       Object.entries(
-        (
-          await this.cache.cache.store.mget(
-            ...members.map(m => CacheRepository.createKey(CacheNamespace.Member, key(m))),
-          )
-        )
+        (await this.cache.cache.mget(members.map(m => CacheRepository.createKey(CacheNamespace.Member, key(m)))))
           .map(data => {
             const obj: PluralMemberEntry | null = typeof data === 'string' ? JSON.parse(data) : null;
             if (!obj) return null;

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PluralObserverBag } from './PluralObserverBag';
-import { BullModule } from '@nestjs/bull';
+import { BullModule } from '@nestjs/bullmq';
 import { PluralObserverUpdateQueue } from '../utils';
 import { SystemModule } from '@domain/system/SystemModule';
 import { UserModule } from '@domain/user/UserModule';

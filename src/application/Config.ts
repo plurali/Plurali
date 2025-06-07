@@ -1,5 +1,5 @@
 import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { RedisOptions } from 'ioredis';
+import { RedisOptions } from 'iovalkey';
 
 export enum Environment {
   Development = 'development',
