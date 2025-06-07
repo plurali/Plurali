@@ -1,3 +1,20 @@
 packages:
   - apps/*
   - packages/*
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@prisma/client'
+  - '@prisma/engines'
+  - '@scarf/scarf'
+  - '@sentry/profiling-node'
+  - '@tree-sitter-grammars/tree-sitter-yaml'
+  - bcrypt
+  - core-js
+  - core-js-pure
+  - esbuild
+  - fast-folder-size
+  - msgpackr-extract
+  - prisma
+  - tree-sitter
+  - tree-sitter-json

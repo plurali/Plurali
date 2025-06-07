@@ -1,6 +1,6 @@
 import { ConsoleLogger, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { PluralObserver } from './PluralObserver';
-import { InjectQueue } from '@nestjs/bull';
+import { InjectQueue } from '@nestjs/bullmq';
 import { PluralObserverUpdateQueue } from '../utils';
 import { Queue } from 'bull';
 import { UpdateMemberQueueData } from '../types/queue';
