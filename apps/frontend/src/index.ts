@@ -1,9 +1,11 @@
-import { createApp } from 'vue';
-import { router } from './router';
-import { RouterView } from 'vue-router';
-import { polyfill as sanitizer } from '@plurali/sanitizer';
-import './assets/app.css';
+import "./assets/app.css";
+
+import { polyfill as sanitizer } from "@plurali/sanitizer";
+import { createApp } from "vue";
+import { RouterView } from "vue-router";
+
+import { router } from "./router";
 
 sanitizer(true);
 
-createApp(RouterView).use(router).mount('#app');
+createApp(RouterView).use(router).mount("#app");

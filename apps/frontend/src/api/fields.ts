@@ -1,8 +1,9 @@
-import xss from 'xss';
-import markdown from 'markdown-it';
-import type { UserFieldDto } from '@app/v1/dto/user/field/UserFieldDto';
-import type { UserValueFieldDto } from '@app/v1/dto/user/field/UserValueFieldDto';
-import { MemberFieldType } from '../../../../src/domain/plural/utils';
+import type { UserFieldDto } from "@app/v1/dto/user/field/UserFieldDto";
+import type { UserValueFieldDto } from "@app/v1/dto/user/field/UserValueFieldDto";
+import markdown from "markdown-it";
+import xss from "xss";
+
+import { MemberFieldType } from "../../../../src/domain/plural/utils";
 
 export const string = (string: string, useMd = true): string => {
   // hotfix-ish
@@ -10,13 +11,13 @@ export const string = (string: string, useMd = true): string => {
 
   return useMd
     ? markdown({
-      html: true,
-      linkify: true,
-      breaks: true,
-      typographer: true,
-    }).render(xss(string))
+        html: true,
+        linkify: true,
+        breaks: true,
+        typographer: true,
+      }).render(xss(string))
     : xss(string);
-}
+};
 
 const color = (string: string): string | null => {
   if (string && string.length >= 1) {
@@ -30,7 +31,7 @@ const color = (string: string): string | null => {
 
 const date = (string: string): string => new Date(xss(string)).toDateString();
 
-const month = (string: string): string => new Date(xss(string)).toLocaleString('default', { month: 'long' });
+const month = (string: string): string => new Date(xss(string)).toLocaleString("default", { month: "long" });
 
 const year = (string: string): string => new Date(xss(string)).getFullYear().toString();
 
@@ -54,7 +55,7 @@ export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean)
 };
 
 export function hasValue(value: UserFieldDto | UserValueFieldDto): value is UserValueFieldDto {
-  return value.hasOwnProperty('value');
+  return value.hasOwnProperty("value");
 }
 
 export const formatField = (field: UserValueFieldDto): string | null => {
@@ -62,7 +63,7 @@ export const formatField = (field: UserValueFieldDto): string | null => {
 
   // Distinguish empty strings
   if (!str || str.length <= 1) {
-    str = '---';
+    str = "---";
   }
 
   return str;

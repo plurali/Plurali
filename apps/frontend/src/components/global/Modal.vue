@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot as="template" :show="modelValue">
-    <Dialog as="div" class="relative z-10" @close="() => loading ? {} : $emit('update:modelValue', false)">
+    <Dialog as="div" class="relative z-10" @close="() => (loading ? {} : $emit('update:modelValue', false))">
       <TransitionChild
         as="template"
         enter="ease-out duration-300"
@@ -27,8 +27,11 @@
             <DialogPanel
               class="relative transform overflow-hidden rounded-2xl bg-white p-8 text-left shadow-2xl transition-all sm:my-8 sm:max-w-sm lg:max-w-7xl !w-full"
             >
-              <div v-if="loading" class="absolute inset-0 w-full h-full bg-white bg-opacity-75 flex justify-center items-center cursor-default z-10">
-                <Spinner class="!text-violet-700 !w-12 !h-12"/>
+              <div
+                v-if="loading"
+                class="absolute inset-0 w-full h-full bg-white bg-opacity-75 flex justify-center items-center cursor-default z-10"
+              >
+                <Spinner class="!text-violet-700 !w-12 !h-12" />
               </div>
               <div class="border-b-2 mb-6 pb-6 flex justify-between items-center gap-3">
                 <div class="inline-flex items-center justify-start gap-3">
@@ -41,28 +44,28 @@
                     <XMarkIcon v-else-if="color === 'warning'" class="h-8 w-8 text-orange-600" aria-hidden="true" />
                     <XMarkIcon v-else-if="color === 'success'" class="h-8 w-8 text-green-600" aria-hidden="true" />
                     <XMarkIcon v-else-if="color === 'info'" class="h-8 w-8 text-blue-600" aria-hidden="true" />
-                    <slot name="icon"></slot>
+                    <slot name="icon" />
                   </div>
                   <DialogTitle as="h2" class="font-semibold leading-6 text-2xl lg:text-3xl text-gray-900">
                     {{ title }}
                   </DialogTitle>
                 </div>
 
-                <slot name="header"></slot>
+                <slot name="header" />
               </div>
 
               <div>
-                <slot></slot>
+                <slot />
               </div>
 
               <div class="mt-2 sm:mt-3">
-                <slot name="footer"></slot>
+                <slot name="footer" />
                 <Button
                   v-if="goBack"
                   :disabled="loading"
                   type="button"
                   class="inline-flex w-full justify-end bg-red-700 text-white font-semibold"
-                  @click="() => loading ? {} : $emit('update:modelValue', false)"
+                  @click="() => (loading ? {} : $emit('update:modelValue', false))"
                 >
                   {{ goBack }}
                 </Button>
@@ -76,11 +79,12 @@
 </template>
 
 <script lang="ts">
-import { PropType, computed, defineComponent } from 'vue';
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { CheckIcon, ExclamationTriangleIcon, XMarkIcon } from '@heroicons/vue/24/outline';
-import Button from '../Button.vue';
-import Spinner from '../Spinner.vue';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from "@headlessui/vue";
+import { CheckIcon, ExclamationTriangleIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { computed, defineComponent, PropType } from "vue";
+
+import Button from "../Button.vue";
+import Spinner from "../Spinner.vue";
 
 export default defineComponent({
   components: {
@@ -93,9 +97,8 @@ export default defineComponent({
     XMarkIcon,
     ExclamationTriangleIcon,
     Button,
-    Spinner
-},
-  emits: ['update:modelValue'],
+    Spinner,
+  },
   props: {
     modelValue: {
       type: Boolean,
@@ -106,7 +109,7 @@ export default defineComponent({
       required: true,
     },
     color: {
-      type: String as PropType<'warning' | 'error' | 'success' | 'info' | string | null>,
+      type: String as PropType<"warning" | "error" | "success" | "info" | string | null>,
       default: null,
     },
     goBack: {
@@ -118,16 +121,17 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ["update:modelValue"],
   setup(props) {
     const iconContainerClassMap = {
-      warning: 'bg-orange-100',
-      error: 'bg-red-100',
-      success: 'bg-green-100',
-      info: 'bg-blue-100',
+      warning: "bg-orange-100",
+      error: "bg-red-100",
+      success: "bg-green-100",
+      info: "bg-blue-100",
     };
 
     const iconContainerClass = computed(() =>
-      props.color ? iconContainerClassMap[props.color as keyof typeof iconContainerClassMap] ?? props.color : null
+      props.color ? (iconContainerClassMap[props.color as keyof typeof iconContainerClassMap] ?? props.color) : null,
     );
 
     return {

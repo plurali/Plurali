@@ -6,12 +6,12 @@
       $attrs.disabled && 'cursor-disabled opacity-25 hover:opacity-25 bg-gray-500',
     ]"
   >
-    {{ visible ? 'Public' : 'Private' }}
+    {{ visible ? "Public" : "Private" }}
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -20,5 +20,5 @@ export default defineComponent({
       required: true,
     },
   },
-})
+});
 </script>

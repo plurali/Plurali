@@ -8,12 +8,12 @@
     <div class="mb-3.5">
       <Label>Your email</Label>
       <input
-        :disabled="loading || isEmailDisabled"
         v-model="form.email"
-        @keyup="validate"
+        :disabled="loading || isEmailDisabled"
         :class="['w-full p-2.5 border rounded-xl border-gray-400', isEmailDisabled && 'opacity-50']"
         placeholder="Your email"
         type="email"
+        @keyup="validate"
       />
       <InputError v-if="formErrors.email">
         {{ formErrors.email }}
@@ -23,12 +23,12 @@
     <div class="mb-3.5">
       <Label>Your new password</Label>
       <input
-        :disabled="loading"
         v-model="form.password"
-        @keyup="validate"
+        :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="*************"
         type="password"
+        @keyup="validate"
       />
       <InputError v-if="formErrors.password">
         {{ formErrors.password }}
@@ -47,18 +47,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive, computed } from "vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { emailRegex, getRouteParam } from '../../utils';
-import { formatError } from '../../api';
-import Spinner from '../../components/Spinner.vue';
-import { flash, FlashType, user } from '../../store';
+
+import { formatError } from "../../api";
 import { processPasswordReset } from "../../api/auth";
+import Button from "../../components/Button.vue";
 import InputError from "../../components/InputError.vue";
 import Label from "../../components/Label.vue";
-import Button from "../../components/Button.vue";
-import Title from "../../components/Title.vue";
+import Spinner from "../../components/Spinner.vue";
 import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { flash, FlashType, user } from "../../store";
+import { emailRegex, getRouteParam } from "../../utils";
 
 export default defineComponent({
   components: {
@@ -78,36 +79,31 @@ export default defineComponent({
     const code = computed(() => getRouteParam(router.currentRoute.value.params.code));
 
     const form = reactive({
-      email: !isEmailDisabled.value ? '' : routeEmail,
-      password: '',
+      email: !isEmailDisabled.value ? "" : routeEmail,
+      password: "",
     });
 
     const formErrors = reactive({
-      email: null as string|null,
-      password: null as string|null,
+      email: null as string | null,
+      password: null as string | null,
     });
 
     const loading = ref<boolean>(false);
 
     onMounted(() => {
       if (user.value) {
-       return router.push("/dashboard");
+        return router.push("/dashboard");
       }
-    })
+    });
 
     const validate = () => {
-      formErrors.email =
-        !form.email || !emailRegex.test(form.email)
-          ? 'A valid email must be entered.'
-          : null;
+      formErrors.email = !form.email || !emailRegex.test(form.email) ? "A valid email must be entered." : null;
 
       formErrors.password =
-        !form.password || form.password.trim().length < 4
-          ? 'Password must be at least 4 characters long.'
-          : null;
+        !form.password || form.password.trim().length < 4 ? "Password must be at least 4 characters long." : null;
 
       return !formErrors.email && !formErrors.password;
-    }
+    };
 
     const submit = async () => {
       if (loading.value) return;
@@ -141,7 +137,7 @@ export default defineComponent({
       validate,
       submit,
       isEmailDisabled,
-    }
-  }
-})
+    };
+  },
+});
 </script>

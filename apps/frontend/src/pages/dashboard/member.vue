@@ -5,19 +5,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { getRouteParam } from '../../utils';
-import { wrapRequest } from '../../api';
-import { getMember, getSystem } from '../../api/system';
-import { useGoBack } from '../../composables/goBack';
-import { withBackground } from '../../composables/background';
-import Fetchable from '../../components/global/Fetchable.vue';
-import { string } from '../../api/fields';
-import MemberSummary from '../../components/global/members/MemberSummary.vue';
-import { $memberPage, PageDtoInterface } from '@plurali/api-client';
+import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
+import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
+import { $memberPage, PageDtoInterface } from "@plurali/api-client";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
+
+import { wrapRequest } from "../../api";
+import { string } from "../../api/fields";
+import { getMember, getSystem } from "../../api/system";
+import Fetchable from "../../components/global/Fetchable.vue";
+import MemberSummary from "../../components/global/members/MemberSummary.vue";
+import { withBackground } from "../../composables/background";
+import { useGoBack } from "../../composables/goBack";
+import { getRouteParam } from "../../utils";
 
 export default defineComponent({
   components: {
@@ -34,7 +35,7 @@ export default defineComponent({
 
     const route = useRoute();
 
-    useGoBack('/dashboard/system');
+    useGoBack("/dashboard/system");
 
     const fetchAll = async () => {
       if (data.system === null || data.member === null || data.pages === null) return;
@@ -62,7 +63,7 @@ export default defineComponent({
     return {
       fetchAll,
       data,
-      isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isDashboard: computed(() => route.path.startsWith("/dashboard")),
       string,
     };
   },

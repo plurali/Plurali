@@ -8,11 +8,11 @@
     <div class="mb-3.5">
       <Label>Your username or email</Label>
       <input
-        :disabled="loading"
         v-model="form.username"
-        @keyup="validate"
+        :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="Your username or email"
+        @keyup="validate"
       />
       <InputError v-if="formErrors.username">
         {{ formErrors.username }}
@@ -22,12 +22,12 @@
     <div class="mb-3.5">
       <Label>Your password</Label>
       <input
-        :disabled="loading"
         v-model="form.password"
-        @keyup="validate"
+        :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="*************"
         type="password"
+        @keyup="validate"
       />
       <InputError v-if="formErrors.password">
         {{ formErrors.password }}
@@ -44,28 +44,25 @@
     </Button>
 
     <div class="inline-flex flex-col md:flex-row w-full justify-end md:justify-between gap-2 items-center">
-      <router-link to="/auth/forgotten-password" class="text-gray-500">
-        Forgot your password?
-      </router-link>
+      <router-link to="/auth/forgotten-password" class="text-gray-500"> Forgot your password? </router-link>
 
-      <router-link to="/auth/register" class="text-gray-500">
-        Don't have an account yet?
-      </router-link>
+      <router-link to="/auth/register" class="text-gray-500"> Don't have an account yet? </router-link>
     </div>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import Title from '../../components/Title.vue'
-import Subtitle from '../../components/Subtitle.vue'
-import Button from '../../components/Button.vue'
-import Label from '../../components/Label.vue'
-import { login } from '../../api/auth'
-import InputError from '../../components/InputError.vue'
-import Spinner from '../../components/Spinner.vue'
-import { setAuth, wrapRequest } from '../../api'
+import { defineComponent, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+
+import { setAuth, wrapRequest } from "../../api";
+import { login } from "../../api/auth";
+import Button from "../../components/Button.vue";
+import InputError from "../../components/InputError.vue";
+import Label from "../../components/Label.vue";
+import Spinner from "../../components/Spinner.vue";
+import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
 
 export default defineComponent({
   components: {
@@ -77,45 +74,41 @@ export default defineComponent({
     Label,
   },
   setup() {
-    const router = useRouter()
+    const router = useRouter();
 
     const form = reactive({
-      username: '',
-      password: '',
-    })
+      username: "",
+      password: "",
+    });
 
     const formErrors = reactive({
       username: null as string | null,
       password: null as string | null,
-    })
+    });
 
-    const loading = ref(false)
+    const loading = ref(false);
 
     const validate = () => {
       formErrors.username =
-        !form.username || form.username.trim().length < 3
-          ? 'Username must be at least 3 characters long.'
-          : null
+        !form.username || form.username.trim().length < 3 ? "Username must be at least 3 characters long." : null;
 
       formErrors.password =
-        !form.password || form.password.trim().length < 4
-          ? 'Password must be at least 4 characters long.'
-          : null
+        !form.password || form.password.trim().length < 4 ? "Password must be at least 4 characters long." : null;
 
-      return !formErrors.username && !formErrors.password
-    }
+      return !formErrors.username && !formErrors.password;
+    };
 
     const submit = async () => {
-      if (loading.value) return
-      loading.value = true
+      if (loading.value) return;
+      loading.value = true;
 
-      const ok = await wrapRequest(() => login(form))
-      loading.value = false
+      const ok = await wrapRequest(() => login(form));
+      loading.value = false;
       if (ok) {
         setAuth(ok.auth);
-        await router.push('/dashboard')
+        await router.push("/dashboard");
       }
-    }
+    };
 
     return {
       form,
@@ -123,7 +116,7 @@ export default defineComponent({
       loading,
       validate,
       submit,
-    }
+    };
   },
-})
+});
 </script>

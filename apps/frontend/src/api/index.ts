@@ -1,10 +1,11 @@
-import axios, { AxiosResponse } from 'axios';
-import { clearFlashes, flash, FlashType } from '../store';
-import type { Status, StatusMapType, SuccessData } from '@app/v1/dto/Status';
-import { $topbar } from '../utils/topbar';
-import { $api, ApiResponse } from '@plurali/api-client';
+import type { Status, StatusMapType, SuccessData } from "@app/v1/dto/Status";
+import { $api, ApiResponse } from "@plurali/api-client";
+import axios, { AxiosResponse } from "axios";
 
-const prodApiUrl = 'https://api.plurali.icu';
+import { clearFlashes, flash, FlashType } from "../store";
+import { $topbar } from "../utils/topbar";
+
+const prodApiUrl = "https://api.plurali.icu";
 
 const pubdevApiUrl = "https://pubdev.plurali.icu/api";
 
@@ -13,7 +14,7 @@ const apiUrls = {
   // [pubdevApiUrl]: window.location.href.startsWith("https://pubdev.plurali.icu"),
   // "https://dev.plurali.icu/api": window.location.href.startsWith("https://dev.plurali.icu"),
   [prodApiUrl]: window.location.href.startsWith("https://plurali.icu"),
-}
+};
 
 const getApiUrl = () => {
   for (const apiUrl in apiUrls) {
@@ -24,7 +25,7 @@ const getApiUrl = () => {
   }
 
   return prodApiUrl;
-}
+};
 
 const baseURL = getApiUrl();
 
@@ -39,7 +40,7 @@ export const $axios = axios.create({
 
 export const setAuth = (auth: string | null) => {
   if (auth) {
-    localStorage.setItem('_plurali_auth', auth);
+    localStorage.setItem("_plurali_auth", auth);
   } else {
     localStorage.removeItem("_plurali_auth");
   }
@@ -47,13 +48,13 @@ export const setAuth = (auth: string | null) => {
   $axios.defaults.headers.common.Authorization = `Bearer ${auth}`;
 };
 
-const auth = localStorage.getItem('_plurali_auth');
+const auth = localStorage.getItem("_plurali_auth");
 if (auth) {
   setAuth(auth);
 }
 
 export const formatError = (e: any) => {
-  const unknownErrorMessage = 'Unknown error has occurred. Please try again.';
+  const unknownErrorMessage = "Unknown error has occurred. Please try again.";
 
   const error = e?.response?.data?.error ?? e?.message ?? unknownErrorMessage;
 
@@ -62,10 +63,10 @@ export const formatError = (e: any) => {
   }
 
   return error;
-}
+};
 
 export const wrapRequest = async <T extends object = SuccessData>(
-  fn: () => Promise<AxiosResponse<Status<T>> | ApiResponse<T>> | null
+  fn: () => Promise<AxiosResponse<Status<T>> | ApiResponse<T>> | null,
 ): Promise<T | false> => {
   clearFlashes();
 
@@ -76,12 +77,12 @@ export const wrapRequest = async <T extends object = SuccessData>(
     const res = await $topbar.promised(promise);
 
     // support @plurali/api-client as well as standard axios response
-    const data = 'success' in res ? res : res.data;
+    const data = "success" in res ? res : res.data;
 
     // hackaround for 200 errors (should not happen)
     if (!data.success) throw new Error($api.handleException({ response: { data } }).error.message);
 
-    if ('warning' in data.data) {
+    if ("warning" in data.data) {
       flash(String(data.data.warning), FlashType.Warning, false, true);
     }
 
@@ -94,18 +95,18 @@ export const wrapRequest = async <T extends object = SuccessData>(
 
 // copied so it's values can be used
 export const StatusMap = {
-  InvalidRequest: 'Invalid request',
-  InvalidPluralKey: 'Invalid plural key',
-  NotAuthenticated: 'Not authenticated',
-  PluralKeyNotSpecified: 'Plural key not specified',
-  InvalidCredentials: 'Invalid credentials',
-  UsernameAlreadyUsed: 'Username is already used',
-  InvalidOverride: 'Invalid Override Plural ID',
-  ResourceNotFound: 'Resource not found',
-  Unauthorized: 'Unauthorized',
-  UnsupportedFile: 'Unsupported or invalid file given',
-  FileProcessingFailed: 'Failed to process the given file',
-  MultipartEndpoint: 'This endpoint is only accepting requests in the multipart form',
+  InvalidRequest: "Invalid request",
+  InvalidPluralKey: "Invalid plural key",
+  NotAuthenticated: "Not authenticated",
+  PluralKeyNotSpecified: "Plural key not specified",
+  InvalidCredentials: "Invalid credentials",
+  UsernameAlreadyUsed: "Username is already used",
+  InvalidOverride: "Invalid Override Plural ID",
+  ResourceNotFound: "Resource not found",
+  Unauthorized: "Unauthorized",
+  UnsupportedFile: "Unsupported or invalid file given",
+  FileProcessingFailed: "Failed to process the given file",
+  MultipartEndpoint: "This endpoint is only accepting requests in the multipart form",
   CacheDemand:
-    'Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.',
+    "Due to unexpected higher demand, we were not able to clear cached content, so your changes may not be visible immediately.",
 } as StatusMapType;

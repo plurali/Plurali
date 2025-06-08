@@ -1,10 +1,15 @@
 <template>
   <div class="flex items-center gap-2 my-5">
-    <h1 class="text-2xl font-medium">Create new {{ isMember ? 'member' : 'system' }} content page</h1>
+    <h1 class="text-2xl font-medium">Create new {{ isMember ? "member" : "system" }} content page</h1>
     <VisibilityTag :visible="visible" @click="visible = !visible" />
   </div>
-  <input :disabled="loading" type="text" class="w-full p-6 py-3 border rounded-xl border-gray-400 mb-5" v-model="name"
-    placeholder="Enter page name..." />
+  <input
+    v-model="name"
+    :disabled="loading"
+    type="text"
+    class="w-full p-6 py-3 border rounded-xl border-gray-400 mb-5"
+    placeholder="Enter page name..."
+  />
 
   <UserContent>
     <Editor id="page--content" :placeholder="`Enter page content...`" initial-value="" @save="createPage" />
@@ -12,28 +17,29 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import Title from '../../components/Title.vue';
-import Subtitle from '../../components/Subtitle.vue';
-import ButtonLink from '../../components/ButtonLink.vue';
-import Button from '../../components/Button.vue';
-import Spinner from '../../components/Spinner.vue';
-import { wrapRequest } from '../../api';
-import { createMemberPage, createSystemPage } from '../../api/page';
-import Color from '../../components/global/color/ColorCircle.vue';
-import { useGoBack } from '../../composables/goBack';
-import Fetchable from '../../components/global/Fetchable.vue';
-import CustomFields from '../../components/global/fields/CustomFields.vue';
-import ColorCircle from '../../components/global/color/ColorCircle.vue';
-import { getRouteParam } from '../../utils';
-import MemberSummary from '../../components/global/members/MemberSummary.vue';
-import UserContent from '../../components/global/UserContent.vue';
-import Editor from '../../components/dashboard/Editor.vue';
-import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
-import { TinyEditorType } from '@plurali/editor';
-import { $memberPage, $systemPage } from '@plurali/api-client';
-import { parseVisibility } from '@plurali/common';
+import { $memberPage, $systemPage } from "@plurali/api-client";
+import { parseVisibility } from "@plurali/common";
+import { TinyEditorType } from "@plurali/editor";
+import { computed, defineComponent, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { wrapRequest } from "../../api";
+import { createMemberPage, createSystemPage } from "../../api/page";
+import Button from "../../components/Button.vue";
+import ButtonLink from "../../components/ButtonLink.vue";
+import Editor from "../../components/dashboard/Editor.vue";
+import Color from "../../components/global/color/ColorCircle.vue";
+import ColorCircle from "../../components/global/color/ColorCircle.vue";
+import Fetchable from "../../components/global/Fetchable.vue";
+import CustomFields from "../../components/global/fields/CustomFields.vue";
+import MemberSummary from "../../components/global/members/MemberSummary.vue";
+import UserContent from "../../components/global/UserContent.vue";
+import VisibilityTag from "../../components/global/visibility/VisibilityTag.vue";
+import Spinner from "../../components/Spinner.vue";
+import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { useGoBack } from "../../composables/goBack";
+import { getRouteParam } from "../../utils";
 
 export default defineComponent({
   components: {
@@ -55,12 +61,12 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
-    const name = ref('');
+    const name = ref("");
     const visible = ref(false);
 
     const loading = ref(false);
 
-    const isMember = computed(() => String(route.name).includes('dashboard:member'));
+    const isMember = computed(() => String(route.name).includes("dashboard:member"));
 
     const memberId = computed(() => getRouteParam(route.params.memberId));
 
@@ -73,7 +79,7 @@ export default defineComponent({
       loading.value = true;
 
       editor.readonly = true;
-      let content: string = editor.getContent({ format: 'html' });
+      let content: string = editor.getContent({ format: "html" });
 
       const data = {
         name: name.value,
@@ -82,10 +88,8 @@ export default defineComponent({
       };
 
       const page = await wrapRequest(() =>
-        isMember.value
-          ? $memberPage.createMemberPage(memberId.value ?? '', data)
-          : $systemPage.createSystemPage(data)
-        );
+        isMember.value ? $memberPage.createMemberPage(memberId.value ?? "", data) : $systemPage.createSystemPage(data),
+      );
 
       if (page) {
         router.push(`${parentRoute.value}/page-edit/${page.id}`);

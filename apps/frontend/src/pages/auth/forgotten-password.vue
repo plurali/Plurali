@@ -8,12 +8,12 @@
     <div class="mb-3.5">
       <Label>Your email</Label>
       <input
-        :disabled="loading"
         v-model="form.email"
-        @keyup="validate"
+        :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="Your email"
         type="email"
+        @keyup="validate"
       />
       <InputError v-if="formErrors.email">
         {{ formErrors.email }}
@@ -32,19 +32,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { emailRegex } from '../../utils';
-import { formatError } from '../../api';
-import Spinner from '../../components/Spinner.vue'
-import { flash, FlashType, user } from '../../store';
+
+import { formatError } from "../../api";
 import { requestPasswordReset } from "../../api/auth";
-import { useGoBack } from "../../composables/goBack";
+import Button from "../../components/Button.vue";
 import InputError from "../../components/InputError.vue";
 import Label from "../../components/Label.vue";
-import Button from "../../components/Button.vue";
-import Title from "../../components/Title.vue";
+import Spinner from "../../components/Spinner.vue";
 import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { useGoBack } from "../../composables/goBack";
+import { flash, FlashType, user } from "../../store";
+import { emailRegex } from "../../utils";
 
 export default defineComponent({
   components: {
@@ -56,34 +57,31 @@ export default defineComponent({
     Label,
   },
   setup() {
-    useGoBack('/auth/login');
+    useGoBack("/auth/login");
 
     const router = useRouter();
 
     const form = reactive({
-      email: '',
+      email: "",
     });
 
     const formErrors = reactive({
-      email: null as string|null
+      email: null as string | null,
     });
 
     const loading = ref<boolean>(false);
 
     onMounted(() => {
       if (user.value) {
-       return router.push("/dashboard");
+        return router.push("/dashboard");
       }
-    })
+    });
 
     const validate = () => {
-      formErrors.email =
-        !form.email || !emailRegex.test(form.email)
-          ? 'A valid email must be entered.'
-          : null;
+      formErrors.email = !form.email || !emailRegex.test(form.email) ? "A valid email must be entered." : null;
 
       return !formErrors.email;
-    }
+    };
 
     const submit = async () => {
       if (loading.value) return;
@@ -96,7 +94,12 @@ export default defineComponent({
           throw new Error(data.error.message);
         }
 
-        flash("If an account matches the provided email, a reset link will be sent shortly.", FlashType.Success, true, false);
+        flash(
+          "If an account matches the provided email, a reset link will be sent shortly.",
+          FlashType.Success,
+          true,
+          false,
+        );
 
         return router.push("/auth/login");
       } catch (e) {
@@ -111,8 +114,8 @@ export default defineComponent({
       formErrors,
       loading,
       validate,
-      submit
-    }
-  }
-})
+      submit,
+    };
+  },
+});
 </script>

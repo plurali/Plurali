@@ -1,38 +1,39 @@
-import { WatchSource, watch } from 'vue';
-import { background } from '../store';
-import type { HasBackground } from '@domain/common/types';
-import { onBeforeRouteLeave } from 'vue-router';
-import { isPubDev } from '../api';
-import { BackgroundType } from '@plurali/api-client';
+import type { HasBackground } from "@domain/common/types";
+import { BackgroundType } from "@plurali/api-client";
+import { watch, WatchSource } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
+
+import { isPubDev } from "../api";
+import { background } from "../store";
 
 export interface Assetable {
   lastTimeAssetChanged: Date;
 }
 
-export const cdnBaseUrl = (import.meta as any).env?.DEV ? 'http://127.0.0.1:8001/plurali' : `https://cdn.plurali.icu/${isPubDev ? "pubdev" : "v1"}`;
+export const cdnBaseUrl = (import.meta as any).env?.DEV
+  ? "http://127.0.0.1:8001/plurali"
+  : `https://cdn.plurali.icu/${isPubDev ? "pubdev" : "v1"}`;
 
 export const parseBackground = (data: HasBackground & Assetable): string | null => {
   if (!data.backgroundImage) return null;
-  if (data.backgroundImage.startsWith('http')) return data.backgroundImage;
+  if (data.backgroundImage.startsWith("http")) return data.backgroundImage;
 
-  return `${cdnBaseUrl}/${data.backgroundImage}?v=${Math.floor(
-    new Date(data.lastTimeAssetChanged).getTime() / 1000
-  )}`;
+  return `${cdnBaseUrl}/${data.backgroundImage}?v=${Math.floor(new Date(data.lastTimeAssetChanged).getTime() / 1000)}`;
 };
 
 export const withBackground = <
   T extends { color: string | null; data: HasBackground & Assetable } = {
     color: string | null;
     data: HasBackground & Assetable;
-  }
+  },
 >(
-  obj: WatchSource<T | null | false>
+  obj: WatchSource<T | null | false>,
 ) => {
   const reset = () => (background.value = null);
 
   const stop = watch(
     obj,
-    val => {
+    (val) => {
       if (!val) return reset();
 
       switch (val?.data?.backgroundType) {
@@ -45,7 +46,7 @@ export const withBackground = <
           break;
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   onBeforeRouteLeave(() => {

@@ -1,10 +1,10 @@
 <template>
-  <div ref="div"></div>
+  <div ref="div" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
-import { Sanitizer, setHTML } from '@plurali/sanitizer';
+import { Sanitizer, setHTML } from "@plurali/sanitizer";
+import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
   props: {
