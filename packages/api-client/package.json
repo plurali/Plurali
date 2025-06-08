@@ -16,7 +16,9 @@
   ],
   "scripts": {
     "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build:watch": "vite build --watch",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx,json,vue}'",
+    "lint:fix": "pnpm lint --fix"
   },
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
