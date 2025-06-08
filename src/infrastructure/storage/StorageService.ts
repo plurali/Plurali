@@ -1,6 +1,6 @@
 import { StoreResult } from "./StoreResult";
 
-export abstract class StorageService<T = any> {
+export abstract class StorageService<T = unknown> {
   readonly client: T;
 
   readonly root: string;

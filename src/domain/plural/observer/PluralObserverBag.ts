@@ -88,7 +88,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     } catch (e) {
       this.logger.error(
         `[watcher-bag] failed to create a watcher for ${user.id}:`,
-        (e as any)?.message ?? "unknown cause",
+        (e as Error)?.message ?? "unknown cause",
       );
       return null;
     }
