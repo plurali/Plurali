@@ -1,11 +1,12 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
-import { User, UserVerificationType } from '@prisma/client';
-import { UserVerificationRepository } from './verification/UserVerificationRepository';
-import { render } from '@react-email/render';
-import { UserVerificationEmail } from '@domain/emails/UserVerificationEmail';
-import { UserPasswordResetEmail } from '@domain/emails/UserPasswordResetEmail';
-import { getFormattedTimeWithUnit } from '@domain/common/time';
+import { getFormattedTimeWithUnit } from "@domain/common/time";
+import { UserPasswordResetEmail } from "@domain/emails/UserPasswordResetEmail";
+import { UserVerificationEmail } from "@domain/emails/UserVerificationEmail";
+import { Injectable } from "@nestjs/common";
+import { MailerService } from "@nestjs-modules/mailer";
+import { User, UserVerificationType } from "@prisma/client";
+import { render } from "@react-email/render";
+
+import { UserVerificationRepository } from "./verification/UserVerificationRepository";
 
 @Injectable()
 export class UserService {
@@ -39,7 +40,7 @@ export class UserService {
 
     await this.mailer.sendMail({
       to: `${user.username} <${email}>`,
-      subject: 'Verify your Plurali account',
+      subject: "Verify your Plurali account",
       html: render(
         UserVerificationEmail({
           link: `https://plurali.icu/user/verify-email/${verification.id}`, // TODO: domain as param
@@ -77,7 +78,7 @@ export class UserService {
 
     await this.mailer.sendMail({
       to: `${user.username} <${email}>`,
-      subject: 'Plurali Password Reset',
+      subject: "Plurali Password Reset",
       html: render(
         UserPasswordResetEmail({
           link: `https://plurali.icu/auth/reset-password/${verification.id}?email=${email}`, // TODO: domain as param

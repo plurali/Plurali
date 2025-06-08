@@ -1,9 +1,10 @@
-import { PluralVisibility, parseAvatar, parseVisibility } from '@domain/plural/utils';
-import { UserMemberDataDto } from './UserMemberDataDto';
-import { UserValueFieldDto } from '../field/UserValueFieldDto';
-import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { MemberWithSystem, SystemWithFields } from '@domain/common/types';
-import { ApiProperty } from '@nestjs/swagger';
+import { MemberWithSystem, SystemWithFields } from "@domain/common/types";
+import { PluralMemberEntry } from "@domain/plural/types/rest/members";
+import { parseAvatar, parseVisibility, PluralVisibility } from "@domain/plural/utils";
+import { ApiProperty } from "@nestjs/swagger";
+
+import { UserValueFieldDto } from "../field/UserValueFieldDto";
+import { UserMemberDataDto } from "./UserMemberDataDto";
 
 /**
  * @deprecated
@@ -78,13 +79,13 @@ export class UserMemberDto {
       plural.content.color,
       plural.content.desc,
       Object.keys(plural.content.info ?? {})
-        .map(id => {
-          const field = member.system.fields.find(f => f.pluralId === id);
+        .map((id) => {
+          const field = member.system.fields.find((f) => f.pluralId === id);
           if (!field) return null;
 
           return UserValueFieldDto.from(field, plural.content.info[id]);
         })
-        .filter(v => !!v),
+        .filter((v) => !!v),
       UserMemberDataDto.from(member),
       parseAvatar(plural.content),
     );

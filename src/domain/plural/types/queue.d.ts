@@ -1,4 +1,4 @@
-import { MemberOperation } from './socket';
+import { MemberOperation } from "./socket";
 
 export interface UpdateMemberQueueData {
   systemId: string;

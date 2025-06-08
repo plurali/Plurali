@@ -1,26 +1,27 @@
-import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { PageModule } from '@domain/page/PageModule';
-import { PluralModule } from '@domain/plural/PluralModule';
-import { SystemModule } from '@domain/system/SystemModule';
-import { UserModule } from '@domain/user/UserModule';
-import { NotificationModule } from '@domain/notification/NotificationModule';
-import { StorageModule } from '@infra/storage/StorageModule';
-import { MemberPageController } from './controller/member/page/MemberPageController';
-import { SystemPageController } from './controller/system/page/SystemPageController';
-import { PublicMemberPageController } from './controller/member/page/PublicMemberPageController';
-import { PublicSystemPageController } from './controller/system/page/PublicSystemPageController';
-import { PublicMemberController } from './controller/member/PublicMemberController';
-import { PublicSystemController } from './controller/system/PublicSystemController';
-import { PublicSystemFieldController } from './controller/system/field/PublicSystemFieldController';
-import { PublicMemberFieldController } from './controller/member/field/PublicMemberFieldController';
-import { AuthController } from './controller/auth/AuthController';
-import { UserController } from './controller/user/UserController';
-import { MemberController } from './controller/member/MemberController';
-import { SystemController } from './controller/system/SystemController';
-import { NotificationController } from './controller/notification/NotificationController';
-import { MemberFieldController } from './controller/member/field/MemberFieldController';
-import { SystemFieldController } from './controller/system/field/SystemFieldController';
+import { NotificationModule } from "@domain/notification/NotificationModule";
+import { PageModule } from "@domain/page/PageModule";
+import { PluralModule } from "@domain/plural/PluralModule";
+import { SystemModule } from "@domain/system/SystemModule";
+import { UserModule } from "@domain/user/UserModule";
+import { StorageModule } from "@infra/storage/StorageModule";
+import { Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+
+import { AuthController } from "./controller/auth/AuthController";
+import { MemberFieldController } from "./controller/member/field/MemberFieldController";
+import { PublicMemberFieldController } from "./controller/member/field/PublicMemberFieldController";
+import { MemberController } from "./controller/member/MemberController";
+import { MemberPageController } from "./controller/member/page/MemberPageController";
+import { PublicMemberPageController } from "./controller/member/page/PublicMemberPageController";
+import { PublicMemberController } from "./controller/member/PublicMemberController";
+import { NotificationController } from "./controller/notification/NotificationController";
+import { PublicSystemFieldController } from "./controller/system/field/PublicSystemFieldController";
+import { SystemFieldController } from "./controller/system/field/SystemFieldController";
+import { PublicSystemPageController } from "./controller/system/page/PublicSystemPageController";
+import { SystemPageController } from "./controller/system/page/SystemPageController";
+import { PublicSystemController } from "./controller/system/PublicSystemController";
+import { SystemController } from "./controller/system/SystemController";
+import { UserController } from "./controller/user/UserController";
 
 @Module({
   imports: [PageModule, SystemModule, UserModule, NotificationModule, JwtModule, PluralModule, StorageModule],

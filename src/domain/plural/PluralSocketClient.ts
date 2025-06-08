@@ -1,8 +1,9 @@
-import { ConsoleLogger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { safeStringify } from '@domain/common';
-import { Message, UpdateMessage } from './types/socket';
-import { SystemWithUser } from '@domain/common/types';
+import { safeStringify } from "@domain/common";
+import { SystemWithUser } from "@domain/common/types";
+import { ConsoleLogger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+
+import { Message, UpdateMessage } from "./types/socket";
 
 export interface PluralSocketClientEvent<D = object> {
   data: D;
@@ -46,7 +47,7 @@ export class PluralSocketClient extends EventEmitter2 {
   }
 
   private init() {
-    this._emitter.on('opened', (socket: WebSocket) => {
+    this._emitter.on("opened", (socket: WebSocket) => {
       if (!this._isUsable(socket)) return;
 
       this._retryAttempts = 0;
@@ -54,17 +55,17 @@ export class PluralSocketClient extends EventEmitter2 {
       this._authenticate(socket);
     });
 
-    this._emitter.on('authenticated', (socket: WebSocket) => {
+    this._emitter.on("authenticated", (socket: WebSocket) => {
       if (!this._isUsable(socket)) return;
 
       this._authenticated = true;
-      this.emit('ready');
+      this.emit("ready");
 
-      socket.addEventListener('message', ({ data }) => {
+      socket.addEventListener("message", ({ data }) => {
         if (!this._isAuthenticated(socket)) return;
 
         const parsedData = this._parse<Message>(data);
-        if (!parsedData || !('msg' in parsedData)) return;
+        if (!parsedData || !("msg" in parsedData)) return;
 
         const event: PluralSocketClientEvent<Message> = {
           data: parsedData,
@@ -72,28 +73,28 @@ export class PluralSocketClient extends EventEmitter2 {
           isUsable: () => this._isAuthenticated(socket),
         };
 
-        this.emit('message', event);
+        this.emit("message", event);
 
-        if (event.data.msg === 'update') {
-          this.emit('update', event.data);
+        if (event.data.msg === "update") {
+          this.emit("update", event.data);
         }
       });
     });
 
-    this._emitter.on('pong', (socket: WebSocket) => {
+    this._emitter.on("pong", (socket: WebSocket) => {
       if (!this._isAuthenticated(socket)) return;
 
       // Send 'pong' every 60s
       setTimeout(() => this._isAuthenticated(socket) && this._ping(socket), PluralSocketClient.PING_TIMEOUT * 1000);
     });
 
-    this._emitter.on('closed', (socket: WebSocket) => {
+    this._emitter.on("closed", (socket: WebSocket) => {
       if (socket !== this._socket) return;
 
       this._socket = null;
       this._authenticated = false;
 
-      this.emit('closed');
+      this.emit("closed");
 
       if (this._destroyed) return;
 
@@ -103,7 +104,7 @@ export class PluralSocketClient extends EventEmitter2 {
         this.logger.warn(`Gave up after ${this._retryAttempts}`);
         this._destroyed = true;
 
-        this.emit('hopeless');
+        this.emit("hopeless");
         return;
       }
 
@@ -112,12 +113,12 @@ export class PluralSocketClient extends EventEmitter2 {
   }
 
   onMessage<D extends Message = Message>(listener: (event: PluralSocketClientEvent<D>) => unknown): this {
-    this._emitter.on('message', listener);
+    this._emitter.on("message", listener);
     return this;
   }
 
   onUpdate<D extends UpdateMessage = UpdateMessage>(listener: (event: PluralSocketClientEvent<D>) => unknown): this {
-    this._emitter.on('update', listener);
+    this._emitter.on("update", listener);
     return this;
   }
 
@@ -129,22 +130,22 @@ export class PluralSocketClient extends EventEmitter2 {
     const socket = new WebSocket(this.endpoint);
 
     socket.addEventListener(
-      'open',
+      "open",
       () => {
         if (!this._isUsable(socket)) return;
 
         socket.addEventListener(
-          'message',
+          "message",
           ({ data }) => {
-            if (this._isUsable(socket) && data === '{}') {
-              this._emitter.emit('opened', socket);
+            if (this._isUsable(socket) && data === "{}") {
+              this._emitter.emit("opened", socket);
             }
           },
           { once: true },
         );
 
-        socket.addEventListener('close', () => {
-          this._emitter.emit('closed');
+        socket.addEventListener("close", () => {
+          this._emitter.emit("closed");
         });
       },
       { once: true },
@@ -189,31 +190,31 @@ export class PluralSocketClient extends EventEmitter2 {
 
   private _authenticate(socket: WebSocket): void {
     socket.addEventListener(
-      'message',
+      "message",
       ({ data }) => {
         if (!this._isUsable(socket)) return;
 
         const message = this._parse(data);
         if (!message) return;
 
-        if ('msg' in message && message.msg === 'Successfully authenticated') {
-          this._emitter.emit('authenticated', socket);
+        if ("msg" in message && message.msg === "Successfully authenticated") {
+          this._emitter.emit("authenticated", socket);
         }
       },
       { once: true },
     );
 
-    this._send({ op: 'authenticate', token: this.system.user.pluralAccessToken }, socket);
+    this._send({ op: "authenticate", token: this.system.user.pluralAccessToken }, socket);
   }
 
   private _ping(socket: WebSocket): void {
-    socket.send('ping');
-    this._emitter.emit('ping');
+    socket.send("ping");
+    this._emitter.emit("ping");
   }
 
   private _parse<D = object>(data: unknown): D | null {
     try {
-      if (typeof data !== 'string') throw new Error();
+      if (typeof data !== "string") throw new Error();
 
       return JSON.parse(data) as D;
     } catch {
@@ -223,6 +224,6 @@ export class PluralSocketClient extends EventEmitter2 {
   }
 
   private _send(data: unknown, socket: WebSocket): void {
-    return socket.send(typeof data !== 'string' ? safeStringify(data) : data);
+    return socket.send(typeof data !== "string" ? safeStringify(data) : data);
   }
 }

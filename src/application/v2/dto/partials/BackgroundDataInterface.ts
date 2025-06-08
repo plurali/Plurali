@@ -1,4 +1,4 @@
-import { BackgroundType } from '@domain/common';
+import { BackgroundType } from "@domain/common";
 
 export interface BackgroundDataInterface {
   type: BackgroundType;

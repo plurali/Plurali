@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { VerificationRequestInterface } from './VerificationRequestInterface';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
+
+import { VerificationRequestInterface } from "./VerificationRequestInterface";
 
 export class VerificationRequest implements VerificationRequestInterface {
   @IsString()

@@ -1,21 +1,22 @@
-import { StorageService } from '../StorageService';
+import { Config } from "@app/Config";
 import {
-  S3Client,
+  _Object as Obj,
+  DeleteObjectCommand,
   HeadBucketCommand,
   HeadObjectCommand,
   ListObjectsV2Command,
-  PutObjectCommand,
-  DeleteObjectCommand,
   NotFound,
-  _Object as Obj,
   ObjectCannedACL,
-} from '@aws-sdk/client-s3';
-import { StoreResult } from '../StoreResult';
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Config } from '@app/Config';
-import { StoragePrefix } from '../StoragePrefix';
-import { DigitalOceanService } from '@infra/digitalocean/DigitalOceanService';
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { DigitalOceanService } from "@infra/digitalocean/DigitalOceanService";
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
+import { StoragePrefix } from "../StoragePrefix";
+import { StorageService } from "../StorageService";
+import { StoreResult } from "../StoreResult";
 
 @Injectable()
 export class S3StorageService implements StorageService<S3Client> {
@@ -27,7 +28,7 @@ export class S3StorageService implements StorageService<S3Client> {
     config: ConfigService<Config>,
     private readonly provider: DigitalOceanService,
   ) {
-    const s3 = config.get('storage', { infer: true });
+    const s3 = config.get("storage", { infer: true });
 
     this.client = new S3Client({
       forcePathStyle: true,
@@ -62,12 +63,12 @@ export class S3StorageService implements StorageService<S3Client> {
     return (
       prefixes
         // Remove forward and trailing slashes first
-        .map(prefix => {
-          if (prefix.startsWith('/')) prefix = prefix.substring(1);
-          if (prefix.endsWith('/')) prefix = prefix.substring(0, prefix.length - 1);
+        .map((prefix) => {
+          if (prefix.startsWith("/")) prefix = prefix.substring(1);
+          if (prefix.endsWith("/")) prefix = prefix.substring(0, prefix.length - 1);
           return prefix;
         })
-        .join('/')
+        .join("/")
     );
   }
 
@@ -107,7 +108,7 @@ export class S3StorageService implements StorageService<S3Client> {
     path: string,
     body: Buffer,
     replaceIfExists = false,
-    acl: ObjectCannedACL = 'public-read',
+    acl: ObjectCannedACL = "public-read",
   ): Promise<StoreResult> {
     let cacheFail = false;
     if (await this.exists(path)) {

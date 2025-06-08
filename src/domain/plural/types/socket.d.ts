@@ -1,4 +1,4 @@
-import { SocketOperationType } from '../utils';
+import { SocketOperationType } from "../utils";
 
 export interface Content<C = object> {
   content: C;
@@ -44,12 +44,12 @@ export interface ResolvedToken {
 }
 
 export interface AuthenticatedMessage {
-  msg: 'Successfully authenticated';
+  msg: "Successfully authenticated";
   resolvedToken: ResolvedToken;
 }
 
 export interface BaseUpdateMessage {
-  msg: 'update';
+  msg: "update";
   target: string;
   results: Operation[];
 }
@@ -57,7 +57,7 @@ export interface BaseUpdateMessage {
 export type MemberOperation = Operation<Content<InsertMember>, Content<UpdateMember>>;
 
 export interface MemberUpdateMessage extends BaseUpdateMessage {
-  target: 'members';
+  target: "members";
   results: MemberOperation[];
 }
 

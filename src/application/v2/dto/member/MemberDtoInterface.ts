@@ -1,5 +1,6 @@
-import { IdentifiableEntityDtoInterface } from '@app/v2/types/response';
-import { MemberDataDtoInterface } from './MemberDataDtoInterface';
+import { IdentifiableEntityDtoInterface } from "@app/v2/types/response";
+
+import { MemberDataDtoInterface } from "./MemberDataDtoInterface";
 
 export interface MemberDtoInterface extends IdentifiableEntityDtoInterface {
   systemId: string;

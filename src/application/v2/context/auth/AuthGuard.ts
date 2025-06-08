@@ -1,10 +1,10 @@
-import { jwtConfig } from '@app/misc/jwt';
-import { NotAuthenticatedException } from '@app/v2/exception/NotAuthenticatedException';
-import { JwtDataInterface } from '@domain/security/JwtData';
-import { UserRepository } from '@domain/user/UserRepository';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { FastifyRequest } from 'fastify';
+import { jwtConfig } from "@app/misc/jwt";
+import { NotAuthenticatedException } from "@app/v2/exception/NotAuthenticatedException";
+import { JwtDataInterface } from "@domain/security/JwtData";
+import { UserRepository } from "@domain/user/UserRepository";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { FastifyRequest } from "fastify";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
         throw new NotAuthenticatedException();
       }
 
-      request['user'] = user;
+      request["user"] = user;
     } catch {
       throw new NotAuthenticatedException();
     }
@@ -45,7 +45,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private extractTokenFromHeader(request: FastifyRequest): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    return type === "Bearer" ? token : undefined;
   }
 }

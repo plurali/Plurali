@@ -1,41 +1,41 @@
-import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
-import { SystemGuard } from '@app/v1/context/system/SystemGuard';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Ok, PaginatedOk, Status, StatusMap } from '@app/v1/dto/Status';
-import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { UpdateSystemMemberRequest } from '@app/v1/dto/user/system/request/UpdateSystemMemberRequest';
-import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
-import { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMembersResponse';
-import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
-import { assignFields, assignSystem, assignUser } from '@domain/common';
-import { FullSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { FieldRepository } from '@domain/system/field/FieldRepository';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Body, Controller, Get, Inject, Param, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { BackgroundType, Member, Prisma, System, User, Visibility } from '@prisma/client';
-import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
-import { StorageService } from '@infra/storage/StorageService';
-import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileException';
-import { StoragePrefix } from '@infra/storage/StoragePrefix';
-import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
-import * as mime from 'mime-types';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/v1/misc/swagger';
-import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
-import { Page } from '@app/v1/context/pagination/Page';
-import { Take } from '@app/v1/context/pagination/Take';
-import { Pagination } from '@app/v1/misc/pagination';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v1/context/auth/CurrentUser";
+import { Page } from "@app/v1/context/pagination/Page";
+import { Take } from "@app/v1/context/pagination/Take";
+import { CurrentSystem } from "@app/v1/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v1/context/system/SystemGuard";
+import { Ok, PaginatedOk, Status, StatusMap } from "@app/v1/dto/Status";
+import { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
+import { UpdateSystemMemberRequest } from "@app/v1/dto/user/system/request/UpdateSystemMemberRequest";
+import { SystemMemberResponse } from "@app/v1/dto/user/system/response/SystemMemberResponse";
+import { SystemMembersResponse } from "@app/v1/dto/user/system/response/SystemMembersResponse";
+import { FileProcessingFailedException } from "@app/v1/exception/FileProcessingFailedException";
+import { InvalidRequestException } from "@app/v1/exception/InvalidRequestException";
+import { ResourceNotFoundException } from "@app/v1/exception/ResourceNotFoundException";
+import { UnsupportedFileException } from "@app/v1/exception/UnsupportedFileException";
+import { Pagination } from "@app/v1/misc/pagination";
+import { error, ok } from "@app/v1/misc/swagger";
+import { FileInterceptor, MemoryStorageFile, UploadedFile } from "@blazity/nest-file-fastify";
+import { assignFields, assignSystem, assignUser } from "@domain/common";
+import { FullSystem, SystemWithFields, SystemWithUser } from "@domain/common/types";
+import { PluralCachedRestService } from "@domain/plural/PluralCachedRestService";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { PluralMemberEntry } from "@domain/plural/types/rest/members";
+import { FieldRepository } from "@domain/system/field/FieldRepository";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { StoragePrefix } from "@infra/storage/StoragePrefix";
+import { StorageService } from "@infra/storage/StorageService";
+import { Body, Controller, Get, Inject, Param, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { BackgroundType, Member, Prisma, System, User, Visibility } from "@prisma/client";
+import * as mime from "mime-types";
 
 @Controller({
-  path: '/system/members',
-  version: '1',
+  path: "/system/members",
+  version: "1",
 })
-@ApiTags('SystemMemberV1')
-@ApiSecurity('bearer')
+@ApiTags("SystemMemberV1")
+@ApiSecurity("bearer")
 @ApiExtraModels(SystemMemberResponse, SystemMembersResponse)
 export class SystemMemberController {
   constructor(
@@ -46,7 +46,7 @@ export class SystemMemberController {
   ) {}
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
@@ -105,14 +105,14 @@ export class SystemMemberController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:id')
+  @Get("/:id")
   @ApiResponse(ok(200, SystemMemberResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
   public async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
+    @Param("id") id: string,
   ): Promise<Ok<SystemMemberResponse>> {
     return Status.ok(
       new SystemMemberResponse(
@@ -122,14 +122,14 @@ export class SystemMemberController {
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:id')
+  @Post("/:id")
   @ApiResponse(ok(200, SystemMemberResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
   public async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() data: UpdateSystemMemberRequest,
   ): Promise<Ok<SystemMemberResponse>> {
     let member = await this.findOrFail(system, id);
@@ -161,21 +161,21 @@ export class SystemMemberController {
     return Status.ok(new SystemMemberResponse(await this.makeDto(member, await this.makeExtendedSystem(system, user))));
   }
 
-  @Post('/:id/background')
+  @Post("/:id/background")
   @UseGuards(SystemGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor("file"))
   @ApiResponse(ok(200, SystemMemberResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.InvalidRequest))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
+    @Param("id") id: string,
     @UploadedFile() file: MemoryStorageFile,
   ) {
     let member = await this.findOrFail(system, id);
 
-    if (!file.mimetype.startsWith('image/')) {
+    if (!file.mimetype.startsWith("image/")) {
       throw new UnsupportedFileException();
     }
 
@@ -240,7 +240,7 @@ export class SystemMemberController {
   ): Promise<UserMemberDto> {
     const extendedMember = assignSystem(member, system);
 
-    let pluralMember = plural ? plural.find(m => m.id === member.pluralId) : null;
+    let pluralMember = plural ? plural.find((m) => m.id === member.pluralId) : null;
     if (!pluralMember) {
       // Attempt to fetch alone
       pluralMember = await this.plural.findMember(extendedMember);

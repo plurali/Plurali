@@ -1,12 +1,13 @@
-import { UserRepository } from '@domain/user/UserRepository';
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AuthGuard } from '../auth/AuthGuard';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { RequestWithUser } from '@app/v2/types/request';
-import { ApiException } from '@app/v2/exception/ApiException';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { NotAuthenticatedException } from '@app/v2/exception/NotAuthenticatedException';
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ApiException } from "@app/v2/exception/ApiException";
+import { NotAuthenticatedException } from "@app/v2/exception/NotAuthenticatedException";
+import { RequestWithUser } from "@app/v2/types/request";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { UserRepository } from "@domain/user/UserRepository";
+import { ExecutionContext, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+
+import { AuthGuard } from "../auth/AuthGuard";
 
 @Injectable()
 export class SystemGuard extends AuthGuard {
@@ -34,7 +35,7 @@ export class SystemGuard extends AuthGuard {
         throw new ApiException(ApiError.InvalidPluralKey);
       }
 
-      request['system'] = system;
+      request["system"] = system;
 
       return true;
     }

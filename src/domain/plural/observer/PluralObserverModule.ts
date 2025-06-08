@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
-import { PluralObserverBag } from './PluralObserverBag';
-import { BullModule } from '@nestjs/bullmq';
-import { PluralObserverUpdateQueue } from '../utils';
-import { SystemModule } from '@domain/system/SystemModule';
-import { UserModule } from '@domain/user/UserModule';
+import { SystemModule } from "@domain/system/SystemModule";
+import { UserModule } from "@domain/user/UserModule";
+import { BullModule } from "@nestjs/bullmq";
+import { Module } from "@nestjs/common";
+
+import { PluralObserverUpdateQueue } from "../utils";
+import { PluralObserverBag } from "./PluralObserverBag";
 
 @Module({
   imports: [

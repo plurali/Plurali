@@ -1,14 +1,15 @@
-import { Field } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
-import { FieldDto } from './FieldDto';
-import { FieldDataDto } from './FieldDataDto';
-import { MemberFieldType } from '@domain/plural/utils';
-import { convertFieldType } from '@domain/common';
-import { ValueFieldDtoInterface } from './ValueFieldDtoInterface';
-import { FieldDataDtoInterface } from './FieldDataDtoInterface';
+import { convertFieldType } from "@domain/common";
+import { MemberFieldType } from "@domain/plural/utils";
+import { ApiProperty } from "@nestjs/swagger";
+import { Field } from "@prisma/client";
+
+import { FieldDataDto } from "./FieldDataDto";
+import { FieldDataDtoInterface } from "./FieldDataDtoInterface";
+import { FieldDto } from "./FieldDto";
+import { ValueFieldDtoInterface } from "./ValueFieldDtoInterface";
 
 export class ValueFieldDto extends FieldDto implements ValueFieldDtoInterface {
-  public type = 'field_value';
+  public type = "field_value";
 
   @ApiProperty()
   public value: string;

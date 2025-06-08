@@ -1,29 +1,29 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { Ok, PaginatedOk, Status, StatusMap } from '@app/v1/dto/Status';
-import { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
-import { SystemMembersResponse } from '@app/v1/dto/user/system/response/SystemMembersResponse';
-import { assignSystem } from '@domain/common';
-import { InvalidRequestException } from '@app/v1/exception/InvalidRequestException';
-import { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/v1/misc/swagger';
-import { Member } from '@prisma/client';
-import { FullSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
-import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { Page } from '@app/v1/context/pagination/Page';
-import { Take } from '@app/v1/context/pagination/Take';
-import { Pagination } from '@app/v1/misc/pagination';
-import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
+import { Page } from "@app/v1/context/pagination/Page";
+import { Take } from "@app/v1/context/pagination/Take";
+import { Ok, PaginatedOk, Status, StatusMap } from "@app/v1/dto/Status";
+import { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
+import { SystemMemberResponse } from "@app/v1/dto/user/system/response/SystemMemberResponse";
+import { SystemMembersResponse } from "@app/v1/dto/user/system/response/SystemMembersResponse";
+import { InvalidRequestException } from "@app/v1/exception/InvalidRequestException";
+import { ResourceNotFoundException } from "@app/v1/exception/ResourceNotFoundException";
+import { Pagination } from "@app/v1/misc/pagination";
+import { error, ok } from "@app/v1/misc/swagger";
+import { assignSystem } from "@domain/common";
+import { FullSystem, SystemWithFields, SystemWithUser } from "@domain/common/types";
+import { PluralCachedRestService } from "@domain/plural/PluralCachedRestService";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { PluralMemberEntry } from "@domain/plural/types/rest/members";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { Controller, Get, Inject, Param } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Member } from "@prisma/client";
 
 @Controller({
-  path: '/public/system/:systemId/members',
-  version: '1',
+  path: "/public/system/:systemId/members",
+  version: "1",
 })
-@ApiTags('SystemMemberPublicV1')
+@ApiTags("SystemMemberPublicV1")
 @ApiExtraModels(SystemMembersResponse, SystemMemberResponse)
 export class PublicSystemMemberController {
   constructor(
@@ -32,11 +32,11 @@ export class PublicSystemMemberController {
     @Inject(PluralRestService) private plural: PluralCachedRestService,
   ) {}
 
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, SystemMembersResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   public async list(
-    @Param('systemId') systemId: string,
+    @Param("systemId") systemId: string,
     @Page() page: number,
     @Take() take: number,
   ): Promise<PaginatedOk<SystemMembersResponse>> {
@@ -77,13 +77,13 @@ export class PublicSystemMemberController {
     });
   }
 
-  @Get('/:memberId')
+  @Get("/:memberId")
   @ApiResponse(ok(200, SystemMemberResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   @ApiResponse(error(400, StatusMap.InvalidRequest))
   public async view(
-    @Param('systemId') systemId: string,
-    @Param('memberId') memberId: string,
+    @Param("systemId") systemId: string,
+    @Param("memberId") memberId: string,
   ): Promise<Ok<SystemMemberResponse>> {
     const system = await this.system.findPublic(systemId);
     if (!system) throw new ResourceNotFoundException();
@@ -106,7 +106,7 @@ export class PublicSystemMemberController {
   ): Promise<UserMemberDto> {
     const extendedMember = assignSystem(member, system);
 
-    let pluralMember = plural ? plural.find(m => m.id === member.pluralId) : null;
+    let pluralMember = plural ? plural.find((m) => m.id === member.pluralId) : null;
     if (!pluralMember) {
       // Attempt to fetch alone
       pluralMember = await this.plural.findMember(extendedMember);

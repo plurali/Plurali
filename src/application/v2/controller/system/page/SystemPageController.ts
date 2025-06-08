@@ -1,35 +1,36 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
-import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { OwnerType, Page, Prisma, System, User } from '@prisma/client';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { error, ok } from '@app/v2/misc/swagger';
-import { PageDto } from '@app/v2/dto/page/PageDto';
-import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
-import { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
-import { PageRepository } from '@domain/page/PageRepository';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { Ok } from '@app/v2/dto/response/Ok';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { BaseController } from '../../BaseController';
-import { createSlug } from '@domain/common';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { PageDto } from "@app/v2/dto/page/PageDto";
+import { CreatePageRequest } from "@app/v2/dto/page/request/CreatePageRequest";
+import { UpdatePageRequest } from "@app/v2/dto/page/request/UpdatePageRequest";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { Ok } from "@app/v2/dto/response/Ok";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { createSlug } from "@domain/common";
+import { PageRepository } from "@domain/page/PageRepository";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from "@nestjs/common";
+import { ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { OwnerType, Page, Prisma, System, User } from "@prisma/client";
+
+import { BaseController } from "../../BaseController";
 
 @Controller({
-  path: '/system/page',
-  version: '2',
+  path: "/system/page",
+  version: "2",
 })
-@ApiTags('SystemPage')
-@ApiSecurity('bearer')
+@ApiTags("SystemPage")
+@ApiSecurity("bearer")
 export class SystemPageController extends BaseController {
   constructor(private readonly pages: PageRepository) {
     super();
   }
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -42,7 +43,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:page')
+  @Get("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -51,13 +52,13 @@ export class SystemPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') id: string,
+    @Param("page") id: string,
   ): Promise<ApiDataResponse<PageDto>> {
     return this.data(PageDto.from(await this.findOrFail(system, user, id)));
   }
 
   @UseGuards(SystemGuard)
-  @Patch('/:page')
+  @Patch("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -66,7 +67,7 @@ export class SystemPageController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') id: string,
+    @Param("page") id: string,
     @Body() data: UpdatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     let page = await this.findOrFail(system, user, id);
@@ -99,7 +100,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Delete('/:page')
+  @Delete("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -108,7 +109,7 @@ export class SystemPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') id: string,
+    @Param("page") id: string,
   ): Promise<ApiDataResponse<Ok>> {
     await this.pages.delete({
       where: {
@@ -120,7 +121,7 @@ export class SystemPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Put('/')
+  @Put("/")
   @HttpCode(200)
   async create(
     @CurrentSystem() system: System,

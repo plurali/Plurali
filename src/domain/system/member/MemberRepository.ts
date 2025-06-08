@@ -1,15 +1,15 @@
-import { PaginationQuery } from '@app/v2/controller/BaseController';
-import { isObjectId } from '@domain/common';
-import { MemberWithSystem, SystemWithFields, SystemWithUser } from '@domain/common/types';
-import { PrismaRepository } from '@infra/prisma/PrismaRepository';
-import { Injectable } from '@nestjs/common';
-import { Member, System, Visibility, Prisma } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { PaginationQuery } from "@app/v2/controller/BaseController";
+import { isObjectId } from "@domain/common";
+import { MemberWithSystem, SystemWithFields, SystemWithUser } from "@domain/common/types";
+import { PrismaRepository } from "@infra/prisma/PrismaRepository";
+import { Injectable } from "@nestjs/common";
+import { Member, Prisma, System, Visibility } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 @Injectable()
-export class MemberRepository extends PrismaRepository<'member'> {
+export class MemberRepository extends PrismaRepository<"member"> {
   constructor(prisma: PrismaService) {
-    super('member', prisma);
+    super("member", prisma);
   }
 
   public async findByIdentifier(identifier: string, where: Prisma.MemberWhereInput = {}): Promise<Member | null> {
@@ -94,7 +94,7 @@ export class MemberRepository extends PrismaRepository<'member'> {
   }
 
   protected createSystemQueryPartial(systemOrIdentifier: System | string) {
-    if (typeof systemOrIdentifier === 'string') {
+    if (typeof systemOrIdentifier === "string") {
       return isObjectId(systemOrIdentifier)
         ? { systemId: systemOrIdentifier }
         : { system: { slug: systemOrIdentifier } };

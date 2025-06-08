@@ -1,33 +1,33 @@
-import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
-import { SystemGuard } from '@app/v1/context/system/SystemGuard';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { UpdateSystemRequest } from '@app/v1/dto/user/system/request/UpdateSystemRequest';
-import { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
-import { StatusException } from '@app/v1/exception/StatusException';
-import { assignFields } from '@domain/common';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { FieldRepository } from '@domain/system/field/FieldRepository';
-import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { BackgroundType, Prisma, System, User, Visibility } from '@prisma/client';
-import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
-import { StorageService } from '@infra/storage/StorageService';
-import { UnsupportedFileException } from '@app/v1/exception/UnsupportedFileException';
-import { StoragePrefix } from '@infra/storage/StoragePrefix';
-import { FileProcessingFailedException } from '@app/v1/exception/FileProcessingFailedException';
-import * as mime from 'mime-types';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/v1/misc/swagger';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v1/context/auth/CurrentUser";
+import { CurrentSystem } from "@app/v1/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v1/context/system/SystemGuard";
+import { Ok, Status, StatusMap } from "@app/v1/dto/Status";
+import { UpdateSystemRequest } from "@app/v1/dto/user/system/request/UpdateSystemRequest";
+import { SystemResponse } from "@app/v1/dto/user/system/response/SystemResponse";
+import { SystemDto } from "@app/v1/dto/user/system/SystemDto";
+import { FileProcessingFailedException } from "@app/v1/exception/FileProcessingFailedException";
+import { StatusException } from "@app/v1/exception/StatusException";
+import { UnsupportedFileException } from "@app/v1/exception/UnsupportedFileException";
+import { error, ok } from "@app/v1/misc/swagger";
+import { FileInterceptor, MemoryStorageFile, UploadedFile } from "@blazity/nest-file-fastify";
+import { assignFields } from "@domain/common";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { FieldRepository } from "@domain/system/field/FieldRepository";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { StoragePrefix } from "@infra/storage/StoragePrefix";
+import { StorageService } from "@infra/storage/StorageService";
+import { Body, Controller, Get, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { BackgroundType, Prisma, System, User, Visibility } from "@prisma/client";
+import * as mime from "mime-types";
 
 @Controller({
-  path: '/system',
-  version: '1',
+  path: "/system",
+  version: "1",
 })
-@ApiTags('SystemV1')
-@ApiSecurity('bearer')
+@ApiTags("SystemV1")
+@ApiSecurity("bearer")
 @ApiExtraModels(SystemResponse)
 export class SystemController {
   constructor(
@@ -38,7 +38,7 @@ export class SystemController {
   ) {}
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, SystemResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
@@ -47,7 +47,7 @@ export class SystemController {
   }
 
   @UseGuards(SystemGuard)
-  @Post('/')
+  @Post("/")
   @ApiResponse(ok(200, SystemResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
@@ -99,9 +99,9 @@ export class SystemController {
     return SystemDto.from(assignFields(system, fields), plural);
   }
 
-  @Post('/background')
+  @Post("/background")
   @UseGuards(SystemGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor("file"))
   @ApiResponse(ok(200, SystemResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey, StatusMap.UnsupportedFile, StatusMap.FileProcessingFailed))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
@@ -110,7 +110,7 @@ export class SystemController {
     @CurrentUser() user: User,
     @UploadedFile() file: MemoryStorageFile,
   ) {
-    if (!file.mimetype.startsWith('image/')) {
+    if (!file.mimetype.startsWith("image/")) {
       throw new UnsupportedFileException();
     }
 

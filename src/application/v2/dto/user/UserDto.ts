@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { User as BaseUser, UserRole } from '@prisma/client';
-import { UserDtoInterface } from './UserDtoInterface';
+import { ApiProperty } from "@nestjs/swagger";
+import { User as BaseUser, UserRole } from "@prisma/client";
+
+import { UserDtoInterface } from "./UserDtoInterface";
 
 export class UserDto implements UserDtoInterface {
   @ApiProperty()

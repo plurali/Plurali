@@ -1,13 +1,14 @@
-import { Button, Heading, Section, Text } from '@react-email/components';
-import { BaseEmail } from './components/BaseEmail';
-import { CopyPaste } from './components/CopyPaste';
+import { Button, Heading, Section, Text } from "@react-email/components";
+
+import { BaseEmail } from "./components/BaseEmail";
+import { CopyPaste } from "./components/CopyPaste";
 
 export interface UserVerificationEmailProps {
   link: string;
   username: string;
 }
 
-export const UserVerificationEmail = ({ link = '', username = '' }: UserVerificationEmailProps) => {
+export const UserVerificationEmail = ({ link = "", username = "" }: UserVerificationEmailProps) => {
   return (
     <BaseEmail previewText="Verify your account at Plurali">
       <Heading className="text-black text-4xl font-normal p-0 mb-8 mx-0">

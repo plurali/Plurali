@@ -1,12 +1,13 @@
-import { UserRepository } from '@domain/user/UserRepository';
-import { ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AuthGuard } from '../auth/AuthGuard';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { RequestWithUser } from '@app/v1/http/RequestWithUser';
-import { StatusException } from '@app/v1/exception/StatusException';
-import { StatusMap } from '@app/v1/dto/Status';
-import { NotAuthenticatedException } from '@app/v1/exception/NotAuthenticatedException';
+import { StatusMap } from "@app/v1/dto/Status";
+import { NotAuthenticatedException } from "@app/v1/exception/NotAuthenticatedException";
+import { StatusException } from "@app/v1/exception/StatusException";
+import { RequestWithUser } from "@app/v1/http/RequestWithUser";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { UserRepository } from "@domain/user/UserRepository";
+import { ExecutionContext, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+
+import { AuthGuard } from "../auth/AuthGuard";
 
 /**
  * @deprecated v2
@@ -37,7 +38,7 @@ export class SystemGuard extends AuthGuard {
         throw new StatusException(StatusMap.InvalidPluralKey);
       }
 
-      request['system'] = system;
+      request["system"] = system;
 
       return true;
     }

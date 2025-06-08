@@ -1,27 +1,28 @@
-import { Controller, Get, HttpCode, Inject, Param } from '@nestjs/common';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { assignSystem } from '@domain/common';
-import { ApiExtraModels, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Member } from '@prisma/client';
-import { SystemWithUser } from '@domain/common/types';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse, ApiPaginatedDataResponse } from '@app/v2/types/response';
-import { BaseController } from '../BaseController';
-import { Page } from '@app/v2/context/pagination/Page';
-import { Take } from '@app/v2/context/pagination/Take';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { MemberDto } from '@app/v2/dto/member/MemberDto';
-import { InvalidRequestException } from '@app/v2/exception/InvalidRequestException';
-import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
+import { Page } from "@app/v2/context/pagination/Page";
+import { Take } from "@app/v2/context/pagination/Take";
+import { MemberDto } from "@app/v2/dto/member/MemberDto";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { InvalidRequestException } from "@app/v2/exception/InvalidRequestException";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse, ApiPaginatedDataResponse } from "@app/v2/types/response";
+import { assignSystem } from "@domain/common";
+import { SystemWithUser } from "@domain/common/types";
+import { PluralCachedRestService } from "@domain/plural/PluralCachedRestService";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { Controller, Get, HttpCode, Inject, Param } from "@nestjs/common";
+import { ApiExtraModels, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Member } from "@prisma/client";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/public/system/:system/member',
-  version: '2',
+  path: "/public/system/:system/member",
+  version: "2",
 })
-@ApiTags('MemberPublic')
+@ApiTags("MemberPublic")
 @ApiExtraModels(MemberDto)
 export class PublicMemberController extends BaseController {
   constructor(
@@ -32,15 +33,15 @@ export class PublicMemberController extends BaseController {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [MemberDto]))
-  @ApiQuery({ name: 'page', required: false, type: 'number', example: 1 })
-  @ApiQuery({ name: 'take', required: false, type: 'number', example: 20 })
+  @ApiQuery({ name: "page", required: false, type: "number", example: 1 })
+  @ApiQuery({ name: "take", required: false, type: "number", example: 20 })
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async list(
-    @Param('system') id: string,
+    @Param("system") id: string,
     @Page() page: number,
     @Take() take: number,
   ): Promise<ApiPaginatedDataResponse<MemberDto>> {
@@ -60,14 +61,14 @@ export class PublicMemberController extends BaseController {
     );
   }
 
-  @Get('/:member')
+  @Get("/:member")
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async view(
-    @Param('system') systemId: string,
-    @Param('member') memberId: string,
+    @Param("system") systemId: string,
+    @Param("member") memberId: string,
   ): Promise<ApiDataResponse<MemberDto>> {
     const system = await this.system.findPublicBase(systemId, {
       user: true,
@@ -99,10 +100,10 @@ export class PublicMemberController extends BaseController {
   protected async makeDtos(members: Member[], system: SystemWithUser): Promise<MemberDto[]> {
     const plurals = await this.plural.findSpecificMembers(system, members);
     return members
-      .map(member => {
+      .map((member) => {
         const plural = plurals.get(member.pluralId);
         return plural ? MemberDto.from(assignSystem(member, system), plural) : null;
       })
-      .filter(m => !!m);
+      .filter((m) => !!m);
   }
 }

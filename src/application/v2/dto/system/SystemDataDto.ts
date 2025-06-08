@@ -1,8 +1,9 @@
-import { convertBackgroundType } from '@domain/common';
-import { ApiExtraModels } from '@nestjs/swagger';
-import { System, Visibility } from '@prisma/client';
-import { BackgroundData } from '../partials/BackgroundData';
-import { SystemDataDtoInterface } from './SystemDataDtoInterface';
+import { convertBackgroundType } from "@domain/common";
+import { ApiExtraModels } from "@nestjs/swagger";
+import { System, Visibility } from "@prisma/client";
+
+import { BackgroundData } from "../partials/BackgroundData";
+import { SystemDataDtoInterface } from "./SystemDataDtoInterface";
 
 @ApiExtraModels(BackgroundData)
 export class SystemDataDto implements SystemDataDtoInterface {

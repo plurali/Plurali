@@ -1,4 +1,4 @@
-import { PaginatedStatus, PaginationData, PaginationQuery } from '@app/v1/dto/Status';
+import { PaginatedStatus, PaginationData, PaginationQuery } from "@app/v1/dto/Status";
 
 export class Pagination {
   public static paginated<D>(data: D, query: PaginationQuery, count: number): PaginatedStatus<D> {

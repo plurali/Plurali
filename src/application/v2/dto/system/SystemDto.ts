@@ -1,15 +1,16 @@
-import { PluralUserEntry } from '@domain/plural/types/rest/user';
-import { parseAvatar } from '@domain/plural/utils';
-import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { SystemDataDto } from './SystemDataDto';
-import { System } from '@prisma/client';
-import { SystemDtoInterface } from './SystemDtoInterface';
-import { SystemDataDtoInterface } from './SystemDataDtoInterface';
+import { PluralUserEntry } from "@domain/plural/types/rest/user";
+import { parseAvatar } from "@domain/plural/utils";
+import { ApiExtraModels, ApiProperty } from "@nestjs/swagger";
+import { System } from "@prisma/client";
+
+import { SystemDataDto } from "./SystemDataDto";
+import { SystemDataDtoInterface } from "./SystemDataDtoInterface";
+import { SystemDtoInterface } from "./SystemDtoInterface";
 
 @ApiExtraModels(SystemDataDto)
 export class SystemDto implements SystemDtoInterface {
-  @ApiProperty({ default: 'system' })
-  public type = 'system';
+  @ApiProperty({ default: "system" })
+  public type = "system";
 
   @ApiProperty()
   public id: string;

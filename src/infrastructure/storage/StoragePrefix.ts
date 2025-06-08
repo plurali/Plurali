@@ -1,3 +1,3 @@
 export enum StoragePrefix {
-  Userdata = '@userdata',
+  Userdata = "@userdata",
 }

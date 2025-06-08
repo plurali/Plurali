@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '../UserDto';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { UserDto } from "../UserDto";
 
 export class UserResponse {
   @ApiProperty()

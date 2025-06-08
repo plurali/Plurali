@@ -1,4 +1,4 @@
-import { BaseData, BaseEntry, VisibilityAttributes } from '.';
+import { BaseData, BaseEntry, VisibilityAttributes } from ".";
 
 export type PluralMemberEntry<I extends Record<string, string> = Record<string, string>> = BaseEntry<
   PluralMemberContent<I>

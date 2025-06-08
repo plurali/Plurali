@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
-import { AuthRequestInterface } from './AuthRequestInterface';
-import { Trim } from '@app/common/validation/Trim';
+import { Trim } from "@app/common/validation/Trim";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
+
+import { AuthRequestInterface } from "./AuthRequestInterface";
 
 export class AuthRequest implements AuthRequestInterface {
   @IsString()

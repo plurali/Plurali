@@ -1,6 +1,6 @@
-import { RequestWithSystem } from '@app/v2/types/request';
-import { ExecutionContext, createParamDecorator } from '@nestjs/common';
-import { System } from '@prisma/client';
+import { RequestWithSystem } from "@app/v2/types/request";
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { System } from "@prisma/client";
 
 /**
  * Returns the system for the current user.

@@ -1,15 +1,16 @@
-import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { MemberWithSystem } from '@domain/common/types';
-import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { parseAvatar } from '@domain/plural/utils';
-import { MemberDataDto } from './MemberDataDto';
-import { MemberDataDtoInterface } from './MemberDataDtoInterface';
-import { MemberDtoInterface } from './MemberDtoInterface';
+import { MemberWithSystem } from "@domain/common/types";
+import { PluralMemberEntry } from "@domain/plural/types/rest/members";
+import { parseAvatar } from "@domain/plural/utils";
+import { ApiExtraModels, ApiProperty } from "@nestjs/swagger";
+
+import { MemberDataDto } from "./MemberDataDto";
+import { MemberDataDtoInterface } from "./MemberDataDtoInterface";
+import { MemberDtoInterface } from "./MemberDtoInterface";
 
 @ApiExtraModels(MemberDataDto)
 export class MemberDto implements MemberDtoInterface {
-  @ApiProperty({ default: 'member' })
-  public type = 'member';
+  @ApiProperty({ default: "member" })
+  public type = "member";
 
   @ApiProperty()
   public id: string;

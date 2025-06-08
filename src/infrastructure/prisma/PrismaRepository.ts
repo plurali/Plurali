@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import { PrismaDelegate, PrismaModelName, PrismaRepositoryType } from './types';
+import { PrismaClient } from "@prisma/client";
+
+import { PrismaDelegate, PrismaModelName, PrismaRepositoryType } from "./types";
 
 class _PrismaRepository<N extends PrismaModelName = PrismaModelName> {
   constructor(

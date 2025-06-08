@@ -1,34 +1,35 @@
-import { UserAuthenticator } from '@domain/security/authenticator/user/UserAuthenticator';
-import { Body, Controller, Get, HttpCode, Inject, Post, Put, Query } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { CacheService } from '@domain/cache/CacheService';
-import { UserRepository } from '@domain/user/UserRepository';
-import { Hasher } from '@domain/security/hasher/Hasher';
-import { JwtData } from '@domain/security/JwtData';
-import { Authenticator } from '@domain/security/authenticator/Authenticator';
-import { jwtConfig } from '@app/misc/jwt';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthDto } from '@app/v2/dto/auth/AuthDto';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { AuthRequest } from '@app/v2/dto/auth/request/AuthRequest';
-import { InvalidCredentialsException } from '@app/v2/exception/InvalidCredentialsException';
-import { UsernameOrEmailTakenException } from '@app/v2/exception/UsernameOrEmailTakenException';
-import { BaseController } from '../BaseController';
-import { RegisterRequest } from '@app/v2/dto/auth/request/RegisterRequest';
-import { UserService } from '@domain/user/UserService';
-import { Ok } from '@app/v2/dto/response/Ok';
-import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
-import { ResetPasswordRequest } from '@app/v2/dto/auth/request/ResetPasswordRequest';
-import { UserVerificationType } from '@prisma/client';
-import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
+import { jwtConfig } from "@app/misc/jwt";
+import { AuthDto } from "@app/v2/dto/auth/AuthDto";
+import { AuthRequest } from "@app/v2/dto/auth/request/AuthRequest";
+import { RegisterRequest } from "@app/v2/dto/auth/request/RegisterRequest";
+import { ResetPasswordRequest } from "@app/v2/dto/auth/request/ResetPasswordRequest";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { Ok } from "@app/v2/dto/response/Ok";
+import { InvalidCredentialsException } from "@app/v2/exception/InvalidCredentialsException";
+import { InvalidVerificationException } from "@app/v2/exception/InvalidVerificationException";
+import { UsernameOrEmailTakenException } from "@app/v2/exception/UsernameOrEmailTakenException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { CacheService } from "@domain/cache/CacheService";
+import { Authenticator } from "@domain/security/authenticator/Authenticator";
+import { UserAuthenticator } from "@domain/security/authenticator/user/UserAuthenticator";
+import { Hasher } from "@domain/security/hasher/Hasher";
+import { JwtData } from "@domain/security/JwtData";
+import { UserRepository } from "@domain/user/UserRepository";
+import { UserService } from "@domain/user/UserService";
+import { UserVerificationRepository } from "@domain/user/verification/UserVerificationRepository";
+import { Body, Controller, Get, HttpCode, Inject, Post, Put, Query } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { UserVerificationType } from "@prisma/client";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/auth',
-  version: '2',
+  path: "/auth",
+  version: "2",
 })
-@ApiTags('Auth')
+@ApiTags("Auth")
 @ApiExtraModels(AuthDto)
 export class AuthController extends BaseController {
   constructor(
@@ -43,7 +44,7 @@ export class AuthController extends BaseController {
     super();
   }
 
-  @Post('/login')
+  @Post("/login")
   @HttpCode(200)
   @ApiResponse(ok(200, AuthDto))
   @ApiResponse(error(401, ApiError.InvalidCredentials))
@@ -61,15 +62,15 @@ export class AuthController extends BaseController {
     );
   }
 
-  @Put('/register')
+  @Put("/register")
   @HttpCode(200)
   @ApiResponse(ok(200, AuthDto))
   @ApiResponse(error(400, ApiError.UsernameOrEmailTaken))
   public async register(@Body() credentials: RegisterRequest): Promise<ApiDataResponse<AuthDto>> {
     if (
-      !!(await this.users.findFirst({
+      await this.users.findFirst({
         where: { OR: [{ username: credentials.username }, { email: credentials.email }] },
-      }))
+      })
     ) {
       throw new UsernameOrEmailTakenException();
     }
@@ -87,9 +88,9 @@ export class AuthController extends BaseController {
     return await this.login(credentials);
   }
 
-  @Get('/reset-password')
+  @Get("/reset-password")
   @ApiResponse(ok(200, Ok))
-  async requestPasswordReset(@Query('email') email: string): Promise<ApiDataResponse<Ok>> {
+  async requestPasswordReset(@Query("email") email: string): Promise<ApiDataResponse<Ok>> {
     const user = await this.users.findFirst({
       where: {
         email,
@@ -99,7 +100,7 @@ export class AuthController extends BaseController {
     if (!user) {
       // Mocks the timeout of sending a password reset email.
       // This is to prevent users from checking if an email is registered for malicious purposes.
-      return await new Promise(resolve => setTimeout(() => resolve(this.ok()), 700));
+      return await new Promise((resolve) => setTimeout(() => resolve(this.ok()), 700));
     }
 
     await this.userService.sendPasswordResetEmail(user);
@@ -107,7 +108,7 @@ export class AuthController extends BaseController {
     return this.ok();
   }
 
-  @Put('/reset-password')
+  @Put("/reset-password")
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(400, ApiError.InvalidVerification))
   async processPasswordReset(@Body() { email, code, password }: ResetPasswordRequest): Promise<ApiDataResponse<Ok>> {

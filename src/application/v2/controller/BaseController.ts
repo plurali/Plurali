@@ -1,13 +1,14 @@
-import { ApiExtraModels } from '@nestjs/swagger';
-import { Ok } from '../dto/response/Ok';
-import { ApiError, ApiErrorMessage } from '../dto/response/errors';
+import { ApiExtraModels } from "@nestjs/swagger";
+
+import { ApiError, ApiErrorMessage } from "../dto/response/errors";
+import { Ok } from "../dto/response/Ok";
 import {
   ApiDataResponse,
   ApiErrorResponse,
   ApiPaginatedDataResponse,
   ApiResponseMeta,
   ApiResponsePagination,
-} from '../types/response';
+} from "../types/response";
 
 export interface PaginationQuery {
   skip: number;

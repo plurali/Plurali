@@ -1,22 +1,23 @@
-import { Controller, Get, HttpCode, Param, UseGuards } from '@nestjs/common';
-import { System, Visibility } from '@prisma/client';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
-import { BaseController } from '../../BaseController';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { ValueFieldDto } from "@app/v2/dto/field/ValueFieldDto";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { Controller, Get, HttpCode, Param, UseGuards } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { System, Visibility } from "@prisma/client";
+
+import { BaseController } from "../../BaseController";
 
 @Controller({
-  path: '/member/:member/field',
-  version: '2',
+  path: "/member/:member/field",
+  version: "2",
 })
-@ApiTags('MemberField')
+@ApiTags("MemberField")
 @ApiExtraModels(ValueFieldDto)
 export class MemberFieldController extends BaseController {
   constructor(
@@ -26,7 +27,7 @@ export class MemberFieldController extends BaseController {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @UseGuards(SystemGuard)
   @ApiResponse(ok(200, [ValueFieldDto]))
@@ -34,7 +35,7 @@ export class MemberFieldController extends BaseController {
   @ApiResponse(error(400, ApiError.InvalidRequest, ApiError.InvalidPluralKey))
   public async list(
     @CurrentSystem() system: System,
-    @Param('member') memberId: string,
+    @Param("member") memberId: string,
   ): Promise<ApiDataResponse<ValueFieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
@@ -63,11 +64,11 @@ export class MemberFieldController extends BaseController {
 
     return this.data(
       member.system.fields
-        .map(f => {
+        .map((f) => {
           const value = plural.content.info[f.pluralId];
           return value ? ValueFieldDto.fromValue(f, value) : null;
         })
-        .filter(f => !!f),
+        .filter((f) => !!f),
     );
   }
 }

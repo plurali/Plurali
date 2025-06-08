@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Field, Visibility } from '@prisma/client';
-import { FieldDataDtoInterface } from './FieldDataDtoInterface';
+import { ApiProperty } from "@nestjs/swagger";
+import { Field, Visibility } from "@prisma/client";
+
+import { FieldDataDtoInterface } from "./FieldDataDtoInterface";
 
 export class FieldDataDto implements FieldDataDtoInterface {
   @ApiProperty()

@@ -1,28 +1,28 @@
-import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
-import { CurrentSystem } from '@app/v1/context/system/CurrentSystem';
-import { SystemGuard } from '@app/v1/context/system/SystemGuard';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { error, ok } from '@app/v1/misc/swagger';
-import { OkResponse } from '@app/v1/dto/OkResponse';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
-import { PageDto } from '@app/v1/dto/page/PageDto';
-import { CreatePageRequest } from '@app/v1/dto/page/request/CreatePageRequest';
-import { UpdatePageRequest } from '@app/v1/dto/page/request/UpdatePageRequest';
-import { PageResponse } from '@app/v1/dto/page/response/PageResponse';
-import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import { PageRepository } from '@domain/page/PageRepository';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Prisma, System, User, Visibility } from '@prisma/client';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v1/context/auth/CurrentUser";
+import { CurrentSystem } from "@app/v1/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v1/context/system/SystemGuard";
+import { OkResponse } from "@app/v1/dto/OkResponse";
+import { PageDto } from "@app/v1/dto/page/PageDto";
+import { CreatePageRequest } from "@app/v1/dto/page/request/CreatePageRequest";
+import { UpdatePageRequest } from "@app/v1/dto/page/request/UpdatePageRequest";
+import { PageResponse } from "@app/v1/dto/page/response/PageResponse";
+import { PagesResponse } from "@app/v1/dto/page/response/PagesResponse";
+import { Ok, Status, StatusMap } from "@app/v1/dto/Status";
+import { ResourceNotFoundException } from "@app/v1/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v1/misc/swagger";
+import { PageRepository } from "@domain/page/PageRepository";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { Member, Page, Prisma, System, User, Visibility } from "@prisma/client";
 
 @Controller({
-  path: '/member/:memberId/page',
-  version: '1',
+  path: "/member/:memberId/page",
+  version: "1",
 })
-@ApiTags('SystemMemberPageV1')
-@ApiSecurity('bearer')
+@ApiTags("SystemMemberPageV1")
+@ApiSecurity("bearer")
 @ApiExtraModels(PageResponse, PagesResponse, OkResponse)
 export class SystemMemberPageController {
   constructor(
@@ -31,17 +31,17 @@ export class SystemMemberPageController {
   ) {}
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, PagesResponse))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
-  async list(@CurrentSystem() system: System, @Param('memberId') memberId: string): Promise<Ok<PagesResponse>> {
+  async list(@CurrentSystem() system: System, @Param("memberId") memberId: string): Promise<Ok<PagesResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     const pages = await this.pages.findMany({
       where: {
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
       },
     });
 
@@ -49,7 +49,7 @@ export class SystemMemberPageController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:id')
+  @Get("/:id")
   @ApiResponse(ok(200, PageResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
@@ -57,8 +57,8 @@ export class SystemMemberPageController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
-    @Param('id') id: string,
+    @Param("memberId") memberId: string,
+    @Param("id") id: string,
   ): Promise<Ok<PageResponse>> {
     return Status.ok(
       new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(system, memberId), user, id))),
@@ -66,7 +66,7 @@ export class SystemMemberPageController {
   }
 
   @UseGuards(SystemGuard)
-  @Post('/:id')
+  @Post("/:id")
   @ApiResponse(ok(200, PageResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
@@ -74,8 +74,8 @@ export class SystemMemberPageController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
-    @Param('memberId') memberId: string,
+    @Param("id") id: string,
+    @Param("memberId") memberId: string,
     @Body() data: UpdatePageRequest,
   ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
@@ -109,7 +109,7 @@ export class SystemMemberPageController {
   }
 
   @UseGuards(SystemGuard)
-  @Delete('/:id')
+  @Delete("/:id")
   @ApiResponse(ok(200, OkResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
@@ -117,8 +117,8 @@ export class SystemMemberPageController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
-    @Param('id') id: string,
+    @Param("memberId") memberId: string,
+    @Param("id") id: string,
   ): Promise<Ok<OkResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -132,7 +132,7 @@ export class SystemMemberPageController {
   }
 
   @UseGuards(SystemGuard)
-  @Put('/')
+  @Put("/")
   @ApiResponse(ok(200, PageResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
   @ApiResponse(error(400, StatusMap.InvalidPluralKey))
@@ -140,7 +140,7 @@ export class SystemMemberPageController {
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('memberId') memberId: string,
+    @Param("memberId") memberId: string,
     @Body() data: CreatePageRequest,
   ): Promise<Ok<PageResponse>> {
     const member = await this.findMemberOrFail(system, memberId);
@@ -148,7 +148,7 @@ export class SystemMemberPageController {
     const page = await this.pages.create({
       data: {
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
         name: data.name,
         content: data.content,
         userId: user.id,
@@ -176,7 +176,7 @@ export class SystemMemberPageController {
       where: {
         id,
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
         userId: user.id,
       },
     });

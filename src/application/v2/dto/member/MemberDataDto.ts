@@ -1,9 +1,10 @@
-import { convertBackgroundType } from '@domain/common';
-import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { Member, Visibility } from '@prisma/client';
-import { BackgroundData } from '../partials/BackgroundData';
-import { MemberDataDtoInterface } from './MemberDataDtoInterface';
-import { BackgroundDataInterface } from '../partials/BackgroundDataInterface';
+import { convertBackgroundType } from "@domain/common";
+import { ApiExtraModels, ApiProperty } from "@nestjs/swagger";
+import { Member, Visibility } from "@prisma/client";
+
+import { BackgroundData } from "../partials/BackgroundData";
+import { BackgroundDataInterface } from "../partials/BackgroundDataInterface";
+import { MemberDataDtoInterface } from "./MemberDataDtoInterface";
 
 @ApiExtraModels(BackgroundData)
 export class MemberDataDto implements MemberDataDtoInterface {

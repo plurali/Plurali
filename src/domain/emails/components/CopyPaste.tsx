@@ -1,9 +1,10 @@
-import { Link, Text } from '@react-email/components';
-import { linkClassName } from '../constants';
+import { Link, Text } from "@react-email/components";
+
+import { linkClassName } from "../constants";
 
 export const CopyPaste = ({
   link,
-  text = 'or copy and paste this URL into your browser:',
+  text = "or copy and paste this URL into your browser:",
 }: {
   link: string;
   text?: string;

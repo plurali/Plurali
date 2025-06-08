@@ -1,7 +1,8 @@
-import { Button, Heading, Section, Text } from '@react-email/components';
-import { BaseEmail } from './components/BaseEmail';
-import { CopyPaste } from './components/CopyPaste';
-import { FormattedTimeWithUnit } from '@domain/common/time';
+import { FormattedTimeWithUnit } from "@domain/common/time";
+import { Button, Heading, Section, Text } from "@react-email/components";
+
+import { BaseEmail } from "./components/BaseEmail";
+import { CopyPaste } from "./components/CopyPaste";
 
 export interface UserPasswordResetEmailProps {
   link: string;
@@ -10,9 +11,9 @@ export interface UserPasswordResetEmailProps {
 }
 
 export const UserPasswordResetEmail = ({
-  link = '',
-  username = '',
-  expiry = { value: 5, unit: 'minutes' },
+  link = "",
+  username = "",
+  expiry = { value: 5, unit: "minutes" },
 }: UserPasswordResetEmailProps) => {
   return (
     <BaseEmail previewText="Reset your Plurali account password">
@@ -23,7 +24,7 @@ export const UserPasswordResetEmail = ({
       <Text className="text-black text-md">Dear {username},</Text>
 
       <Text className="text-black text-md">
-        please click below to reset the password to your Plurali account. This link expires in {expiry.value}{' '}
+        please click below to reset the password to your Plurali account. This link expires in {expiry.value}{" "}
         {expiry.unit}.
       </Text>
 

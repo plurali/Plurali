@@ -1,10 +1,11 @@
-import { Queue } from 'bull';
-import { ConsoleLogger } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PluralSocketClient } from '../PluralSocketClient';
-import { UpdateMemberQueueData } from '../types/queue';
-import { SystemWithUser } from '@domain/common/types';
-import { SocketOperationType } from '../utils';
+import { SystemWithUser } from "@domain/common/types";
+import { ConsoleLogger } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { Queue } from "bull";
+
+import { PluralSocketClient } from "../PluralSocketClient";
+import { UpdateMemberQueueData } from "../types/queue";
+import { SocketOperationType } from "../utils";
 
 export class PluralObserver extends EventEmitter2 {
   public readonly client: PluralSocketClient;
@@ -29,10 +30,10 @@ export class PluralObserver extends EventEmitter2 {
     }
 
     this.client.onUpdate(({ data }) => {
-      if (data.target === 'members') {
+      if (data.target === "members") {
         this.queue.addBulk(
-          data.results.map(operation => ({
-            name: 'update.member',
+          data.results.map((operation) => ({
+            name: "update.member",
             data: {
               systemId: this.system.id,
               systemPluralId:

@@ -1,15 +1,15 @@
-import { SystemWithCollections, SystemWithUser } from '@domain/common/types';
-import { Prisma, Visibility } from '@prisma/client';
-import { PrismaRepository } from '@infra/prisma/PrismaRepository';
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
-import { PaginationQuery } from '@app/v2/controller/BaseController';
-import { isObjectId } from '@domain/common';
+import { PaginationQuery } from "@app/v2/controller/BaseController";
+import { isObjectId } from "@domain/common";
+import { SystemWithCollections, SystemWithUser } from "@domain/common/types";
+import { PrismaRepository } from "@infra/prisma/PrismaRepository";
+import { Injectable } from "@nestjs/common";
+import { Prisma, Visibility } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 @Injectable()
-export class SystemRepository extends PrismaRepository<'system'> {
+export class SystemRepository extends PrismaRepository<"system"> {
   constructor(prisma: PrismaService) {
-    super('system', prisma);
+    super("system", prisma);
   }
 
   public async findPublic(
@@ -37,7 +37,7 @@ export class SystemRepository extends PrismaRepository<'system'> {
       return null;
     }
 
-    data.fields = data.fields.filter(f => f.visibility === Visibility.Public); // TODO: include in query
+    data.fields = data.fields.filter((f) => f.visibility === Visibility.Public); // TODO: include in query
 
     return data as SystemWithUser & SystemWithCollections;
   }

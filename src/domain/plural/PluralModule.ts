@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
-import { PluralRestService } from './PluralRestService';
-import { PluralCachedRestService } from './PluralCachedRestService';
+import { Module } from "@nestjs/common";
+
+import { PluralCachedRestService } from "./PluralCachedRestService";
+import { PluralRestService } from "./PluralRestService";
 
 @Module({
   providers: [
@@ -9,10 +10,10 @@ import { PluralCachedRestService } from './PluralCachedRestService';
       useClass: PluralCachedRestService,
     },
     {
-      provide: 'PluralRestServiceBase',
+      provide: "PluralRestServiceBase",
       useClass: PluralRestService,
     },
   ],
-  exports: [PluralRestService, 'PluralRestServiceBase'],
+  exports: [PluralRestService, "PluralRestServiceBase"],
 })
 export class PluralModule {}

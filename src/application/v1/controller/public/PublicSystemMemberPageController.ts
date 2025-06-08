@@ -1,20 +1,20 @@
-import { error, ok } from '@app/v1/misc/swagger';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { ResourceNotFoundException } from '@app/v1/exception/ResourceNotFoundException';
-import { PageDto } from '@app/v1/dto/page/PageDto';
-import { PageResponse } from '@app/v1/dto/page/response/PageResponse';
-import { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import { PageRepository } from '@domain/page/PageRepository';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { Controller, Get, Param } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Member, Page, Visibility } from '@prisma/client';
+import { PageDto } from "@app/v1/dto/page/PageDto";
+import { PageResponse } from "@app/v1/dto/page/response/PageResponse";
+import { PagesResponse } from "@app/v1/dto/page/response/PagesResponse";
+import { Ok, Status, StatusMap } from "@app/v1/dto/Status";
+import { ResourceNotFoundException } from "@app/v1/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v1/misc/swagger";
+import { PageRepository } from "@domain/page/PageRepository";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { Controller, Get, Param } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Member, Page, Visibility } from "@prisma/client";
 
 @Controller({
-  path: '/public/member/:memberId/page',
-  version: '1',
+  path: "/public/member/:memberId/page",
+  version: "1",
 })
-@ApiTags('SystemMemberPagePublicV1')
+@ApiTags("SystemMemberPagePublicV1")
 @ApiExtraModels(PageResponse, PagesResponse)
 export class PublicSystemMemberPageController {
   constructor(
@@ -22,16 +22,16 @@ export class PublicSystemMemberPageController {
     private readonly members: MemberRepository,
   ) {}
 
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, PagesResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async list(@Param('memberId') memberId: string): Promise<Ok<PagesResponse>> {
+  async list(@Param("memberId") memberId: string): Promise<Ok<PagesResponse>> {
     const member = await this.findMemberOrFail(memberId);
 
     const pages = await this.pages.findMany({
       where: {
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
         visibility: Visibility.Public,
       },
     });
@@ -39,10 +39,10 @@ export class PublicSystemMemberPageController {
     return Status.ok(new PagesResponse(pages.map(PageDto.from)));
   }
 
-  @Get('/:id')
+  @Get("/:id")
   @ApiResponse(ok(200, PageResponse))
   @ApiResponse(error(404, StatusMap.ResourceNotFound))
-  async view(@Param('memberId') memberId: string, @Param('id') id: string): Promise<Ok<PageResponse>> {
+  async view(@Param("memberId") memberId: string, @Param("id") id: string): Promise<Ok<PageResponse>> {
     return Status.ok(new PageResponse(PageDto.from(await this.findOrFail(await this.findMemberOrFail(memberId), id))));
   }
 
@@ -66,7 +66,7 @@ export class PublicSystemMemberPageController {
       where: {
         id,
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
         visibility: Visibility.Public,
       },
     });

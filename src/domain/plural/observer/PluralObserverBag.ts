@@ -1,13 +1,14 @@
-import { ConsoleLogger, Injectable, OnApplicationBootstrap } from '@nestjs/common';
-import { PluralObserver } from './PluralObserver';
-import { InjectQueue } from '@nestjs/bullmq';
-import { PluralObserverUpdateQueue } from '../utils';
-import { Queue } from 'bull';
-import { UpdateMemberQueueData } from '../types/queue';
-import { ConfigService } from '@nestjs/config';
-import { ConfigInterface, PluralConfig } from '@app/Config';
-import { PrismaService } from 'nestjs-prisma';
-import { FullUser } from '@domain/common/types';
+import { ConfigInterface, PluralConfig } from "@app/Config";
+import { FullUser } from "@domain/common/types";
+import { InjectQueue } from "@nestjs/bullmq";
+import { ConsoleLogger, Injectable, OnApplicationBootstrap } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Queue } from "bull";
+import { PrismaService } from "nestjs-prisma";
+
+import { UpdateMemberQueueData } from "../types/queue";
+import { PluralObserverUpdateQueue } from "../utils";
+import { PluralObserver } from "./PluralObserver";
 
 @Injectable()
 export class PluralObserverBag implements OnApplicationBootstrap {
@@ -23,7 +24,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     readonly config: ConfigService<ConfigInterface>,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.endpoint = config.get<PluralConfig>('plural').socketEndpoint;
+    this.endpoint = config.get<PluralConfig>("plural").socketEndpoint;
   }
 
   async onApplicationBootstrap() {
@@ -33,7 +34,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
   public async init() {
     this._destroyAll();
 
-    this.logger.log('Initializing websocket observers');
+    this.logger.log("Initializing websocket observers");
 
     const users = await this.db.user.findMany({
       include: {
@@ -87,7 +88,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
     } catch (e) {
       this.logger.error(
         `[watcher-bag] failed to create a watcher for ${user.id}:`,
-        (e as any)?.message ?? 'unknown cause',
+        (e as any)?.message ?? "unknown cause",
       );
       return null;
     }
@@ -102,7 +103,7 @@ export class PluralObserverBag implements OnApplicationBootstrap {
   }
 
   private _destroyAll(): void {
-    this.logger.log('Destroying all existing observers');
+    this.logger.log("Destroying all existing observers");
     for (const observer of this.observers.values()) {
       observer.client.destroy();
     }

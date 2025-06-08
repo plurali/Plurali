@@ -1,13 +1,13 @@
-import { isObjectId } from '@domain/common';
-import { PrismaRepository } from '@infra/prisma/PrismaRepository';
-import { Injectable } from '@nestjs/common';
-import { OwnerType, System, Prisma, Page, Member } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
+import { isObjectId } from "@domain/common";
+import { PrismaRepository } from "@infra/prisma/PrismaRepository";
+import { Injectable } from "@nestjs/common";
+import { Member, OwnerType, Page, Prisma, System } from "@prisma/client";
+import { PrismaService } from "nestjs-prisma";
 
 @Injectable()
-export class PageRepository extends PrismaRepository<'page'> {
+export class PageRepository extends PrismaRepository<"page"> {
   constructor(prisma: PrismaService) {
-    super('page', prisma);
+    super("page", prisma);
   }
 
   public async findByIdentifier(identifier: string, where: Prisma.PageWhereInput = {}): Promise<Page | null> {

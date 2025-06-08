@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { UpdatePageRequestInterface } from './UpdatePageRequestInterface';
-import { Visibility } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { Visibility } from "@prisma/client";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+
+import { UpdatePageRequestInterface } from "./UpdatePageRequestInterface";
 
 export class UpdatePageRequest implements UpdatePageRequestInterface {
   @IsString()

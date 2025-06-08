@@ -1,16 +1,17 @@
-import { System } from '@prisma/client';
+import { System } from "@prisma/client";
 import {
-  RouteGenericInterface,
-  RawServerBase,
-  RawRequestDefaultExpression,
-  FastifySchema,
-  FastifyTypeProvider,
   ContextConfigDefault,
   FastifyBaseLogger,
-} from 'fastify';
-import { FastifyRequestType, ResolveFastifyRequestType, FastifyTypeProviderDefault } from 'fastify/types/type-provider';
-import { RawServerDefault } from 'fastify/types/utils';
-import { RequestWithUser } from './RequestWithUser';
+  FastifySchema,
+  FastifyTypeProvider,
+  RawRequestDefaultExpression,
+  RawServerBase,
+  RouteGenericInterface,
+} from "fastify";
+import { FastifyRequestType, FastifyTypeProviderDefault, ResolveFastifyRequestType } from "fastify/types/type-provider";
+import { RawServerDefault } from "fastify/types/utils";
+
+import { RequestWithUser } from "./RequestWithUser";
 
 export interface RequestWithSystem<
   RouteGeneric extends RouteGenericInterface = RouteGenericInterface,
