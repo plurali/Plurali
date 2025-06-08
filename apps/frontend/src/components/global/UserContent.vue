@@ -13,7 +13,7 @@
   @apply rounded-2xl border-[3px] border-violet-300 p-6;
 }
 
-.user-content .mce-content-body:not([dir='rtl'])[data-mce-placeholder]:not(.mce-visualblocks)::before {
+.user-content .mce-content-body:not([dir="rtl"])[data-mce-placeholder]:not(.mce-visualblocks)::before {
   @apply !left-[unset];
 }
 

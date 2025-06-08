@@ -1,9 +1,7 @@
 <template>
   <div class="mb-5">
     <Title>Plurali</Title>
-    <Subtitle
-      >Informative page about your system and it's members you can share with people!</Subtitle
-    >
+    <Subtitle>Informative page about your system and it's members you can share with people!</Subtitle>
   </div>
 
   <div class="inline-flex items-center gap-2">
@@ -12,11 +10,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Title from '../components/Title.vue'
-import Subtitle from '../components/Subtitle.vue'
-import ButtonLink from '../components/ButtonLink.vue'
-import { useMeta } from '../utils/meta'
+import { defineComponent } from "vue";
+
+import ButtonLink from "../components/ButtonLink.vue";
+import Subtitle from "../components/Subtitle.vue";
+import Title from "../components/Title.vue";
+import { useMeta } from "../utils/meta";
 
 export default defineComponent({
   components: {
@@ -27,6 +26,6 @@ export default defineComponent({
   setup() {
     const setMeta = useMeta();
     setMeta({});
-  }
-})
+  },
+});
 </script>

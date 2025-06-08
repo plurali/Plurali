@@ -13,22 +13,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
-import Title from '../../components/Title.vue';
-import Subtitle from '../../components/Subtitle.vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { wrapRequest } from '../../api';
-import { getSystem } from '../../api/system';
-import { $systemPage, PageDtoInterface } from '@plurali/api-client';
-import ColorCircle from '../../components/global/color/ColorCircle.vue';
-import CustomFields from '../../components/global/fields/CustomFields.vue';
-import Members from '../../components/dashboard/members/Members.vue';
-import Fetchable from '../../components/global/Fetchable.vue';
-import { useGoBack } from '../../composables/goBack';
-import Color from '../../components/global/color/ColorCircle.vue';
-import SystemSummary from '../../components/global/system/SystemSummary.vue';
-import { withBackground } from '../../composables/background';
-import PageFields from '../../components/global/page/PageFields.vue';
+import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
+import { $systemPage, PageDtoInterface } from "@plurali/api-client";
+import { defineComponent, onMounted, ref } from "vue";
+
+import { wrapRequest } from "../../api";
+import { getSystem } from "../../api/system";
+import Members from "../../components/dashboard/members/Members.vue";
+import ColorCircle from "../../components/global/color/ColorCircle.vue";
+import Color from "../../components/global/color/ColorCircle.vue";
+import Fetchable from "../../components/global/Fetchable.vue";
+import CustomFields from "../../components/global/fields/CustomFields.vue";
+import PageFields from "../../components/global/page/PageFields.vue";
+import SystemSummary from "../../components/global/system/SystemSummary.vue";
+import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { withBackground } from "../../composables/background";
+import { useGoBack } from "../../composables/goBack";
 
 export default defineComponent({
   components: {
@@ -40,13 +41,13 @@ export default defineComponent({
     Title,
     Subtitle,
     ColorCircle,
-    PageFields
+    PageFields,
   },
   setup() {
     const system = ref<SystemDto | null | false>(false);
     const pages = ref<PageDtoInterface[] | null | false>(false);
 
-    useGoBack('/dashboard');
+    useGoBack("/dashboard");
 
     const fetchSystem = async () => {
       if (system.value === null) return;

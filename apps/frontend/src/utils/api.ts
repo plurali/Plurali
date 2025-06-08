@@ -1,9 +1,10 @@
-import { $topbar } from '@plurali/common';
 import { $api, ApiResponse } from "@plurali/api-client";
-import { clearFlashes, flash, FlashType } from '../store';
+import { $topbar } from "@plurali/common";
+
+import { clearFlashes, flash, FlashType } from "../store";
 
 export const wrapRequest = async <T extends object = {}>(
-  fn: () => Promise<ApiResponse<T>> | null
+  fn: () => Promise<ApiResponse<T>> | null,
 ): Promise<T | false> => {
   clearFlashes();
 

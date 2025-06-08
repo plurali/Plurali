@@ -1,19 +1,19 @@
 <template>
   <div
+    class="w-full min-h-[10rem] h-full inset-0 flex justify-center items-center rounded-2xl cursor-pointer"
+    :class="!upload && 'bg-gray-100 bg-opacity-50'"
     @dragover="() => (dragged = true)"
     @dragleave="() => (dragged = false)"
     @drop.prevent="onDrop"
-    class="w-full min-h-[10rem] h-full inset-0 flex justify-center items-center rounded-2xl cursor-pointer"
     @click="() => uploaderEl?.click()"
-    :class="!upload && 'bg-gray-100 bg-opacity-50'"
   >
-    <input type="file" ref="uploaderEl" class="hidden" :accept="accept.join(',')" @change="onChange" />
+    <input ref="uploaderEl" type="file" class="hidden" :accept="accept.join(',')" @change="onChange" />
     <div v-if="!dragged && !thumbnail" class="inline-flex justify-center items-center gap-4">
       <div class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-violet-100 shadow-xl">
         <DocumentArrowUpIcon class="h-8 w-8 text-violet-600" aria-hidden="true" />
       </div>
       <p class="text-2xl text-violet-600 font-light hidden uppercase md:inline-block t">
-        {{ upload && !thumbnail ? 'Preview not available' : 'or drag & drop' }}
+        {{ upload && !thumbnail ? "Preview not available" : "or drag & drop" }}
       </p>
     </div>
 
@@ -30,10 +30,11 @@
 </template>
 
 <script lang="ts">
-import { DocumentArrowUpIcon } from '@heroicons/vue/24/outline';
-import { PropType, computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { DocumentArrowUpIcon } from "@heroicons/vue/24/outline";
+import { computed, defineComponent, onMounted, onUnmounted, PropType, ref } from "vue";
 
 export default defineComponent({
+  components: { DocumentArrowUpIcon },
   props: {
     modelValue: {
       type: Object as PropType<Blob | null>,
@@ -41,10 +42,10 @@ export default defineComponent({
     },
     accept: {
       type: Array as PropType<string[]>,
-      default: ['image/png', 'image/jpeg', 'image/avif', 'image/gif', 'image/webp'],
+      default: ["image/png", "image/jpeg", "image/avif", "image/gif", "image/webp"],
     },
   },
-  emits: ['update:modelValue', 'submit'],
+  emits: ["update:modelValue", "submit"],
   setup(props, { emit }) {
     const dragged = ref(false);
 
@@ -55,7 +56,7 @@ export default defineComponent({
         return props.modelValue;
       },
       set(v) {
-        emit('update:modelValue', v);
+        emit("update:modelValue", v);
       },
     });
 
@@ -79,17 +80,17 @@ export default defineComponent({
       if (e.dataTransfer?.files && e.dataTransfer.files.length >= 1) {
         const file = e.dataTransfer.files.item(0);
         // if (file?.type && props.accept.find(accepted => file.type.toLowerCase() === accepted.toLowerCase())) {
-          upload.value = file;
+        upload.value = file;
         // }
       }
     };
 
     const _prevent = (e: Event) => e.preventDefault();
 
-    const dragEvents: string[] = ['dragenter', 'dragleave', 'dragover', 'drop'];
+    const dragEvents: string[] = ["dragenter", "dragleave", "dragover", "drop"];
 
-    onMounted(() => dragEvents.forEach(eventName => document.body.addEventListener(eventName, _prevent)));
-    onUnmounted(() => dragEvents.forEach(e => document.body.removeEventListener(e, _prevent)));
+    onMounted(() => dragEvents.forEach((eventName) => document.body.addEventListener(eventName, _prevent)));
+    onUnmounted(() => dragEvents.forEach((e) => document.body.removeEventListener(e, _prevent)));
 
     return {
       dragged,
@@ -100,6 +101,5 @@ export default defineComponent({
       thumbnail,
     };
   },
-  components: { DocumentArrowUpIcon },
 });
 </script>

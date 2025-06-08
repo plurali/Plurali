@@ -9,7 +9,7 @@
       />
       <Color v-else :color="system.color ?? '#e2e8f0'" class="flex-shrink-0 !w-32 !h-32 opacity-25" />
       <div>
-        <p class="text-sm text-gray-700" v-if="isDashboard">ID: {{ system.id }}</p>
+        <p v-if="isDashboard" class="text-sm text-gray-700">ID: {{ system.id }}</p>
         <PageTitle class="inline-flex flex-col sm:flex-row items-center justify-center gap-3">
           {{ system.username }}
           <VisibilityTag
@@ -28,8 +28,8 @@
             <u>Open public view</u>
           </a>
         </PageTitle>
-        <Subtitle class="mb-3" v-if="system.description">
-          <Sanitized :value="string(system.description, true)"/>
+        <Subtitle v-if="system.description" class="mb-3">
+          <Sanitized :value="string(system.description, true)" />
         </Subtitle>
         <span v-if="system.color" class="inline-flex text-gray-700 items-center gap-1">
           Color: {{ system.color }}
@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div v-if="isDashboard" class="flex flex-col sm:flex-row items-center gap-2 ">
+    <div v-if="isDashboard" class="flex flex-col sm:flex-row items-center gap-2">
       <BackgroundChooser v-model:entity="system" type="system" />
     </div>
   </div>
@@ -50,33 +50,34 @@
     :placeholder="`Add custom description for ${system.username}...`"
     @save="updateCustomDescription"
   />
-  <UserContent class="mb-5 p-6" v-else-if="system.data.customDescription">
+  <UserContent v-else-if="system.data.customDescription" class="mb-5 p-6">
     <Sanitized :value="system.data.customDescription" />
   </UserContent>
 
   <CustomFields :fields="system.fields" :modifiable="isDashboard" />
 </template>
 <script lang="ts">
-import PageTitle from '../../Title.vue';
-import Color from '../color/ColorCircle.vue';
-import Subtitle from '../../Subtitle.vue';
-import ColorCircle from '../color/ColorCircle.vue';
-import { computed, defineComponent, PropType, ref } from 'vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { useRoute } from 'vue-router';
-import VisibilityTag from '../visibility/VisibilityTag.vue';
-import { wrapRequest } from '../../../api';
-import { updateSystem } from '../../../api/system';
-import { Editor as EditorType } from 'tinymce';
-import CustomFields from '../fields/CustomFields.vue';
-import UserContent from '../UserContent.vue';
-import Sanitized from '../Sanitized.vue';
-import Editor from '../../dashboard/Editor.vue';
-import BackgroundChooser from '../BackgroundChooser.vue';
-import Fetchable from '../Fetchable.vue';
-import ButtonLink from '../../ButtonLink.vue';
-import { DocumentIcon } from '@heroicons/vue/24/outline';
-import { string } from '../../../api/fields';
+import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
+import { DocumentIcon } from "@heroicons/vue/24/outline";
+import { Editor as EditorType } from "tinymce";
+import { computed, defineComponent, PropType, ref } from "vue";
+import { useRoute } from "vue-router";
+
+import { wrapRequest } from "../../../api";
+import { string } from "../../../api/fields";
+import { updateSystem } from "../../../api/system";
+import ButtonLink from "../../ButtonLink.vue";
+import Editor from "../../dashboard/Editor.vue";
+import Subtitle from "../../Subtitle.vue";
+import PageTitle from "../../Title.vue";
+import BackgroundChooser from "../BackgroundChooser.vue";
+import Color from "../color/ColorCircle.vue";
+import ColorCircle from "../color/ColorCircle.vue";
+import Fetchable from "../Fetchable.vue";
+import CustomFields from "../fields/CustomFields.vue";
+import Sanitized from "../Sanitized.vue";
+import UserContent from "../UserContent.vue";
+import VisibilityTag from "../visibility/VisibilityTag.vue";
 
 export default defineComponent({
   components: {
@@ -92,15 +93,15 @@ export default defineComponent({
     BackgroundChooser,
     Fetchable,
     ButtonLink,
-    DocumentIcon
-},
+    DocumentIcon,
+  },
   props: {
     entity: {
       type: Object as PropType<SystemDto>,
       required: true,
     },
   },
-  emits: ['update:entity'],
+  emits: ["update:entity"],
   setup(props, { emit }) {
     const route = useRoute();
 
@@ -111,7 +112,7 @@ export default defineComponent({
         return props.entity;
       },
       set(v) {
-        emit('update:entity', v);
+        emit("update:entity", v);
       },
     });
 
@@ -122,11 +123,11 @@ export default defineComponent({
       const res = await wrapRequest(() =>
         updateSystem({
           visible: !system.value.data.visible,
-        })
+        }),
       );
 
       // fail??? refresh
-      if (!res) return (window.location.href = '');
+      if (!res) return (window.location.href = "");
 
       system.value = res.system;
       loading.value = false;
@@ -140,9 +141,9 @@ export default defineComponent({
         if (!system.value) return null;
 
         editor.readonly = true;
-        let customDescription: string | null = editor.getContent({ format: 'html' });
+        let customDescription: string | null = editor.getContent({ format: "html" });
 
-        if (editor.getContent({ format: 'text' }).trim().length < 1) {
+        if (editor.getContent({ format: "text" }).trim().length < 1) {
           customDescription = null;
         }
 
@@ -164,7 +165,7 @@ export default defineComponent({
       loading,
       system,
       string,
-      isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isDashboard: computed(() => route.path.startsWith("/dashboard")),
     };
   },
 });

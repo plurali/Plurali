@@ -1,18 +1,19 @@
 <template>
-  <div id="swagger-ui"></div>
+  <div id="swagger-ui" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
 // @ts-ignore
-import SwaggerUIBundle from 'swagger-ui-dist/swagger-ui-es-bundle.js';
-import { $axios } from '../api';
+import SwaggerUIBundle from "swagger-ui-dist/swagger-ui-es-bundle.js";
+import { defineComponent, onMounted } from "vue";
+
+import { $axios } from "../api";
 
 export default defineComponent({
   setup() {
     const init = () => {
       SwaggerUIBundle({
-        dom_id: '#swagger-ui',
+        dom_id: "#swagger-ui",
         url: `${$axios.defaults.baseURL}/oa-json`,
         presets: [SwaggerUIBundle.presets.apis],
       });
@@ -24,5 +25,5 @@ export default defineComponent({
 </script>
 
 <style>
-@import 'swagger-ui-dist/swagger-ui.css';
+@import "swagger-ui-dist/swagger-ui.css";
 </style>

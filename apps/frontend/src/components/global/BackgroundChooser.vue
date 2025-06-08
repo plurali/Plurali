@@ -1,7 +1,7 @@
 <template>
   <Button
-    @click="open = !open"
     class="border-[2.5px] text-violet-700 font-semibold inline-flex justify-center items-center gap-1"
+    @click="open = !open"
   >
     <PhotoIcon class="w-8 h-8" />
     <span>Background</span>
@@ -25,16 +25,16 @@
         <Button
           v-for="type of types"
           :key="type"
-          @click="() => setType(type)"
           class="text-lg transition duration-500 ease-in-out"
           :class="backgroundType === type && `bg-white shadow-md font-medium`"
+          @click="() => setType(type)"
         >
           {{ type }}
         </Button>
       </div>
     </template>
 
-    <form @submit.prevent="onSubmit" :enctype="backgroundType !== BackgroundType.Image ? 'multipart/form-data' : ''">
+    <form :enctype="backgroundType !== BackgroundType.Image ? 'multipart/form-data' : ''" @submit.prevent="onSubmit">
       <Uploader v-if="backgroundType === BackgroundType.Image" v-model="backgroundImage" />
       <Palette v-else v-model="backgroundColor" />
       <Button
@@ -51,34 +51,25 @@
 </template>
 
 <script lang="ts">
-import type { HasBackground } from '@domain/common/types';
-import { isHex } from '../../utils';
-import { PropType, computed, defineComponent, ref } from 'vue';
-import { PhotoIcon, SwatchIcon } from '@heroicons/vue/24/outline';
-import { wrapRequest } from '../../api';
-import { updateMember, updateSystem } from '../../api/system';
-import { flash } from '../../store';
-import Button from '../Button.vue';
-import Modal from './Modal.vue';
-import Uploader from './Uploader.vue';
-import Palette from './Palette.vue';
-import Spinner from '../Spinner.vue';
-import { updateMemberBackgroundImage, updateSystemBackgroundImage } from '../../api/system';
-import type { SystemResponse } from '@app/v1/dto/user/system/response/SystemResponse';
-import type { SystemMemberResponse } from '@app/v1/dto/user/system/response/SystemMemberResponse';
-import { BackgroundType } from '@plurali/api-client';
+import type { SystemMemberResponse } from "@app/v1/dto/user/system/response/SystemMemberResponse";
+import type { SystemResponse } from "@app/v1/dto/user/system/response/SystemResponse";
+import type { HasBackground } from "@domain/common/types";
+import { PhotoIcon, SwatchIcon } from "@heroicons/vue/24/outline";
+import { BackgroundType } from "@plurali/api-client";
+import { computed, defineComponent, PropType, ref } from "vue";
+
+import { wrapRequest } from "../../api";
+import { updateMember, updateSystem } from "../../api/system";
+import { updateMemberBackgroundImage, updateSystemBackgroundImage } from "../../api/system";
+import { flash } from "../../store";
+import { isHex } from "../../utils";
+import Button from "../Button.vue";
+import Spinner from "../Spinner.vue";
+import Modal from "./Modal.vue";
+import Palette from "./Palette.vue";
+import Uploader from "./Uploader.vue";
 
 export default defineComponent({
-  props: {
-    entity: {
-      type: Object as PropType<{ id: string, color: string|null, data: HasBackground }>,
-      required: true,
-    },
-    type: {
-      type: String as PropType<'member' | 'system'>,
-      required: true,
-    },
-  },
   components: {
     Button,
     Modal,
@@ -88,9 +79,19 @@ export default defineComponent({
     SwatchIcon,
     Spinner,
   },
-  emits: ['update:entity'],
+  props: {
+    entity: {
+      type: Object as PropType<{ id: string; color: string | null; data: HasBackground }>,
+      required: true,
+    },
+    type: {
+      type: String as PropType<"member" | "system">,
+      required: true,
+    },
+  },
+  emits: ["update:entity"],
   setup(props, { emit }) {
-    const initialColor = props.entity.data.backgroundColor ?? props.entity.color ?? 'rgb(109, 40, 217)';
+    const initialColor = props.entity.data.backgroundColor ?? props.entity.color ?? "rgb(109, 40, 217)";
 
     const open = ref(false);
 
@@ -110,33 +111,35 @@ export default defineComponent({
     const setType = (type: BackgroundType) => (backgroundType.value = type);
 
     const updateColor = async (color: string | null) => {
-      if (!color || !isHex(color)) return flash('The specified color needs to be a valid Hex value.');
+      if (!color || !isHex(color)) return flash("The specified color needs to be a valid Hex value.");
 
       const data = { backgroundColor: color };
 
       const res = await wrapRequest<SystemResponse | SystemMemberResponse>(() =>
-        props.type === 'member' ? updateMember(props.entity.id, data) : updateSystem(data)
+        props.type === "member" ? updateMember(props.entity.id, data) : updateSystem(data),
       );
 
       if (!res) {
         return flash();
       }
 
-      emit('update:entity', (res as any)[props.type]);
+      emit("update:entity", (res as any)[props.type]);
     };
 
     const updateImage = async (image: Blob | null) => {
       if (!image) return flash("An error occurred with processing your file.");
 
       const res = await wrapRequest<SystemResponse | SystemMemberResponse>(() =>
-        props.type === 'member' ? updateMemberBackgroundImage(props.entity.id, image) : updateSystemBackgroundImage(image)
+        props.type === "member"
+          ? updateMemberBackgroundImage(props.entity.id, image)
+          : updateSystemBackgroundImage(image),
       );
 
       if (!res) {
         return flash();
       }
 
-      emit('update:entity', (res as any)[props.type]);
+      emit("update:entity", (res as any)[props.type]);
     };
 
     const onSubmit = async () => {
@@ -145,7 +148,7 @@ export default defineComponent({
 
       if (backgroundType.value === BackgroundType.Image && !!backgroundImage.value) {
         await updateImage(backgroundImage.value);
-      } else if (!!backgroundColor.value) {
+      } else if (backgroundColor.value) {
         await updateColor(backgroundColor.value);
       }
 

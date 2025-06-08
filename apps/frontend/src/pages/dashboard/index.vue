@@ -1,33 +1,28 @@
 <template>
   <div class="mb-5">
     <Title>Plurali</Title>
-    <Subtitle
-      >Informative page about your system and it's members you can share with people!</Subtitle
-    >
+    <Subtitle>Informative page about your system and it's members you can share with people!</Subtitle>
   </div>
 
   <div class="inline-flex items-center gap-2">
-    <ButtonLink to="/dashboard/user" class="bg-violet-700 text-white"
-      >User settings</ButtonLink
-    >
+    <ButtonLink to="/dashboard/user" class="bg-violet-700 text-white">User settings</ButtonLink>
 
     <ButtonLink to="/dashboard/system" class="bg-violet-700 text-white">System</ButtonLink>
 
-    <Button @click.prevent="logout" class="border border-violet-700 text-violet-700"
-      >Logout</Button
-    >
+    <Button class="border border-violet-700 text-violet-700" @click.prevent="logout">Logout</Button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import Title from '../../components/Title.vue'
-import Subtitle from '../../components/Subtitle.vue'
-import ButtonLink from '../../components/ButtonLink.vue'
-import Button from '../../components/Button.vue'
-import { useRouter } from 'vue-router'
-import { useGoBack } from '../../composables/goBack'
-import { setAuth } from '../../api'
+import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+
+import { setAuth } from "../../api";
+import Button from "../../components/Button.vue";
+import ButtonLink from "../../components/ButtonLink.vue";
+import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { useGoBack } from "../../composables/goBack";
 
 export default defineComponent({
   components: {
@@ -37,16 +32,16 @@ export default defineComponent({
     Button,
   },
   setup() {
-    const router = useRouter()
+    const router = useRouter();
 
-    useGoBack(null)
+    useGoBack(null);
 
     const logout = async () => {
       setAuth(null);
-      await router.push('/auth/login')
-    }
+      await router.push("/auth/login");
+    };
 
-    return { logout }
+    return { logout };
   },
-})
+});
 </script>

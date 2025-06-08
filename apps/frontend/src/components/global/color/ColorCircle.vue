@@ -1,12 +1,9 @@
 <template>
-  <div
-    :style="{ backgroundColor: color }"
-    class="w-6 h-6 rounded-full border border-gray-400"
-  ></div>
+  <div :style="{ backgroundColor: color }" class="w-6 h-6 rounded-full border border-gray-400" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -14,5 +11,5 @@ export default defineComponent({
       type: String,
     },
   },
-})
+});
 </script>

@@ -5,24 +5,25 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { wrapRequest } from '../api';
-import { getMember } from '../api/public';
-import { useGoBack } from '../composables/goBack';
-import Fetchable from '../components/global/Fetchable.vue';
-import { getRouteParam } from '../utils';
-import { withBackground } from '../composables/background';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { useMeta } from '../utils/meta';
-import MemberSummary from '../components/global/members/MemberSummary.vue';
-import { $memberPage, PageDtoInterface } from '@plurali/api-client';
+import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
+import { $memberPage, PageDtoInterface } from "@plurali/api-client";
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import { wrapRequest } from "../api";
+import { getMember } from "../api/public";
+import Fetchable from "../components/global/Fetchable.vue";
+import MemberSummary from "../components/global/members/MemberSummary.vue";
+import { withBackground } from "../composables/background";
+import { useGoBack } from "../composables/goBack";
+import { getRouteParam } from "../utils";
+import { useMeta } from "../utils/meta";
 
 export default defineComponent({
   components: {
     Fetchable,
     MemberSummary,
-},
+  },
   setup() {
     const data = reactive({
       member: false as UserMemberDto | null | false,
@@ -62,14 +63,17 @@ export default defineComponent({
 
     onMounted(() => fetchMember());
 
-    const stopWatch = watch(() => data.member, (member) => {
-      setMeta({
-        title: member ? member.name : '',
-        description: member ? member.description ?? '' : '',
-        imageUrl: member ? member.avatar ?? '' : '',
-        color: member ? member.color ?? '' : '',
-      });
-    })
+    const stopWatch = watch(
+      () => data.member,
+      (member) => {
+        setMeta({
+          title: member ? member.name : "",
+          description: member ? (member.description ?? "") : "",
+          imageUrl: member ? (member.avatar ?? "") : "",
+          color: member ? (member.color ?? "") : "",
+        });
+      },
+    );
 
     onBeforeUnmount(() => stopWatch());
 

@@ -11,28 +11,29 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import Title from '../components/Title.vue';
-import Subtitle from '../components/Subtitle.vue';
-import ButtonLink from '../components/ButtonLink.vue';
-import Button from '../components/Button.vue';
-import Spinner from '../components/Spinner.vue';
-import type { SystemDto } from '@app/v1/dto/user/system/SystemDto';
-import { wrapRequest } from '../api';
-import Color from '../components/global/color/ColorCircle.vue';
-import { useRoute } from 'vue-router';
-import Fetchable from '../components/global/Fetchable.vue';
-import Members from '../components/front/members/Members.vue';
-import ColorCircle from '../components/global/color/ColorCircle.vue';
-import SystemSummary from '../components/global/system/SystemSummary.vue';
-import PageFields from '../components/global/page/PageFields.vue';
-import { getRouteParam } from '../utils';
-import { withBackground } from '../composables/background';
-import { getSystem, getSystemPages } from '../api/public';
-import type { PagesResponse } from '@app/v1/dto/page/response/PagesResponse';
-import type { PageDto } from '@app/v1/dto/page/PageDto';
-import { useMeta } from '../utils/meta';
-import { $systemPage, PageDtoInterface } from '@plurali/api-client';
+import type { PageDto } from "@app/v1/dto/page/PageDto";
+import type { PagesResponse } from "@app/v1/dto/page/response/PagesResponse";
+import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
+import { $systemPage, PageDtoInterface } from "@plurali/api-client";
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import { wrapRequest } from "../api";
+import { getSystem, getSystemPages } from "../api/public";
+import Button from "../components/Button.vue";
+import ButtonLink from "../components/ButtonLink.vue";
+import Members from "../components/front/members/Members.vue";
+import Color from "../components/global/color/ColorCircle.vue";
+import ColorCircle from "../components/global/color/ColorCircle.vue";
+import Fetchable from "../components/global/Fetchable.vue";
+import PageFields from "../components/global/page/PageFields.vue";
+import SystemSummary from "../components/global/system/SystemSummary.vue";
+import Spinner from "../components/Spinner.vue";
+import Subtitle from "../components/Subtitle.vue";
+import Title from "../components/Title.vue";
+import { withBackground } from "../composables/background";
+import { getRouteParam } from "../utils";
+import { useMeta } from "../utils/meta";
 
 export default defineComponent({
   components: {
@@ -83,12 +84,12 @@ export default defineComponent({
 
     const stopWatch = watch(system, (system) => {
       setMeta({
-        title: system ? system.username : '',
-        description: system ? system.description ?? '' : '',
-        imageUrl: system ? system.avatar ?? '' : '',
-        color: system ? system.color ?? '' : '',
+        title: system ? system.username : "",
+        description: system ? (system.description ?? "") : "",
+        imageUrl: system ? (system.avatar ?? "") : "",
+        color: system ? (system.color ?? "") : "",
       });
-    })
+    });
 
     onBeforeUnmount(() => stopWatch());
 

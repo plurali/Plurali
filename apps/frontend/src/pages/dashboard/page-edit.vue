@@ -2,20 +2,20 @@
   <Fetchable :result="page" :retry="fetchPage">
     <div v-if="page">
       <div class="flex items-center gap-2 my-5">
-        <h1 class="text-2xl font-medium">Edit {{ isMember ? 'member' : 'system' }} content page</h1>
+        <h1 class="text-2xl font-medium">Edit {{ isMember ? "member" : "system" }} content page</h1>
         <VisibilityTag :visible="page.visibility === Visibility.Public" @click="toggleVisibility" />
         <Button
-          @click="deletePage"
           class="border-[2.5px] bg-white bg-opacity-25 border-violet-300 text-black inline-flex justify-center items-center gap-1 ml-4"
+          @click="deletePage"
         >
           <TrashIcon class="w-5 h-5" />
         </Button>
       </div>
       <input
+        v-model="name"
         :disabled="loading"
         type="text"
         class="w-full p-2.5 border rounded-xl border-gray-400 mb-5"
-        v-model="name"
         placeholder="Enter page name..."
       />
       <UserContent>
@@ -23,8 +23,8 @@
           :id="`${page.id}_content`"
           :initial-value="page.content"
           :placeholder="`Enter page content...`"
-          @save="updatePage"
           :force-save="page.name !== name"
+          @save="updatePage"
         />
       </UserContent>
     </div>
@@ -32,30 +32,31 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import Title from '../../components/Title.vue';
-import Subtitle from '../../components/Subtitle.vue';
-import ButtonLink from '../../components/ButtonLink.vue';
-import Button from '../../components/Button.vue';
-import Spinner from '../../components/Spinner.vue';
-import { wrapRequest } from '../../api';
-import Color from '../../components/global/color/ColorCircle.vue';
-import { useGoBack } from '../../composables/goBack';
-import Fetchable from '../../components/global/Fetchable.vue';
-import CustomFields from '../../components/global/fields/CustomFields.vue';
-import ColorCircle from '../../components/global/color/ColorCircle.vue';
-import { getRouteParam } from '../../utils';
-import MemberSummary from '../../components/global/members/MemberSummary.vue';
-import UserContent from '../../components/global/UserContent.vue';
-import Editor from '../../components/dashboard/Editor.vue';
-import type { PageDto } from '@app/v2/dto/page/PageDto';
-import VisibilityTag from '../../components/global/visibility/VisibilityTag.vue';
-import { TrashIcon } from '@heroicons/vue/24/outline';
-import type { OkResponse } from '@app/v1/dto/OkResponse';
-import { toggleVisibilityState } from '@plurali/common';
-import { $memberPage, $systemPage, Visibility } from '@plurali/api-client';
-import { TinyEditorType } from '@plurali/editor';
+import type { OkResponse } from "@app/v1/dto/OkResponse";
+import type { PageDto } from "@app/v2/dto/page/PageDto";
+import { TrashIcon } from "@heroicons/vue/24/outline";
+import { $memberPage, $systemPage, Visibility } from "@plurali/api-client";
+import { toggleVisibilityState } from "@plurali/common";
+import { TinyEditorType } from "@plurali/editor";
+import { computed, defineComponent, onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { wrapRequest } from "../../api";
+import Button from "../../components/Button.vue";
+import ButtonLink from "../../components/ButtonLink.vue";
+import Editor from "../../components/dashboard/Editor.vue";
+import Color from "../../components/global/color/ColorCircle.vue";
+import ColorCircle from "../../components/global/color/ColorCircle.vue";
+import Fetchable from "../../components/global/Fetchable.vue";
+import CustomFields from "../../components/global/fields/CustomFields.vue";
+import MemberSummary from "../../components/global/members/MemberSummary.vue";
+import UserContent from "../../components/global/UserContent.vue";
+import VisibilityTag from "../../components/global/visibility/VisibilityTag.vue";
+import Spinner from "../../components/Spinner.vue";
+import Subtitle from "../../components/Subtitle.vue";
+import Title from "../../components/Title.vue";
+import { useGoBack } from "../../composables/goBack";
+import { getRouteParam } from "../../utils";
 
 export default defineComponent({
   components: {
@@ -81,11 +82,11 @@ export default defineComponent({
 
     const route = useRoute();
 
-    const name = ref('');
+    const name = ref("");
 
     const loading = ref(false);
 
-    const isMember = computed(() => String(route.name).includes('dashboard:member'));
+    const isMember = computed(() => String(route.name).includes("dashboard:member"));
 
     const memberId = computed(() => getRouteParam(route.params.memberId));
 
@@ -100,7 +101,9 @@ export default defineComponent({
       page.value = null;
 
       page.value = await wrapRequest(() =>
-        isMember.value ? $memberPage.getMemberPage(memberId.value, pageId.value) : $systemPage.getSystemPage(pageId.value)
+        isMember.value
+          ? $memberPage.getMemberPage(memberId.value, pageId.value)
+          : $systemPage.getSystemPage(pageId.value),
       );
 
       if (page.value) {
@@ -139,7 +142,7 @@ export default defineComponent({
         if (!page.value) return null;
 
         editor.readonly = true;
-        let content: string = editor.getContent({ format: 'html' });
+        let content: string = editor.getContent({ format: "html" });
 
         const data = {
           name: name.value,
@@ -164,9 +167,11 @@ export default defineComponent({
       if (loading.value) return;
       loading.value = true;
 
-      const res = await wrapRequest<OkResponse>(() => isMember.value
+      const res = await wrapRequest<OkResponse>(() =>
+        isMember.value
           ? $memberPage.deleteMemberPage(memberId.value, pageId.value)
-          : $systemPage.deleteSystemPage(pageId.value));
+          : $systemPage.deleteSystemPage(pageId.value),
+      );
 
       if (res) {
         router.push(parentRoute.value);
@@ -186,7 +191,7 @@ export default defineComponent({
       loading,
       isMember,
       toggleVisibility,
-      Visibility
+      Visibility,
     };
   },
 });

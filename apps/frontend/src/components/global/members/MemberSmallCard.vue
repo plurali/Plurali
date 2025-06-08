@@ -2,7 +2,6 @@
   <router-link
     :disabled="loading"
     :aria-disabled="loading"
-    @click.ctrl.prevent="toggleVisibility"
     :to="
       isDashboard ? `/dashboard/member/${systemMember.id}` : `/${$route.params.systemId}/m/${systemMember.data.slug}`
     "
@@ -12,6 +11,7 @@
       loading && 'bg-gray-200',
     ]"
     :style="!isDashboard && systemMember.color ? { borderLeftColor: systemMember.color } : {}"
+    @click.ctrl.prevent="toggleVisibility"
   >
     <img
       v-if="systemMember.avatar"
@@ -33,15 +33,16 @@
   </router-link>
 </template>
 <script lang="ts">
-import Color from '../color/ColorCircle.vue';
-import { computed, defineComponent, PropType, ref } from 'vue';
-import type { UserMemberDto } from '@app/v1/dto/user/member/UserMemberDto';
-import { useRoute } from 'vue-router';
-import { updateMember } from '../../../api/system';
-import { flash, FlashType } from '../../../store';
-import { formatError } from '../../../api';
-import { string } from '../../../api/fields';
-import Sanitized from '../Sanitized.vue';
+import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
+import { computed, defineComponent, PropType, ref } from "vue";
+import { useRoute } from "vue-router";
+
+import { formatError } from "../../../api";
+import { string } from "../../../api/fields";
+import { updateMember } from "../../../api/system";
+import { flash, FlashType } from "../../../store";
+import Color from "../color/ColorCircle.vue";
+import Sanitized from "../Sanitized.vue";
 
 export default defineComponent({
   components: {
@@ -90,7 +91,7 @@ export default defineComponent({
       toggleVisibility,
       loading,
       string,
-      isDashboard: computed(() => route.path.startsWith('/dashboard')),
+      isDashboard: computed(() => route.path.startsWith("/dashboard")),
     };
   },
 });

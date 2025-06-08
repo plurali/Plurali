@@ -3,19 +3,22 @@
     <Spinner class="!text-violet-700 w-10 h-10" />
   </div>
   <div v-else-if="result === false" class="inline-flex w-full justify-center items-center">
-    <Button class="border border-gray-700 text-gray-700" @click.prevent="retry">{{
-      retryText
-    }}</Button>
+    <Button class="border border-gray-700 text-gray-700" @click.prevent="retry">{{ retryText }}</Button>
   </div>
   <slot v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import Spinner from '../Spinner.vue'
-import Button from '../Button.vue'
+import { defineComponent, PropType } from "vue";
+
+import Button from "../Button.vue";
+import Spinner from "../Spinner.vue";
 
 export default defineComponent({
+  components: {
+    Button,
+    Spinner,
+  },
   props: {
     result: {},
     retry: {
@@ -25,12 +28,8 @@ export default defineComponent({
     },
     retryText: {
       type: String,
-      default: 'Try again',
+      default: "Try again",
     },
   },
-  components: {
-    Button,
-    Spinner,
-  },
-})
+});
 </script>
