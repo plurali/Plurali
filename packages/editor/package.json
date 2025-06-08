@@ -16,7 +16,9 @@
   ],
   "scripts": {
     "html-tags": "ts-node bin/html-tags.ts",
-    "convert": "ts-node bin/convert.ts"
+    "convert": "ts-node bin/convert.ts",
+    "lint": "eslint 'src/**/*.{ts,tsx,js,jsx,json,vue}'",
+    "lint:fix": "pnpm lint --fix"
   },
   "devDependencies": {
     "@prisma/client": "^5.2.0",
