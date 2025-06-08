@@ -102,7 +102,7 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   if (!process.argv.includes("--rebuild-only")) {
-    await app.listen(server as any);
+    await app.listen(server);
   } else {
     process.exit(0);
   }

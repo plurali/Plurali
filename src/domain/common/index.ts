@@ -30,7 +30,7 @@ export const safeStringify = (val: unknown) => {
 };
 
 export const overrideLoggerPrefix = <T = Logger>(logger: T, prefix = "Server"): T =>
-  Object.assign(logger as any, {
+  Object.assign(logger, {
     // https://github.com/nestjs/nest/blob/85966703ac57a5b263ab5807033f6ac78548c0ef/packages/common/services/console-logger.service.ts#L206-L208
     formatPid(pid: number) {
       return `[${prefix}] ${pid}  - `;

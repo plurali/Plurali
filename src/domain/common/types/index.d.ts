@@ -22,7 +22,6 @@ export interface FullSystem<U extends User = User, M extends Member = Member, F 
 export interface UserWithSystem<S extends System | undefined = System | undefined> extends User {
   system: S;
 }
-undefined;
 
 export type FullUser<S extends System | undefined = System | undefined> = UserWithSystem<S>;
 
