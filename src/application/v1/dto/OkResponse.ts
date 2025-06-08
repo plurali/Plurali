@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class OkResponse {
-  @ApiProperty({ default: 'ok' })
+  @ApiProperty({ default: "ok" })
   public readonly message: string;
 
-  constructor(message = 'ok') {
+  constructor(message = "ok") {
     this.message = message;
   }
 }

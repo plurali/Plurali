@@ -1,4 +1,4 @@
-import { NotificationType } from '@prisma/client';
+import { NotificationType } from "@prisma/client";
 
 export interface NotificationDtoInterface {
   id: string;

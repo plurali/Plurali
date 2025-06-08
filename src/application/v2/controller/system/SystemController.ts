@@ -1,33 +1,34 @@
-import { Body, Controller, Get, HttpCode, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { BackgroundType, Prisma, System, User, Visibility } from '@prisma/client';
-import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
-import * as mime from 'mime-types';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { StorageService } from '@infra/storage/StorageService';
-import { StoragePrefix } from '@infra/storage/StoragePrefix';
-import { SystemDto } from '@app/v2/dto/system/SystemDto';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { InvalidRequestException } from '@app/v2/exception/InvalidRequestException';
-import { UnsupportedFileException } from '@app/v2/exception/UnsupportedFileException';
-import { UploadFailedException } from '@app/v2/exception/UploadFailedException';
-import { BaseController } from '../BaseController';
-import { ApiWarning } from '@app/v2/dto/response/warning';
-import { UpdateSystemRequest } from '@app/v2/dto/system/request/UpdateSystemRequest';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ApiWarning } from "@app/v2/dto/response/warning";
+import { UpdateSystemRequest } from "@app/v2/dto/system/request/UpdateSystemRequest";
+import { SystemDto } from "@app/v2/dto/system/SystemDto";
+import { InvalidRequestException } from "@app/v2/exception/InvalidRequestException";
+import { UnsupportedFileException } from "@app/v2/exception/UnsupportedFileException";
+import { UploadFailedException } from "@app/v2/exception/UploadFailedException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { FileInterceptor, MemoryStorageFile, UploadedFile } from "@blazity/nest-file-fastify";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { StoragePrefix } from "@infra/storage/StoragePrefix";
+import { StorageService } from "@infra/storage/StorageService";
+import { Body, Controller, Get, HttpCode, Patch, Post, UseGuards, UseInterceptors } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { BackgroundType, Prisma, System, User, Visibility } from "@prisma/client";
+import * as mime from "mime-types";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/system',
-  version: '2',
+  path: "/system",
+  version: "2",
 })
-@ApiTags('System')
-@ApiSecurity('bearer')
+@ApiTags("System")
+@ApiSecurity("bearer")
 @ApiExtraModels(SystemDto)
 export class SystemController extends BaseController {
   constructor(
@@ -39,7 +40,7 @@ export class SystemController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, SystemDto))
   @ApiResponse(error(400, ApiError.InvalidPluralKey))
@@ -49,7 +50,7 @@ export class SystemController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Patch('/')
+  @Patch("/")
   @HttpCode(200)
   @ApiResponse(ok(200, SystemDto))
   @ApiResponse(error(400, ApiError.InvalidPluralKey))
@@ -86,10 +87,10 @@ export class SystemController extends BaseController {
     return this.data(await this.makeDto(system, user));
   }
 
-  @Post('/background')
+  @Post("/background")
   @HttpCode(200)
   @UseGuards(SystemGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor("file"))
   @ApiResponse(ok(200, SystemDto))
   @ApiResponse(error(400, ApiError.InvalidPluralKey, ApiError.UnsupportedFile, ApiError.UploadFailed))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
@@ -98,7 +99,7 @@ export class SystemController extends BaseController {
     @CurrentUser() user: User,
     @UploadedFile() file: MemoryStorageFile,
   ) {
-    if (!file.mimetype.startsWith('image/')) {
+    if (!file.mimetype.startsWith("image/")) {
       throw new UnsupportedFileException();
     }
 

@@ -1,29 +1,30 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from '@nestjs/common';
-import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Member, OwnerType, Page, Prisma, System, User } from '@prisma/client';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { PageDto } from '@app/v2/dto/page/PageDto';
-import { CreatePageRequest } from '@app/v2/dto/page/request/CreatePageRequest';
-import { UpdatePageRequest } from '@app/v2/dto/page/request/UpdatePageRequest';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { PageRepository } from '@domain/page/PageRepository';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { BaseController } from '../../BaseController';
-import { Ok } from '@app/v2/dto/response/Ok';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { createSlug } from '@domain/common';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { PageDto } from "@app/v2/dto/page/PageDto";
+import { CreatePageRequest } from "@app/v2/dto/page/request/CreatePageRequest";
+import { UpdatePageRequest } from "@app/v2/dto/page/request/UpdatePageRequest";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { Ok } from "@app/v2/dto/response/Ok";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { createSlug } from "@domain/common";
+import { PageRepository } from "@domain/page/PageRepository";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Put, UseGuards } from "@nestjs/common";
+import { ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { Member, OwnerType, Page, Prisma, System, User } from "@prisma/client";
+
+import { BaseController } from "../../BaseController";
 
 @Controller({
-  path: '/member/:member/page',
-  version: '2',
+  path: "/member/:member/page",
+  version: "2",
 })
-@ApiTags('MemberPage')
-@ApiSecurity('bearer')
+@ApiTags("MemberPage")
+@ApiSecurity("bearer")
 export class MemberPageController extends BaseController {
   constructor(
     private readonly pages: PageRepository,
@@ -33,18 +34,18 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [PageDto]))
   @ApiResponse(error(400, ApiError.InvalidPluralKey))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
-  async list(@CurrentSystem() system: System, @Param('member') memberId: string): Promise<ApiDataResponse<PageDto[]>> {
+  async list(@CurrentSystem() system: System, @Param("member") memberId: string): Promise<ApiDataResponse<PageDto[]>> {
     const member = await this.findMemberOrFail(system, memberId);
 
     const pages = await this.pages.findMany({
       where: {
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
       },
     });
 
@@ -52,7 +53,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:page')
+  @Get("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -61,8 +62,8 @@ export class MemberPageController extends BaseController {
   async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('member') memberId: string,
-    @Param('page') pageId: string,
+    @Param("member") memberId: string,
+    @Param("page") pageId: string,
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
     const page = await this.findOrFail(member, user, pageId);
@@ -71,7 +72,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Patch('/:page')
+  @Patch("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -80,8 +81,8 @@ export class MemberPageController extends BaseController {
   async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('page') pageId: string,
-    @Param('member') memberId: string,
+    @Param("page") pageId: string,
+    @Param("member") memberId: string,
     @Body() data: UpdatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
@@ -116,7 +117,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Delete('/:page')
+  @Delete("/:page")
   @HttpCode(200)
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -125,8 +126,8 @@ export class MemberPageController extends BaseController {
   async delete(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('member') memberId: string,
-    @Param('page') pageId: string,
+    @Param("member") memberId: string,
+    @Param("page") pageId: string,
   ): Promise<ApiDataResponse<Ok>> {
     const member = await this.findMemberOrFail(system, memberId);
 
@@ -140,7 +141,7 @@ export class MemberPageController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Put('/')
+  @Put("/")
   @HttpCode(200)
   @ApiResponse(ok(200, PageDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
@@ -149,7 +150,7 @@ export class MemberPageController extends BaseController {
   async create(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('member') memberId: string,
+    @Param("member") memberId: string,
     @Body() data: CreatePageRequest,
   ): Promise<ApiDataResponse<PageDto>> {
     const member = await this.findMemberOrFail(system, memberId);
@@ -157,7 +158,7 @@ export class MemberPageController extends BaseController {
     const page = await this.pages.create({
       data: {
         ownerId: member.id,
-        ownerType: 'Member',
+        ownerType: "Member",
         name: data.name,
         slug: createSlug(data.name),
         content: data.content,

@@ -1,6 +1,7 @@
-import { Notification, NotificationType } from '@prisma/client';
-import { NotificationDtoInterface } from './NotificationDtoInterface';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
+import { Notification, NotificationType } from "@prisma/client";
+
+import { NotificationDtoInterface } from "./NotificationDtoInterface";
 
 export class NotificationDto implements NotificationDtoInterface {
   @ApiProperty()
@@ -9,7 +10,7 @@ export class NotificationDto implements NotificationDtoInterface {
   @ApiProperty()
   public content: string;
 
-  @ApiProperty({ description: 'Danger/Warning/Success/Info/#hex' })
+  @ApiProperty({ description: "Danger/Warning/Success/Info/#hex" })
   public color: string;
 
   @ApiProperty()

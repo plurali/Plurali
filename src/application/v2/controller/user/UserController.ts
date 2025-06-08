@@ -1,41 +1,42 @@
-import { Body, Controller, Get, HttpCode, Inject, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { Prisma, User, UserRole, UserVerificationType } from '@prisma/client';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { UserRepository } from '@domain/user/UserRepository';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { CacheService } from '@domain/cache/CacheService';
-import { UserDto } from '@app/v2/dto/user/UserDto';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { UnauthorizedException } from '@app/v2/exception/UnauthorizedException';
-import { UpdateUserRequest } from '@app/v2/dto/user/request/UpdateUserRequest';
-import { BaseController } from '../BaseController';
-import { AuthGuard } from '@app/v2/context/auth/AuthGuard';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { EmailAlreadyUsedException } from '@app/v2/exception/EmailAlreadyUsedException';
-import { UserService } from '@domain/user/UserService';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { SystemAlreadyAssociatedException } from '@app/v2/exception/SystemAlreadyAssociatedException';
-import { Ok } from '@app/v2/dto/response/Ok';
-import { UserVerificationRepository } from '@domain/user/verification/UserVerificationRepository';
-import { InvalidVerificationException } from '@app/v2/exception/InvalidVerificationException';
-import { VerifyUserEmailRequest } from '@app/v2/dto/user/request/VerifyUserEmailRequest';
-import { getMinuteDifference } from '@domain/common/time';
-import { EmailVerificationRatelimitedException } from '@app/v2/exception/EmailVerificationRatelimitedException';
-import { EmailAlreadyVerifiedException } from '@app/v2/exception/EmailAlreadyVerifiedException';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { AuthGuard } from "@app/v2/context/auth/AuthGuard";
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { Ok } from "@app/v2/dto/response/Ok";
+import { UpdateUserRequest } from "@app/v2/dto/user/request/UpdateUserRequest";
+import { VerifyUserEmailRequest } from "@app/v2/dto/user/request/VerifyUserEmailRequest";
+import { UserDto } from "@app/v2/dto/user/UserDto";
+import { EmailAlreadyUsedException } from "@app/v2/exception/EmailAlreadyUsedException";
+import { EmailAlreadyVerifiedException } from "@app/v2/exception/EmailAlreadyVerifiedException";
+import { EmailVerificationRatelimitedException } from "@app/v2/exception/EmailVerificationRatelimitedException";
+import { InvalidVerificationException } from "@app/v2/exception/InvalidVerificationException";
+import { SystemAlreadyAssociatedException } from "@app/v2/exception/SystemAlreadyAssociatedException";
+import { UnauthorizedException } from "@app/v2/exception/UnauthorizedException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { CacheService } from "@domain/cache/CacheService";
+import { getMinuteDifference } from "@domain/common/time";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { UserRepository } from "@domain/user/UserRepository";
+import { UserService } from "@domain/user/UserService";
+import { UserVerificationRepository } from "@domain/user/verification/UserVerificationRepository";
+import { Body, Controller, Get, HttpCode, Inject, Patch, Post, UseGuards } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { Prisma, User, UserRole, UserVerificationType } from "@prisma/client";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/user',
-  version: '2',
+  path: "/user",
+  version: "2",
 })
-@ApiTags('User')
-@ApiSecurity('bearer')
+@ApiTags("User")
+@ApiSecurity("bearer")
 @ApiExtraModels(UserDto)
 export class UserController extends BaseController {
   constructor(
-    @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
+    @Inject("PluralRestServiceBase") private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly userService: UserService,
     private readonly users: UserRepository,
@@ -46,7 +47,7 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, UserDto))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
@@ -55,7 +56,7 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch('/')
+  @Patch("/")
   @HttpCode(200)
   @ApiResponse(ok(200, UserDto))
   @ApiResponse(error(401, ApiError.NotAuthenticated, ApiError.Unauthorized, ApiError.SystemAlreadyAssociated))
@@ -64,7 +65,7 @@ export class UserController extends BaseController {
     let clearCache = false;
 
     if (notEmpty(data.accessToken)) {
-      const plural = await this.rest.findUserForId('me', data.accessToken);
+      const plural = await this.rest.findUserForId("me", data.accessToken);
 
       if (plural) {
         const alreadyAssociated = !!(await this.systems.findUnique({
@@ -81,7 +82,7 @@ export class UserController extends BaseController {
         }
       }
 
-      update.pluralAccessToken = !!plural ? data.accessToken : null;
+      update.pluralAccessToken = plural ? data.accessToken : null;
       clearCache = true;
     }
 
@@ -120,7 +121,7 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/resend-email')
+  @Post("/resend-email")
   @ApiResponse(ok(200, Ok))
   @ApiResponse(ok(400, ApiError.EmailVerificationRatelimited))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
@@ -134,7 +135,7 @@ export class UserController extends BaseController {
         userId: user.id,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
 
@@ -148,7 +149,7 @@ export class UserController extends BaseController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/verify-email')
+  @Post("/verify-email")
   @ApiResponse(ok(200, Ok))
   @ApiResponse(error(401, ApiError.NotAuthenticated))
   @ApiResponse(error(400, ApiError.InvalidVerification))

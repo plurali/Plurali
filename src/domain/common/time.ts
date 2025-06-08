@@ -1,20 +1,20 @@
 export interface FormattedTimeWithUnit {
   value: number;
   unit:
-    | 'decade'
-    | 'decades'
-    | 'year'
-    | 'years'
-    | 'month'
-    | 'months'
-    | 'day'
-    | 'days'
-    | 'hour'
-    | 'hours'
-    | 'minute'
-    | 'minutes'
-    | 'second'
-    | 'seconds';
+    | "decade"
+    | "decades"
+    | "year"
+    | "years"
+    | "month"
+    | "months"
+    | "day"
+    | "days"
+    | "hour"
+    | "hours"
+    | "minute"
+    | "minutes"
+    | "second"
+    | "seconds";
 }
 
 const isPlural = (num: number) => Math.abs(num) !== 1;
@@ -31,7 +31,7 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
   if (seconds < 60) {
     return {
       value: seconds,
-      unit: isPlural(seconds) ? 'seconds' : 'second',
+      unit: isPlural(seconds) ? "seconds" : "second",
     };
   }
 
@@ -40,7 +40,7 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
   if (minutes < 60) {
     return {
       value: minutes,
-      unit: isPlural(minutes) ? 'minutes' : 'minute',
+      unit: isPlural(minutes) ? "minutes" : "minute",
     };
   }
 
@@ -49,7 +49,7 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
   if (hours < 24) {
     return {
       value: hours,
-      unit: isPlural(hours) ? 'hours' : 'hour',
+      unit: isPlural(hours) ? "hours" : "hour",
     };
   }
 
@@ -58,7 +58,7 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
   if (days < 30) {
     return {
       value: days,
-      unit: isPlural(days) ? 'days' : 'day',
+      unit: isPlural(days) ? "days" : "day",
     };
   }
 
@@ -68,7 +68,7 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
   if (months < 12) {
     return {
       value: months,
-      unit: isPlural(months) ? 'months' : 'month',
+      unit: isPlural(months) ? "months" : "month",
     };
   }
 
@@ -76,6 +76,6 @@ export const getFormattedTimeWithUnit = (seconds: number): FormattedTimeWithUnit
 
   return {
     value: years,
-    unit: isPlural(years) ? 'years' : 'year',
+    unit: isPlural(years) ? "years" : "year",
   };
 };

@@ -1,9 +1,10 @@
-import { User } from '@prisma/client';
-import { Authenticator } from '../Authenticator';
-import { UserRepository } from '@domain/user/UserRepository';
-import { Hasher } from '../../hasher/Hasher';
-import { Injectable } from '@nestjs/common';
-import { UserCredentials } from './types';
+import { UserRepository } from "@domain/user/UserRepository";
+import { Injectable } from "@nestjs/common";
+import { User } from "@prisma/client";
+
+import { Hasher } from "../../hasher/Hasher";
+import { Authenticator } from "../Authenticator";
+import { UserCredentials } from "./types";
 
 @Injectable()
 export class UserAuthenticator extends Authenticator<UserCredentials, User> {

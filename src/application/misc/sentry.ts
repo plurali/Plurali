@@ -1,12 +1,12 @@
-import { ExecutionContext, HttpException } from '@nestjs/common';
-import { Scope } from '@sentry/node';
-import { FastifyRequest } from 'fastify';
-import { RavenInterceptor } from 'nest-raven';
+import { ExecutionContext, HttpException } from "@nestjs/common";
+import { Scope } from "@sentry/node";
+import { FastifyRequest } from "fastify";
+import { RavenInterceptor } from "nest-raven";
 
-export const FILTERED_KEYS = ['password', 'email', 'accessToken', 'email'];
+export const FILTERED_KEYS = ["password", "email", "accessToken", "email"];
 
 export const filterSensitiveData = (data: unknown) => {
-  if (data === null || typeof data !== 'object') {
+  if (data === null || typeof data !== "object") {
     return data;
   }
 
@@ -16,9 +16,9 @@ export const filterSensitiveData = (data: unknown) => {
     let value = data[key];
 
     if (value && FILTERED_KEYS.includes(key)) {
-      const type = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
+      const type = value === null ? "null" : Array.isArray(value) ? "array" : typeof value;
 
-      if (type === 'object') {
+      if (type === "object") {
         filteredObj[key] = filterSensitiveData(value);
         continue;
       }
@@ -34,7 +34,7 @@ export const filterSensitiveData = (data: unknown) => {
 
 export const createSentryInterceptor = () => {
   return new RavenInterceptor({
-    level: 'error',
+    level: "error",
     filters: [
       {
         type: HttpException,

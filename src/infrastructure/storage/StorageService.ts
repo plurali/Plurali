@@ -1,4 +1,4 @@
-import { StoreResult } from './StoreResult';
+import { StoreResult } from "./StoreResult";
 
 export abstract class StorageService<T = any> {
   readonly client: T;

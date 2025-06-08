@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { AuthDtoInterface } from './AuthDtoInterface';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { AuthDtoInterface } from "./AuthDtoInterface";
 
 export class AuthDto implements AuthDtoInterface {
   @ApiProperty()

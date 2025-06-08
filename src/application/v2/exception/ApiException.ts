@@ -1,6 +1,7 @@
-import { HttpException, HttpExceptionOptions } from '@nestjs/common';
-import { ApiError, ApiErrorMessage } from '../dto/response/errors';
-import { ApiErrorResponse, ApiResponseMeta } from '../types/response';
+import { HttpException, HttpExceptionOptions } from "@nestjs/common";
+
+import { ApiError, ApiErrorMessage } from "../dto/response/errors";
+import { ApiErrorResponse, ApiResponseMeta } from "../types/response";
 
 export class ApiException extends HttpException {
   constructor(

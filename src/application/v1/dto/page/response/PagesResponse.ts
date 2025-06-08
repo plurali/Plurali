@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { PageDto } from '../PageDto';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { PageDto } from "../PageDto";
 
 export class PagesResponse {
   @ApiProperty({ type: [PageDto] })

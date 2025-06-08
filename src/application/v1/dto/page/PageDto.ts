@@ -1,6 +1,6 @@
-import { Page, Visibility } from '@prisma/client';
-import { OwnerType } from '@domain/common';
-import { ApiProperty } from '@nestjs/swagger';
+import { OwnerType } from "@domain/common";
+import { ApiProperty } from "@nestjs/swagger";
+import { Page, Visibility } from "@prisma/client";
 
 export class PageDto {
   @ApiProperty()

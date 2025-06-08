@@ -1,7 +1,7 @@
-import { BackgroundType } from '@domain/common';
-import { HasBackground } from '@domain/common/types';
-import { ApiProperty } from '@nestjs/swagger';
-import { Member, Visibility } from '@prisma/client';
+import { BackgroundType } from "@domain/common";
+import { HasBackground } from "@domain/common/types";
+import { ApiProperty } from "@nestjs/swagger";
+import { Member, Visibility } from "@prisma/client";
 
 /**
  * @deprecated

@@ -1,25 +1,26 @@
-import { ConsoleLogger, Global, Logger, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { BullModule } from '@nestjs/bullmq';
-import KeyvValkey from '@keyv/valkey';
-import { plainToInstance } from 'class-transformer';
-import { Config, ConfigInterface } from './Config';
-import { validateSync } from 'class-validator';
-import { CacheModule } from '@nestjs/cache-manager';
-import { PrismaModule as BasePrismaModule } from 'nestjs-prisma';
-import { SystemModule } from '@domain/system/SystemModule';
-import { UserModule } from '@domain/user/UserModule';
-import { overrideLoggerPrefix } from '@domain/common';
-import { CacheRepository } from '@infra/cache/CacheRepository';
-import { CacheService } from '@domain/cache/CacheService';
-import { ApiV1Module } from './v1/ApiV1Module';
-import { ApiV2Module } from './v2/ApiV2Module';
-import { PluralModule } from '@domain/plural/PluralModule';
-import { SecurityModule } from '@domain/security/SecurityModule';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConfig } from './misc/jwt';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { RedisOptions } from 'iovalkey';
+import { CacheService } from "@domain/cache/CacheService";
+import { overrideLoggerPrefix } from "@domain/common";
+import { PluralModule } from "@domain/plural/PluralModule";
+import { SecurityModule } from "@domain/security/SecurityModule";
+import { SystemModule } from "@domain/system/SystemModule";
+import { UserModule } from "@domain/user/UserModule";
+import { CacheRepository } from "@infra/cache/CacheRepository";
+import KeyvValkey from "@keyv/valkey";
+import { BullModule } from "@nestjs/bullmq";
+import { CacheModule } from "@nestjs/cache-manager";
+import { ConsoleLogger, Global, Logger, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
+import { MailerModule } from "@nestjs-modules/mailer";
+import { plainToInstance } from "class-transformer";
+import { validateSync } from "class-validator";
+import { RedisOptions } from "iovalkey";
+import { PrismaModule as BasePrismaModule } from "nestjs-prisma";
+
+import { Config, ConfigInterface } from "./Config";
+import { jwtConfig } from "./misc/jwt";
+import { ApiV1Module } from "./v1/ApiV1Module";
+import { ApiV2Module } from "./v2/ApiV2Module";
 
 @Global()
 @Module({
@@ -44,7 +45,7 @@ import { RedisOptions } from 'iovalkey';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService<ConfigInterface>) => ({
-        stores: [new KeyvValkey(config.get('redis'))],
+        stores: [new KeyvValkey(config.get("redis"))],
       }),
       inject: [ConfigService],
     }),
@@ -53,9 +54,9 @@ import { RedisOptions } from 'iovalkey';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService<ConfigInterface>) => ({
-        transport: config.get('email').transport,
+        transport: config.get("email").transport,
         defaults: {
-          from: `"Plurali" <${config.get('email').from}>`,
+          from: `"Plurali" <${config.get("email").from}>`,
         },
       }),
     }),
@@ -67,10 +68,10 @@ import { RedisOptions } from 'iovalkey';
       useFactory: (config: ConfigService<ConfigInterface>) => ({
         explicitConnect: true,
         prismaOptions: {
-          log: config.get<boolean>('dev') ? ['warn', 'error'] : [],
+          log: config.get<boolean>("dev") ? ["warn", "error"] : [],
           datasources: {
             db: {
-              url: config.get<string>('db'),
+              url: config.get<string>("db"),
             },
           },
         },
@@ -81,7 +82,7 @@ import { RedisOptions } from 'iovalkey';
       imports: [ConfigModule],
       useFactory: (config: ConfigService<ConfigInterface>) => {
         return {
-          connection: config.get<RedisOptions>('redis'),
+          connection: config.get<RedisOptions>("redis"),
         };
       },
       inject: [ConfigService],
@@ -97,7 +98,7 @@ import { RedisOptions } from 'iovalkey';
   providers: [CacheRepository, CacheService],
   exports: [BullModule, CacheRepository, CacheService],
 })
-export class Kernel { }
+export class Kernel {}
 
 /**
  * @internal
@@ -119,7 +120,7 @@ export const serverLogger = overrideLoggerPrefix(new ConsoleLogger());
   ],
   exports: [Kernel, ConsoleLogger, Logger],
 })
-export class ServerKernel { }
+export class ServerKernel {}
 
 @Global()
 @Module({
@@ -127,4 +128,4 @@ export class ServerKernel { }
   // microservices add their own logger
   exports: [Kernel],
 })
-export class MicroserviceKernel { }
+export class MicroserviceKernel {}

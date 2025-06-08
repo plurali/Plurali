@@ -1,10 +1,10 @@
-import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { RedisOptions } from 'iovalkey';
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { RedisOptions } from "iovalkey";
 
 export enum Environment {
-  Development = 'development',
-  Production = 'production',
-  Test = 'test',
+  Development = "development",
+  Production = "production",
+  Test = "test",
 }
 
 export interface ServerConfig {
@@ -109,11 +109,11 @@ export class Config implements ConfigInterface {
 
   @IsString()
   @IsOptional()
-  protected PLURAL_API = 'https://v2.apparyllis.com/v1';
+  protected PLURAL_API = "https://v2.apparyllis.com/v1";
 
   @IsString()
   @IsOptional()
-  protected PLURAL_WS = 'wss://v2.apparyllis.com/v1/socket';
+  protected PLURAL_WS = "wss://v2.apparyllis.com/v1/socket";
 
   @IsBoolean()
   protected PLURAL_OBSERVER_FORK: boolean;
@@ -128,7 +128,7 @@ export class Config implements ConfigInterface {
   protected JWT_SECRET: string;
 
   @IsString()
-  protected EMAIL_FROM: string = 'plurali@plurali.icu';
+  protected EMAIL_FROM: string = "plurali@plurali.icu";
 
   @IsString()
   protected EMAIL_TRANSPORT: string;

@@ -1,20 +1,21 @@
-import { Controller, Get, Param } from '@nestjs/common';
-import { SystemRepository } from '@domain/system/SystemRepository';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SystemDto } from '@app/v2/dto/system/SystemDto';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { BaseController } from '../BaseController';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { InvalidRequestException } from '@app/v2/exception/InvalidRequestException';
+import { ApiError } from "@app/v2/dto/response/errors";
+import { SystemDto } from "@app/v2/dto/system/SystemDto";
+import { InvalidRequestException } from "@app/v2/exception/InvalidRequestException";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { Controller, Get, Param } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/public/system/:system',
-  version: '2',
+  path: "/public/system/:system",
+  version: "2",
 })
-@ApiTags('SystemPublic')
+@ApiTags("SystemPublic")
 @ApiExtraModels(SystemDto)
 export class PublicSystemController extends BaseController {
   constructor(
@@ -24,11 +25,11 @@ export class PublicSystemController extends BaseController {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, SystemDto))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
-  public async view(@Param('system') systemId: string): Promise<ApiDataResponse<SystemDto>> {
+  public async view(@Param("system") systemId: string): Promise<ApiDataResponse<SystemDto>> {
     const system = await this.system.findPublicBase(systemId, {
       user: true,
     });

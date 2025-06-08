@@ -1,10 +1,11 @@
-import { Config, PluralConfig } from '@app/Config';
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import axios, { AxiosInstance } from 'axios';
-import { PluralMemberEntry } from './types/rest/members';
-import { MemberWithSystem, SystemWithUser } from '@domain/common/types';
-import { PluralUserEntry } from './types/rest/user';
+import { Config, PluralConfig } from "@app/Config";
+import { MemberWithSystem, SystemWithUser } from "@domain/common/types";
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import axios, { AxiosInstance } from "axios";
+
+import { PluralMemberEntry } from "./types/rest/members";
+import { PluralUserEntry } from "./types/rest/user";
 
 @Injectable()
 export class PluralRestService {
@@ -12,7 +13,7 @@ export class PluralRestService {
 
   constructor(config: ConfigService<Config>) {
     this.httpClient = axios.create({
-      baseURL: config.get<PluralConfig>('plural').apiEndpoint,
+      baseURL: config.get<PluralConfig>("plural").apiEndpoint,
     });
   }
 
@@ -27,7 +28,7 @@ export class PluralRestService {
       return (
         await this.httpClient.request<PluralMemberEntry[]>({
           url: `/members/${systemId}`,
-          method: 'GET',
+          method: "GET",
           headers: {
             Authorization,
           },
@@ -47,7 +48,7 @@ export class PluralRestService {
       return (
         await this.httpClient.request<PluralMemberEntry>({
           url: `/member/${systemId}/${memberId}`,
-          method: 'GET',
+          method: "GET",
           headers: {
             Authorization,
           },
@@ -59,15 +60,15 @@ export class PluralRestService {
   }
 
   async findUserForId(
-    userId: string | 'me',
+    userId: string | "me",
     Authorization: string,
     override?: string,
   ): Promise<PluralUserEntry | null> {
     try {
       const data = (
         await this.httpClient.request<PluralUserEntry>({
-          url: !override && userId === 'me' ? `/me` : `/user/${override ?? userId}`,
-          method: 'GET',
+          url: !override && userId === "me" ? `/me` : `/user/${override ?? userId}`,
+          method: "GET",
           headers: {
             Authorization,
           },

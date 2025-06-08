@@ -1,32 +1,32 @@
-import { CurrentUser } from '@app/v1/context/auth/CurrentUser';
-import { AuthGuard } from '@app/v1/context/auth/AuthGuard';
-import { Ok, Status, StatusMap } from '@app/v1/dto/Status';
-import { UserResponse } from '@app/v1/dto/user/response/UserResponse';
-import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
-import { Prisma, User, UserRole } from '@prisma/client';
-import { UpdateUserRequest } from '@app/v1/dto/user/request/UpdateUserRequest';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { UserRepository } from '@domain/user/UserRepository';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { CacheService } from '@domain/cache/CacheService';
-import { UserDto } from '@app/v1/dto/user/UserDto';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/v1/misc/swagger';
-import { StatusException } from '@app/v1/exception/StatusException';
-import { UserService } from '@domain/user/UserService';
-import { SystemAlreadyAssociatedException } from '@app/v1/exception/SystemAlreadyAssociatedException';
-import { SystemRepository } from '@domain/system/SystemRepository';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { AuthGuard } from "@app/v1/context/auth/AuthGuard";
+import { CurrentUser } from "@app/v1/context/auth/CurrentUser";
+import { Ok, Status, StatusMap } from "@app/v1/dto/Status";
+import { UpdateUserRequest } from "@app/v1/dto/user/request/UpdateUserRequest";
+import { UserResponse } from "@app/v1/dto/user/response/UserResponse";
+import { UserDto } from "@app/v1/dto/user/UserDto";
+import { StatusException } from "@app/v1/exception/StatusException";
+import { SystemAlreadyAssociatedException } from "@app/v1/exception/SystemAlreadyAssociatedException";
+import { error, ok } from "@app/v1/misc/swagger";
+import { CacheService } from "@domain/cache/CacheService";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { SystemRepository } from "@domain/system/SystemRepository";
+import { UserRepository } from "@domain/user/UserRepository";
+import { UserService } from "@domain/user/UserService";
+import { Body, Controller, Get, Inject, Post, UseGuards } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { Prisma, User, UserRole } from "@prisma/client";
 
 @Controller({
-  path: '/user',
-  version: '1',
+  path: "/user",
+  version: "1",
 })
-@ApiTags('UserV1')
-@ApiSecurity('bearer')
+@ApiTags("UserV1")
+@ApiSecurity("bearer")
 @ApiExtraModels(UserResponse)
 export class UserController {
   constructor(
-    @Inject('PluralRestServiceBase') private readonly rest: PluralRestService,
+    @Inject("PluralRestServiceBase") private readonly rest: PluralRestService,
     private readonly cache: CacheService,
     private readonly userService: UserService,
     private readonly users: UserRepository,
@@ -34,7 +34,7 @@ export class UserController {
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('/')
+  @Get("/")
   @ApiResponse(ok(200, UserResponse))
   @ApiResponse(error(401, StatusMap.NotAuthenticated))
   async me(@CurrentUser() user: User): Promise<Ok<UserResponse>> {
@@ -42,7 +42,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('/')
+  @Post("/")
   @ApiResponse(ok(200, UserResponse))
   @ApiResponse(error(401, StatusMap.NotAuthenticated, StatusMap.SystemAlreadyAssociated))
   async update(@CurrentUser() user: User, @Body() data: UpdateUserRequest): Promise<Ok<UserResponse>> {
@@ -50,7 +50,7 @@ export class UserController {
     let rebuild = false;
 
     if (notEmpty(data.pluralKey)) {
-      const plural = await this.rest.findUserForId('me', data.pluralKey);
+      const plural = await this.rest.findUserForId("me", data.pluralKey);
 
       if (plural) {
         const alreadyAssociated = !!(await this.systems.findUnique({
@@ -67,7 +67,7 @@ export class UserController {
         }
       }
 
-      update.pluralAccessToken = !!plural ? data.pluralKey : null;
+      update.pluralAccessToken = plural ? data.pluralKey : null;
       rebuild = true;
     }
 

@@ -1,11 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Cache } from 'cache-manager';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { CacheNamespace } from './utils.js';
-import { LazyCachedResult } from './types.js';
-import { RedisCommander } from 'iovalkey';
-import Keyv from 'keyv';
-import KeyvValkey from '@keyv/valkey';
+import KeyvValkey from "@keyv/valkey";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Inject, Injectable } from "@nestjs/common";
+import { Cache } from "cache-manager";
+import { RedisCommander } from "iovalkey";
+import Keyv from "keyv";
+
+import { LazyCachedResult } from "./types.js";
+import { CacheNamespace } from "./utils.js";
 
 @Injectable()
 export class CacheRepository {
@@ -27,10 +28,10 @@ export class CacheRepository {
       return (this.cache.stores[this._redisStoreIdx] as Keyv).store.redis as RedisCommander;
     }
 
-    const idx = this.cache.stores.findIndex(keyv => keyv.store instanceof KeyvValkey);
+    const idx = this.cache.stores.findIndex((keyv) => keyv.store instanceof KeyvValkey);
 
     if (idx === null) {
-      throw new Error('Called getUnderlyingRedis() but Redis store cannot be found');
+      throw new Error("Called getUnderlyingRedis() but Redis store cannot be found");
     }
 
     this._redisStoreIdx = idx;
@@ -40,13 +41,13 @@ export class CacheRepository {
   public async keys(pattern: string): Promise<string[]> {
     const redis = this.getUnderlyingRedis();
     const keys: string[] = [];
-    let cursor = '0';
+    let cursor = "0";
 
     do {
-      const [nextCursor, foundKeys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100);
+      const [nextCursor, foundKeys] = await redis.scan(cursor, "MATCH", pattern, "COUNT", 100);
       cursor = nextCursor;
       keys.push(...foundKeys);
-    } while (cursor !== '0');
+    } while (cursor !== "0");
 
     return keys;
   }

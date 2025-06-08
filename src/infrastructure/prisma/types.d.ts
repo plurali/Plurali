@@ -1,6 +1,7 @@
-import { ExistingProvider, InjectionToken, Provider, Type } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { PrismaRepository } from './PrismaRepository';
+import { ExistingProvider, InjectionToken, Provider, Type } from "@nestjs/common";
+import { PrismaClient } from "@prisma/client";
+
+import { PrismaRepository } from "./PrismaRepository";
 
 export type KeysMatching<T, V> = { [K in keyof T]-?: T[K] extends V ? K : never }[keyof T];
 
@@ -18,7 +19,7 @@ export interface CustomRepositoryProviderOptionsBase<N extends PrismaModelName =
 export type CustomRepositoryProviderOptions<N extends PrismaModelName = PrismaModelName> =
   | (DistributiveOmit<
       Exclude<Provider<PrismaRepositoryType<N>>, Type | ExistingProvider> | ExistingProvider<PrismaRepository<N>>,
-      'provide'
+      "provide"
     > &
       CustomRepositoryProviderOptionsBase<N>)
   | Type<PrismaRepository<N>>;
@@ -35,7 +36,7 @@ export type PrismaRepositoryType<N extends PrismaModelName = PrismaModelName> = 
 
 export type PrismaModelName<M = any> = KeysMatching<
   PrismaClient,
-  { create(args: { data: any }): ReturnType<Prisma.PrismaPromise<M>['then']> }
+  { create(args: { data: any }): ReturnType<Prisma.PrismaPromise<M>["then"]> }
 >;
 
 export type PrismaDelegate<N extends PrismaModelName> = PrismaClient[N];
@@ -45,4 +46,4 @@ export type PrismaDelegateFuncArgs<N extends PrismaModelName, F extends keyof Pr
   PrismaDelegate<N>[F]
 >[0];
 
-export type PrismaTx = Parameters<Parameters<PrismaClient['$transaction']>[0]>[0];
+export type PrismaTx = Parameters<Parameters<PrismaClient["$transaction"]>[0]>[0];

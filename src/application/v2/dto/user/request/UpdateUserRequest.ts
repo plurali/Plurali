@@ -1,6 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { UpdateUserRequestInterface } from './UpdateUserRequestInterface';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsOptional, IsString } from "class-validator";
+
+import { UpdateUserRequestInterface } from "./UpdateUserRequestInterface";
 
 export class UpdateUserRequest implements UpdateUserRequestInterface {
   @IsString()
@@ -16,6 +17,6 @@ export class UpdateUserRequest implements UpdateUserRequestInterface {
 
   @IsString()
   @IsOptional()
-  @ApiProperty({ description: 'Admin-only (for debugging/testing)' })
+  @ApiProperty({ description: "Admin-only (for debugging/testing)" })
   public systemIdOverride: string | null = null;
 }

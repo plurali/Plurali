@@ -1,20 +1,21 @@
-import { Controller, Get, HttpCode, Param } from '@nestjs/common';
-import { Visibility } from '@prisma/client';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { ValueFieldDto } from '@app/v2/dto/field/ValueFieldDto';
-import { BaseController } from '../../BaseController';
+import { ValueFieldDto } from "@app/v2/dto/field/ValueFieldDto";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { Controller, Get, HttpCode, Param } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Visibility } from "@prisma/client";
+
+import { BaseController } from "../../BaseController";
 
 @Controller({
-  path: '/public/system/:system/member/:member/field',
-  version: '2',
+  path: "/public/system/:system/member/:member/field",
+  version: "2",
 })
-@ApiTags('MemberFieldPublic')
+@ApiTags("MemberFieldPublic")
 @ApiExtraModels(ValueFieldDto)
 export class PublicMemberFieldController extends BaseController {
   constructor(
@@ -24,14 +25,14 @@ export class PublicMemberFieldController extends BaseController {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [ValueFieldDto]))
   @ApiResponse(error(404, ApiError.ResourceNotFound))
   @ApiResponse(error(400, ApiError.InvalidRequest))
   public async list(
-    @Param('system') systemId: string,
-    @Param('member') memberId: string,
+    @Param("system") systemId: string,
+    @Param("member") memberId: string,
   ): Promise<ApiDataResponse<ValueFieldDto[]>> {
     const member = await this.member.findFirst({
       where: {
@@ -60,11 +61,11 @@ export class PublicMemberFieldController extends BaseController {
 
     return this.data(
       member.system.fields
-        .map(f => {
+        .map((f) => {
           const value = plural.content.info[f.pluralId];
           return value ? ValueFieldDto.fromValue(f, value) : null;
         })
-        .filter(f => !!f),
+        .filter((f) => !!f),
     );
   }
 }

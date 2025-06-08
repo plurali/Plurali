@@ -1,35 +1,35 @@
-import type { Logger } from '@nestjs/common';
-import { Field, MemberFieldType as PrismaFieldType, System, User } from '@prisma/client';
-import slugify from 'slugify';
-import { BackgroundType as PrismaBackgroundType } from '@prisma/client';
-import { MemberFieldType } from '@domain/plural/utils';
-import { ObjectId } from 'bson';
+import { MemberFieldType } from "@domain/plural/utils";
+import type { Logger } from "@nestjs/common";
+import { Field, MemberFieldType as PrismaFieldType, System, User } from "@prisma/client";
+import { BackgroundType as PrismaBackgroundType } from "@prisma/client";
+import { ObjectId } from "bson";
+import slugify from "slugify";
 
-export const id = <T = object, K extends keyof V = 'id', V extends Record<any, any> = Record<any, any>>(
+export const id = <T = object, K extends keyof V = "id", V extends Record<any, any> = Record<any, any>>(
   val: T | (V & { [key in K]: T }),
-  key = 'id',
-): T => (typeof val === 'object' ? (val as any)[key] : val);
+  key = "id",
+): T => (typeof val === "object" ? (val as any)[key] : val);
 
 export const safeStringify = (val: unknown) => {
   const seen = new WeakSet();
   return JSON.stringify(val, function (_, value) {
-    if (typeof value === 'object' && value !== null) {
+    if (typeof value === "object" && value !== null) {
       if (seen.has(value)) {
-        return '[circular]';
+        return "[circular]";
       }
       seen.add(value);
     }
-    if (typeof value === 'bigint') {
-      return value.toString() + 'n';
+    if (typeof value === "bigint") {
+      return value.toString() + "n";
     }
-    if (typeof value === 'undefined') {
-      return '__undefined__';
+    if (typeof value === "undefined") {
+      return "__undefined__";
     }
     return value;
   });
 };
 
-export const overrideLoggerPrefix = <T = Logger>(logger: T, prefix = 'Server'): T =>
+export const overrideLoggerPrefix = <T = Logger>(logger: T, prefix = "Server"): T =>
   Object.assign(logger as any, {
     // https://github.com/nestjs/nest/blob/85966703ac57a5b263ab5807033f6ac78548c0ef/packages/common/services/console-logger.service.ts#L206-L208
     formatPid(pid: number) {
@@ -48,8 +48,8 @@ export const isUrl = (url: string): boolean => {
 };
 
 export const generateRandomString = (length: number) => {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = "";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -72,13 +72,13 @@ export const assignFields = <T extends object, F extends Field>(obj: T, fields: 
   Object.assign({ fields }, obj);
 
 export enum BackgroundType {
-  Color = 'Color',
-  Image = 'Image',
+  Color = "Color",
+  Image = "Image",
 }
 
 export enum OwnerType {
-  Member = 'member',
-  System = 'system',
+  Member = "member",
+  System = "system",
 }
 
 export const convertBackgroundType = (type: PrismaBackgroundType): BackgroundType => BackgroundType[type];

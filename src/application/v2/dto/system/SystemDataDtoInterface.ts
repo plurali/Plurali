@@ -1,5 +1,6 @@
-import { Visibility } from '@prisma/client';
-import { BackgroundDataInterface } from '../partials/BackgroundDataInterface';
+import { Visibility } from "@prisma/client";
+
+import { BackgroundDataInterface } from "../partials/BackgroundDataInterface";
 
 export interface SystemDataDtoInterface {
   slug: string | null;

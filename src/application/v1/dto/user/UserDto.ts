@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { User as BaseUser, UserRole } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { User as BaseUser, UserRole } from "@prisma/client";
 
 /**
  * @deprecated

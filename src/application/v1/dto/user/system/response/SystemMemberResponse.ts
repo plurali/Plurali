@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { UserMemberDto } from '../../member/UserMemberDto';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { UserMemberDto } from "../../member/UserMemberDto";
 
 export class SystemMemberResponse {
   @ApiProperty()

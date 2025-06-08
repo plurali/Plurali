@@ -1,5 +1,6 @@
-import { IdentifiableEntityDtoInterface } from '@app/v2/types/response';
-import { SystemDataDtoInterface } from './SystemDataDtoInterface';
+import { IdentifiableEntityDtoInterface } from "@app/v2/types/response";
+
+import { SystemDataDtoInterface } from "./SystemDataDtoInterface";
 
 export interface SystemDtoInterface extends IdentifiableEntityDtoInterface {
   name: string;

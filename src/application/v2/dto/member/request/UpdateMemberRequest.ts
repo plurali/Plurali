@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Visibility } from '@prisma/client';
-import { IsEnum, IsHexColor, IsOptional, IsString } from 'class-validator';
-import { UpdateMemberRequestInterface } from './UpdateMemberRequestInterface';
+import { ApiProperty } from "@nestjs/swagger";
+import { Visibility } from "@prisma/client";
+import { IsEnum, IsHexColor, IsOptional, IsString } from "class-validator";
+
+import { UpdateMemberRequestInterface } from "./UpdateMemberRequestInterface";
 
 export class UpdateMemberRequest implements UpdateMemberRequestInterface {
   @IsString()

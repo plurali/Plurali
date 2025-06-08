@@ -1,6 +1,6 @@
-import { RequestWithUser } from '@app/v1/http/RequestWithUser';
-import { ExecutionContext, createParamDecorator } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { RequestWithUser } from "@app/v1/http/RequestWithUser";
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { User } from "@prisma/client";
 
 /**
  * Returns the user for an authenticated request.

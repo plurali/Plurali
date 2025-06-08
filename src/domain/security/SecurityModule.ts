@@ -1,9 +1,10 @@
-import { Global, Module } from '@nestjs/common';
-import { Hasher } from './hasher/Hasher';
-import { BcryptHasher } from './hasher/BcryptHasher';
-import { Authenticator } from './authenticator/Authenticator';
-import { UserAuthenticator } from './authenticator/user/UserAuthenticator';
-import { UserModule } from '@domain/user/UserModule';
+import { UserModule } from "@domain/user/UserModule";
+import { Global, Module } from "@nestjs/common";
+
+import { Authenticator } from "./authenticator/Authenticator";
+import { UserAuthenticator } from "./authenticator/user/UserAuthenticator";
+import { BcryptHasher } from "./hasher/BcryptHasher";
+import { Hasher } from "./hasher/Hasher";
 
 @Global()
 @Module({

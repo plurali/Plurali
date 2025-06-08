@@ -1,4 +1,4 @@
-import { BaseData, BaseEntry, VisibilityAttributes } from '.';
+import { BaseData, BaseEntry, VisibilityAttributes } from ".";
 
 export type PluralUserEntry = BaseEntry<UserContent>;
 

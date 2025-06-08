@@ -1,4 +1,27 @@
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { Page } from "@app/v2/context/pagination/Page";
+import { Take } from "@app/v2/context/pagination/Take";
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { MemberDto } from "@app/v2/dto/member/MemberDto";
+import { UpdateMemberRequest } from "@app/v2/dto/member/request/UpdateMemberRequest";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ApiWarning } from "@app/v2/dto/response/warning";
+import { InvalidRequestException } from "@app/v2/exception/InvalidRequestException";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { UnsupportedFileException } from "@app/v2/exception/UnsupportedFileException";
+import { UploadFailedException } from "@app/v2/exception/UploadFailedException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse, ApiPaginatedDataResponse } from "@app/v2/types/response";
+import { FileInterceptor, MemoryStorageFile, UploadedFile } from "@blazity/nest-file-fastify";
+import { assignSystem, assignUser } from "@domain/common";
+import { SystemWithUser } from "@domain/common/types";
+import { PluralCachedRestService } from "@domain/plural/PluralCachedRestService";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { MemberRepository } from "@domain/system/member/MemberRepository";
+import { StoragePrefix } from "@infra/storage/StoragePrefix";
+import { StorageService } from "@infra/storage/StorageService";
 import {
   Body,
   Controller,
@@ -10,41 +33,19 @@ import {
   Post,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { BackgroundType, Member, Prisma, System, User, Visibility } from '@prisma/client';
-import { FileInterceptor, UploadedFile, MemoryStorageFile } from '@blazity/nest-file-fastify';
-import * as mime from 'mime-types';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { assignSystem, assignUser } from '@domain/common';
-import { SystemWithUser } from '@domain/common/types';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { MemberRepository } from '@domain/system/member/MemberRepository';
-import { StorageService } from '@infra/storage/StorageService';
-import { StoragePrefix } from '@infra/storage/StoragePrefix';
-import { MemberDto } from '@app/v2/dto/member/MemberDto';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { InvalidRequestException } from '@app/v2/exception/InvalidRequestException';
-import { PluralCachedRestService } from '@domain/plural/PluralCachedRestService';
-import { ApiDataResponse, ApiPaginatedDataResponse } from '@app/v2/types/response';
-import { Page } from '@app/v2/context/pagination/Page';
-import { Take } from '@app/v2/context/pagination/Take';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { UnsupportedFileException } from '@app/v2/exception/UnsupportedFileException';
-import { UploadFailedException } from '@app/v2/exception/UploadFailedException';
-import { ApiWarning } from '@app/v2/dto/response/warning';
-import { UpdateMemberRequest } from '@app/v2/dto/member/request/UpdateMemberRequest';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { BaseController } from '../BaseController';
+} from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { BackgroundType, Member, Prisma, System, User, Visibility } from "@prisma/client";
+import * as mime from "mime-types";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/member',
-  version: '2',
+  path: "/member",
+  version: "2",
 })
-@ApiTags('Member')
-@ApiSecurity('bearer')
+@ApiTags("Member")
+@ApiSecurity("bearer")
 @ApiExtraModels(MemberDto)
 export class MemberController extends BaseController {
   constructor(
@@ -56,7 +57,7 @@ export class MemberController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [MemberDto]))
   @ApiResponse(error(400, ApiError.InvalidPluralKey, ApiError.InvalidRequest))
@@ -87,7 +88,7 @@ export class MemberController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Get('/:id')
+  @Get("/:id")
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(error(400, ApiError.InvalidPluralKey, ApiError.InvalidRequest))
@@ -95,7 +96,7 @@ export class MemberController extends BaseController {
   public async view(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('id') id: string,
+    @Param("id") id: string,
   ): Promise<ApiDataResponse<MemberDto>> {
     return this.data(
       await this.makeDto(await this.findOrFail(system, id), await this.makeSystemWithUser(system, user)),
@@ -103,7 +104,7 @@ export class MemberController extends BaseController {
   }
 
   @UseGuards(SystemGuard)
-  @Patch('/:member')
+  @Patch("/:member")
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(error(400, ApiError.InvalidPluralKey, ApiError.InvalidRequest))
@@ -111,7 +112,7 @@ export class MemberController extends BaseController {
   public async update(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('member') memberId: string,
+    @Param("member") memberId: string,
     @Body() data: UpdateMemberRequest,
   ): Promise<ApiDataResponse<MemberDto>> {
     let member = await this.findOrFail(system, memberId);
@@ -143,9 +144,9 @@ export class MemberController extends BaseController {
     return this.data(await this.makeDto(member, await this.makeSystemWithUser(system, user)));
   }
 
-  @Post('/:member/background')
+  @Post("/:member/background")
   @UseGuards(SystemGuard)
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor("file"))
   @HttpCode(200)
   @ApiResponse(ok(200, MemberDto))
   @ApiResponse(
@@ -155,12 +156,12 @@ export class MemberController extends BaseController {
   async updateBackground(
     @CurrentSystem() system: System,
     @CurrentUser() user: User,
-    @Param('member') memberId: string,
+    @Param("member") memberId: string,
     @UploadedFile() file: MemoryStorageFile,
   ) {
     let member = await this.findOrFail(system, memberId);
 
-    if (!file.mimetype.startsWith('image/')) {
+    if (!file.mimetype.startsWith("image/")) {
       throw new UnsupportedFileException();
     }
 
@@ -224,10 +225,10 @@ export class MemberController extends BaseController {
   protected async makeDtos(members: Member[], system: SystemWithUser): Promise<MemberDto[]> {
     const plurals = await this.plural.findSpecificMembers(system, members);
     return members
-      .map(member => {
+      .map((member) => {
         const plural = plurals.get(member.pluralId);
         return plural ? MemberDto.from(assignSystem(member, system), plural) : null;
       })
-      .filter(m => !!m);
+      .filter((m) => !!m);
   }
 }

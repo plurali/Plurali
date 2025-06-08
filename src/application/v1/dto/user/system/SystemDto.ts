@@ -1,9 +1,10 @@
-import { PluralUserEntry } from '@domain/plural/types/rest/user';
-import { UserDataDto } from '../UserDataDto';
-import { UserFieldDto } from '../field/UserFieldDto';
-import { parseAvatar } from '@domain/plural/utils';
-import { SystemWithFields } from '@domain/common/types';
-import { ApiProperty } from '@nestjs/swagger';
+import { SystemWithFields } from "@domain/common/types";
+import { PluralUserEntry } from "@domain/plural/types/rest/user";
+import { parseAvatar } from "@domain/plural/utils";
+import { ApiProperty } from "@nestjs/swagger";
+
+import { UserFieldDto } from "../field/UserFieldDto";
+import { UserDataDto } from "../UserDataDto";
 
 /**
  * @deprecated

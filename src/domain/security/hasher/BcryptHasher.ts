@@ -1,5 +1,6 @@
-import { Hasher } from './Hasher';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
+
+import { Hasher } from "./Hasher";
 
 export class BcryptHasher extends Hasher {
   hash(plain: string): string {

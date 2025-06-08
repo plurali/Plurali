@@ -1,27 +1,28 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { BaseController } from '../BaseController';
-import { CurrentUser } from '@app/v2/context/auth/CurrentUser';
-import { NotificationService } from '@domain/notification/NotificationService';
-import { NotificationDto } from '@app/v2/dto/notification/NotificationDto';
+import { CurrentUser } from "@app/v2/context/auth/CurrentUser";
+import { NotificationDto } from "@app/v2/dto/notification/NotificationDto";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { NotificationService } from "@domain/notification/NotificationService";
+import { Controller, Get, HttpCode } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { User } from "@prisma/client";
+
+import { BaseController } from "../BaseController";
 
 @Controller({
-  path: '/notification',
-  version: '2',
+  path: "/notification",
+  version: "2",
 })
-@ApiTags('Notification')
-@ApiSecurity('bearer')
+@ApiTags("Notification")
+@ApiSecurity("bearer")
 @ApiExtraModels(NotificationDto)
 export class NotificationController extends BaseController {
   constructor(private readonly notifications: NotificationService) {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @ApiResponse(ok(200, [NotificationDto]))
   @ApiResponse(error(401, ApiError.NotAuthenticated))

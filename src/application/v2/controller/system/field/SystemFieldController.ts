@@ -1,30 +1,31 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, UseGuards } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { error, ok } from '@app/v2/misc/swagger';
-import { ApiError } from '@app/v2/dto/response/errors';
-import { ApiDataResponse } from '@app/v2/types/response';
-import { BaseController } from '../../BaseController';
-import { FieldDto } from '@app/v2/dto/field/FieldDto';
-import { SystemGuard } from '@app/v2/context/system/SystemGuard';
-import { CurrentSystem } from '@app/v2/context/system/CurrentSystem';
-import { Prisma, System } from '@prisma/client';
-import { FieldRepository } from '@domain/system/field/FieldRepository';
-import { ResourceNotFoundException } from '@app/v2/exception/ResourceNotFoundException';
-import { notEmpty, shouldUpdate } from '@app/misc/request';
-import { UpdateFieldRequest } from '@app/v2/dto/field/request/UpdateFieldRequest';
+import { notEmpty, shouldUpdate } from "@app/misc/request";
+import { CurrentSystem } from "@app/v2/context/system/CurrentSystem";
+import { SystemGuard } from "@app/v2/context/system/SystemGuard";
+import { FieldDto } from "@app/v2/dto/field/FieldDto";
+import { UpdateFieldRequest } from "@app/v2/dto/field/request/UpdateFieldRequest";
+import { ApiError } from "@app/v2/dto/response/errors";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
+import { error, ok } from "@app/v2/misc/swagger";
+import { ApiDataResponse } from "@app/v2/types/response";
+import { FieldRepository } from "@domain/system/field/FieldRepository";
+import { Body, Controller, Get, HttpCode, Param, Patch, UseGuards } from "@nestjs/common";
+import { ApiExtraModels, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Prisma, System } from "@prisma/client";
+
+import { BaseController } from "../../BaseController";
 
 @Controller({
-  path: '/system/field',
-  version: '2',
+  path: "/system/field",
+  version: "2",
 })
-@ApiTags('SystemField')
+@ApiTags("SystemField")
 @ApiExtraModels(FieldDto)
 export class SystemFieldController extends BaseController {
   constructor(private fields: FieldRepository) {
     super();
   }
 
-  @Get('/')
+  @Get("/")
   @HttpCode(200)
   @UseGuards(SystemGuard)
   @ApiResponse(ok(200, [FieldDto]))
@@ -36,10 +37,10 @@ export class SystemFieldController extends BaseController {
         systemId: system.id,
       },
     });
-    return this.data((fields ?? []).map(field => FieldDto.from(field)));
+    return this.data((fields ?? []).map((field) => FieldDto.from(field)));
   }
 
-  @Patch('/:field')
+  @Patch("/:field")
   @HttpCode(200)
   @UseGuards(SystemGuard)
   @ApiResponse(ok(200, FieldDto))
@@ -47,7 +48,7 @@ export class SystemFieldController extends BaseController {
   @ApiResponse(error(400, ApiError.InvalidRequest, ApiError.InvalidPluralKey))
   public async update(
     @CurrentSystem() system: System,
-    @Param('field') fieldId: string,
+    @Param("field") fieldId: string,
     @Body() data: UpdateFieldRequest,
   ): Promise<ApiDataResponse<FieldDto>> {
     let field = await this.fields.findFirst({

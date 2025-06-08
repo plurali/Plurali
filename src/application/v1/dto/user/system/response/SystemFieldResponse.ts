@@ -1,5 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { UserFieldDto } from '../../field/UserFieldDto';
+import { ApiProperty } from "@nestjs/swagger";
+
+import { UserFieldDto } from "../../field/UserFieldDto";
 
 export class SystemFieldResponse {
   @ApiProperty()

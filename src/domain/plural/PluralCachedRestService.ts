@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { PluralRestService } from './PluralRestService';
-import { ConfigService } from '@nestjs/config';
-import { Config } from '@app/Config';
-import { PluralMemberEntry } from './types/rest/members';
-import { PluralUserEntry } from './types/rest/user';
-import { CacheRepository } from '@infra/cache/CacheRepository';
-import { CacheNamespace } from '@infra/cache/utils';
-import { MemberWithSystem, SystemWithUser } from '@domain/common/types';
-import { Member } from '@prisma/client';
-import { assignSystem } from '@domain/common';
+import { Config } from "@app/Config";
+import { assignSystem } from "@domain/common";
+import { MemberWithSystem, SystemWithUser } from "@domain/common/types";
+import { CacheRepository } from "@infra/cache/CacheRepository";
+import { CacheNamespace } from "@infra/cache/utils";
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Member } from "@prisma/client";
+
+import { PluralRestService } from "./PluralRestService";
+import { PluralMemberEntry } from "./types/rest/members";
+import { PluralUserEntry } from "./types/rest/user";
 
 @Injectable()
 export class PluralCachedRestService extends PluralRestService {
@@ -44,14 +45,14 @@ export class PluralCachedRestService extends PluralRestService {
 
     const result = new Map(
       Object.entries(
-        (await this.cache.cache.mget(members.map(m => CacheRepository.createKey(CacheNamespace.Member, key(m)))))
-          .map(data => {
-            const obj: PluralMemberEntry | null = typeof data === 'string' ? JSON.parse(data) : null;
+        (await this.cache.cache.mget(members.map((m) => CacheRepository.createKey(CacheNamespace.Member, key(m)))))
+          .map((data) => {
+            const obj: PluralMemberEntry | null = typeof data === "string" ? JSON.parse(data) : null;
             if (!obj) return null;
 
             return { [obj.id]: obj };
           })
-          .filter(data => !!data)
+          .filter((data) => !!data)
           .reduce((prev, curr) => Object.assign(prev, curr), {}),
       ),
     );
@@ -59,8 +60,8 @@ export class PluralCachedRestService extends PluralRestService {
     (
       await Promise.all(
         members
-          .filter(m => !result.has(m.pluralId))
-          .map(async m => {
+          .filter((m) => !result.has(m.pluralId))
+          .map(async (m) => {
             const data = await super.findMember(assignSystem(m, system));
             if (!data) return null;
 
@@ -68,9 +69,9 @@ export class PluralCachedRestService extends PluralRestService {
 
             return data;
           })
-          .filter(data => !!data),
+          .filter((data) => !!data),
       )
-    ).forEach(r => result.set(r.id, r));
+    ).forEach((r) => result.set(r.id, r));
 
     return result;
   }
@@ -89,7 +90,7 @@ export class PluralCachedRestService extends PluralRestService {
     return (
       await this.cache.lazy<PluralUserEntry>(
         CacheNamespace.System,
-        `PluraliUser${userId}_Override${override ?? 'Unset'}`,
+        `PluraliUser${userId}_Override${override ?? "Unset"}`,
         () => super.findUserForId(userId, Authorization, override),
       )
     ).data;

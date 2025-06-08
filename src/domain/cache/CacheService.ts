@@ -1,16 +1,16 @@
-import { ConsoleLogger, Inject, Injectable } from '@nestjs/common';
-import { System, Member, Visibility, User } from '@prisma/client';
-import { CacheRepository } from '@infra/cache/CacheRepository';
-import { CacheNamespace } from '@infra/cache/utils';
-import { createSlug } from '@domain/common';
-import { PluralRestService } from '@domain/plural/PluralRestService';
-import { SystemWithUser } from '@domain/common/types';
-import { PluralUserEntry } from '@domain/plural/types/rest/user';
-import { PluralVisibility, parseFieldType, parseVisibility } from '@domain/plural/utils';
-import { PluralMemberEntry } from '@domain/plural/types/rest/members';
-import { PrismaService } from 'nestjs-prisma';
-import { PrismaTx } from '@infra/prisma/types';
-import { captureException } from '@sentry/node';
+import { createSlug } from "@domain/common";
+import { SystemWithUser } from "@domain/common/types";
+import { PluralRestService } from "@domain/plural/PluralRestService";
+import { PluralMemberEntry } from "@domain/plural/types/rest/members";
+import { PluralUserEntry } from "@domain/plural/types/rest/user";
+import { parseFieldType, parseVisibility, PluralVisibility } from "@domain/plural/utils";
+import { CacheRepository } from "@infra/cache/CacheRepository";
+import { CacheNamespace } from "@infra/cache/utils";
+import { PrismaTx } from "@infra/prisma/types";
+import { ConsoleLogger, Inject, Injectable } from "@nestjs/common";
+import { Member, System, User, Visibility } from "@prisma/client";
+import { captureException } from "@sentry/node";
+import { PrismaService } from "nestjs-prisma";
 
 const txConfig = {
   maxWait: 50000000,
@@ -23,7 +23,7 @@ export class CacheService {
     private readonly prisma: PrismaService,
     private readonly repository: CacheRepository,
     private readonly logger: ConsoleLogger,
-    @Inject('PluralRestServiceBase') private readonly plural: PluralRestService,
+    @Inject("PluralRestServiceBase") private readonly plural: PluralRestService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -35,7 +35,7 @@ export class CacheService {
     await tx.member.deleteMany({
       where: {
         pluralId: {
-          notIn: pluralMembers.map(member => member.id),
+          notIn: pluralMembers.map((member) => member.id),
         },
         systemId: system.id,
       },
@@ -150,7 +150,7 @@ export class CacheService {
     let pluralUser: PluralUserEntry | null = null;
     if (user.pluralAccessToken) {
       try {
-        pluralUser = await this.plural.findUserForId('me', user.pluralAccessToken);
+        pluralUser = await this.plural.findUserForId("me", user.pluralAccessToken);
       } catch (error) {
         captureException(error);
         this.logger.error(`Failed to get data for ${user.id}`, error);
@@ -237,10 +237,10 @@ export class CacheService {
 
     if (useTransacction) {
       await this.prisma.$transaction(
-        async tx => await this.rebuildMembers(Object.assign(user.system, { user }), tx),
+        async (tx) => await this.rebuildMembers(Object.assign(user.system, { user }), tx),
         txConfig,
       );
-      await this.prisma.$transaction(async tx => await this.rebuildFields(user.system, pluralUser, tx), txConfig);
+      await this.prisma.$transaction(async (tx) => await this.rebuildFields(user.system, pluralUser, tx), txConfig);
     } else {
       await this.rebuildMembers(Object.assign(user.system, { user }));
       await this.rebuildFields(user.system, pluralUser);
@@ -248,7 +248,7 @@ export class CacheService {
   }
 
   async rebuild(): Promise<void> {
-    this.logger.log('Starting a cache rebuild job');
+    this.logger.log("Starting a cache rebuild job");
     const users = await this.prisma.user.findMany({
       include: {
         system: {
@@ -264,7 +264,7 @@ export class CacheService {
     for (const user of users) {
       await this.rebuildFor(user, true);
     }
-    this.logger.log('Cache rebuild job complete');
+    this.logger.log("Cache rebuild job complete");
   }
 
   static createSystemKey(system: System) {
@@ -282,7 +282,6 @@ export class CacheService {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async clearSystem(system: System): Promise<void> {
     const keys = await this.repository.keys(`*SystemSID${system.pluralId}*`);
     await this.repository.cache.mdel(keys);

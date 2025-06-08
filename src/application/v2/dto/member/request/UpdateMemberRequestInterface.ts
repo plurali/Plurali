@@ -1,4 +1,4 @@
-import { Visibility } from '@prisma/client';
+import { Visibility } from "@prisma/client";
 
 export interface UpdateMemberRequestInterface {
   visibility: Visibility | null;

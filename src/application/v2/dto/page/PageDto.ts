@@ -1,10 +1,11 @@
-import { OwnerType, Page, Visibility } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
-import { PageDtoInterface } from './PageDtoInterface';
+import { ApiProperty } from "@nestjs/swagger";
+import { OwnerType, Page, Visibility } from "@prisma/client";
+
+import { PageDtoInterface } from "./PageDtoInterface";
 
 export class PageDto implements PageDtoInterface {
-  @ApiProperty({ default: 'page' })
-  public type = 'page';
+  @ApiProperty({ default: "page" })
+  public type = "page";
 
   @ApiProperty()
   public id: string;

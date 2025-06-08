@@ -1,6 +1,6 @@
-import { BackgroundType } from '@domain/common';
-import { HasBackground } from '@domain/common/types';
-import { System, Visibility } from '@prisma/client';
+import { BackgroundType } from "@domain/common";
+import { HasBackground } from "@domain/common/types";
+import { System, Visibility } from "@prisma/client";
 
 /**
  * @deprecated v2 - UserData->System

@@ -1,6 +1,6 @@
-import { ApiErrorMessage } from '../dto/response/errors';
-import { ApiError } from '../dto/response/errors';
-import { ApiWarning } from '../dto/response/warning';
+import { ApiErrorMessage } from "../dto/response/errors";
+import { ApiError } from "../dto/response/errors";
+import { ApiWarning } from "../dto/response/warning";
 
 export interface EntityDtoInterface {
   type: string;

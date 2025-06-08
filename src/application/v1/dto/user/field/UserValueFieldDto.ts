@@ -1,6 +1,7 @@
-import { Field, MemberFieldType, Visibility } from '@prisma/client';
-import { UserFieldDataDto } from './UserFieldDataDto';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
+import { Field, MemberFieldType, Visibility } from "@prisma/client";
+
+import { UserFieldDataDto } from "./UserFieldDataDto";
 
 /**
  * @deprecated

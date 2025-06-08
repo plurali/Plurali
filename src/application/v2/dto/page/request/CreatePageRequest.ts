@@ -1,7 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { CreatePageRequestInterface } from './CreatePageRequestInterface';
-import { Visibility } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { Visibility } from "@prisma/client";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+
+import { CreatePageRequestInterface } from "./CreatePageRequestInterface";
 
 export class CreatePageRequest implements CreatePageRequestInterface {
   @IsString()
