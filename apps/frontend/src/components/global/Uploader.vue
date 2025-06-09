@@ -42,7 +42,7 @@ export default defineComponent({
     },
     accept: {
       type: Array as PropType<string[]>,
-      default: ["image/png", "image/jpeg", "image/avif", "image/gif", "image/webp"],
+      default: () => ["image/png", "image/jpeg", "image/avif", "image/gif", "image/webp"],
     },
   },
   emits: ["update:modelValue", "submit"],

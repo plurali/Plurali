@@ -6,7 +6,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-      <CustomField v-for="field of computedFields" :modifiable="modifiable" :field="field" />
+      <CustomField v-for="field of computedFields" :key="field.id" :field="field" :modifiable="modifiable" />
     </div>
   </div>
 </template>
@@ -16,12 +16,10 @@ import type { UserValueFieldDto } from "@app/v1/dto/user/field/UserValueFieldDto
 import { IdentificationIcon } from "@heroicons/vue/24/outline";
 import { computed, defineComponent, PropType, ref } from "vue";
 
-import Fetchable from "../Fetchable.vue";
 import CustomField from "./CustomField.vue";
 
 export default defineComponent({
   components: {
-    Fetchable,
     CustomField,
     IdentificationIcon,
   },
@@ -36,6 +34,7 @@ export default defineComponent({
     },
     title: {
       type: String,
+      default: "",
     },
     hideNoValues: {
       type: Boolean,
@@ -43,14 +42,14 @@ export default defineComponent({
     },
   },
   setup({ fields: _fields, hideNoValues }) {
-    const customFields = ref<(MemberField | MemberFieldWithValue)[] | null | false>(_fields);
+    const customFields = ref<(UserFieldDto | UserValueFieldDto)[] | null | false>(_fields);
 
     return {
       customFields,
       computedFields: computed(() =>
         customFields.value
           ? customFields.value.filter((field) => {
-              return hideNoValues ? (field as any).value?.length >= 1 : true;
+              return hideNoValues ? (field as UserValueFieldDto).value?.length >= 1 : true;
             })
           : [],
       ),

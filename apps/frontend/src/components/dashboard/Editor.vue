@@ -60,7 +60,7 @@ export default defineComponent({
 
     const editor = ref<EditorType | null>(null);
 
-    const onInit = (_: any, _editor: EditorType) => {
+    const onInit = (_: unknown, _editor: EditorType) => {
       editor.value = _editor;
     };
 
@@ -75,7 +75,6 @@ export default defineComponent({
 
     return {
       value,
-      initialValue,
       editor,
       init: {
         id: props.id,

@@ -20,9 +20,12 @@ export default defineComponent({
     Spinner,
   },
   props: {
-    result: {},
+    result: {
+      type: Object as PropType<unknown | false | null>,
+      default: null,
+    },
     retry: {
-      type: Function as PropType<() => any>,
+      type: Function as PropType<() => unknown>,
       required: false,
       default: () => () => {},
     },

@@ -8,7 +8,7 @@
 import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
 import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
 import { $memberPage, PageDtoInterface } from "@plurali/api-client";
-import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { computed, defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 
 import { wrapRequest } from "../../api";

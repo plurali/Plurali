@@ -10,7 +10,6 @@ import { useRouter } from "vue-router";
 
 import { formatError } from "../../api";
 import { verifyUserEmail } from "../../api/user";
-import Spinner from "../../components/Spinner.vue";
 import { flash, FlashType } from "../../store";
 import { getRouteParam } from "../../utils";
 

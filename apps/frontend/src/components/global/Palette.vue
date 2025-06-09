@@ -24,6 +24,7 @@ export default defineComponent({
   props: {
     modelValue: {
       type: String as PropType<string | null>,
+      default: null,
     },
   },
   emits: ["update:modelValue"],

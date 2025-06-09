@@ -16,34 +16,15 @@ import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { wrapRequest } from "../api";
-import { getMemberPage, getSystemPage } from "../api/public";
-import Button from "../components/Button.vue";
-import ButtonLink from "../components/ButtonLink.vue";
-import Color from "../components/global/color/ColorCircle.vue";
-import ColorCircle from "../components/global/color/ColorCircle.vue";
 import Fetchable from "../components/global/Fetchable.vue";
-import CustomFields from "../components/global/fields/CustomFields.vue";
-import MemberSummary from "../components/global/members/MemberSummary.vue";
 import Sanitized from "../components/global/Sanitized.vue";
 import UserContent from "../components/global/UserContent.vue";
-import Spinner from "../components/Spinner.vue";
-import Subtitle from "../components/Subtitle.vue";
-import Title from "../components/Title.vue";
 import { useGoBack } from "../composables/goBack";
 import { getRouteParam } from "../utils";
 
 export default defineComponent({
   components: {
-    MemberSummary,
-    ColorCircle,
-    CustomFields,
     Fetchable,
-    Spinner,
-    Title,
-    Subtitle,
-    ButtonLink,
-    Button,
-    Color,
     UserContent,
     Sanitized,
   },

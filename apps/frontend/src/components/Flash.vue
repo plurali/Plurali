@@ -22,6 +22,7 @@ export default defineComponent({
   props: {
     color: {
       type: String,
+      default: FlashType.Primary,
     },
   },
   setup({ color }) {

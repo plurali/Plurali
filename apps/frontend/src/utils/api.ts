@@ -3,7 +3,7 @@ import { $topbar } from "@plurali/common";
 
 import { clearFlashes, flash, FlashType } from "../store";
 
-export const wrapRequest = async <T extends object = {}>(
+export const wrapRequest = async <T extends object = object>(
   fn: () => Promise<ApiResponse<T>> | null,
 ): Promise<T | false> => {
   clearFlashes();

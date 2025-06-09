@@ -27,7 +27,7 @@ import { computed, defineComponent, PropType, ref } from "vue";
 import { useRoute } from "vue-router";
 
 import { formatError } from "../../../api";
-import { formatField, string } from "../../../api/fields";
+import { formatField } from "../../../api/fields";
 import { updateField } from "../../../api/system";
 import { flash, FlashType } from "../../../store";
 import ColorCircle from "../color/ColorCircle.vue";
@@ -35,10 +35,6 @@ import Sanitized from "../Sanitized.vue";
 
 export default defineComponent({
   components: { ColorCircle, Sanitized },
-  model: {
-    prop: "field",
-    event: "change",
-  },
   props: {
     field: {
       type: Object as PropType<UserFieldDto | UserValueFieldDto>,
@@ -57,7 +53,7 @@ export default defineComponent({
     const route = useRoute();
 
     const value = computed(() =>
-      (customField.value as any).value ? formatField(customField.value as any as UserValueFieldDto) : "",
+      (customField.value as UserValueFieldDto).value ? formatField(customField.value as UserValueFieldDto) : "",
     );
 
     const toggleVisibility = async () => {
@@ -74,7 +70,9 @@ export default defineComponent({
 
         customField.value = {
           ...res.data.field,
-          ...((customField.value as any).value ? { value: (customField.value as any).value } : {}),
+          ...((customField.value as UserValueFieldDto).value
+            ? { value: (customField.value as UserValueFieldDto).value }
+            : {}),
         };
         loading.value = false;
       } catch (e) {

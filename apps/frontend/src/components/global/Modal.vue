@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from "@headlessui/vue";
-import { CheckIcon, ExclamationTriangleIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { XMarkIcon } from "@heroicons/vue/24/outline";
 import { computed, defineComponent, PropType } from "vue";
 
 import Button from "../Button.vue";
@@ -93,9 +93,7 @@ export default defineComponent({
     TransitionChild,
     DialogPanel,
     DialogTitle,
-    CheckIcon,
     XMarkIcon,
-    ExclamationTriangleIcon,
     Button,
     Spinner,
   },

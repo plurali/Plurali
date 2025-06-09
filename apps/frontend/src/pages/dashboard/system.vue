@@ -20,27 +20,17 @@ import { defineComponent, onMounted, ref } from "vue";
 import { wrapRequest } from "../../api";
 import { getSystem } from "../../api/system";
 import Members from "../../components/dashboard/members/Members.vue";
-import ColorCircle from "../../components/global/color/ColorCircle.vue";
-import Color from "../../components/global/color/ColorCircle.vue";
 import Fetchable from "../../components/global/Fetchable.vue";
-import CustomFields from "../../components/global/fields/CustomFields.vue";
 import PageFields from "../../components/global/page/PageFields.vue";
 import SystemSummary from "../../components/global/system/SystemSummary.vue";
-import Subtitle from "../../components/Subtitle.vue";
-import Title from "../../components/Title.vue";
 import { withBackground } from "../../composables/background";
 import { useGoBack } from "../../composables/goBack";
 
 export default defineComponent({
   components: {
     SystemSummary,
-    Color,
     Fetchable,
     Members,
-    CustomFields,
-    Title,
-    Subtitle,
-    ColorCircle,
     PageFields,
   },
   setup() {
