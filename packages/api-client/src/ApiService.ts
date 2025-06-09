@@ -29,15 +29,17 @@ export class ApiService {
     this.client.defaults.baseURL = value;
   }
 
-  public handleException(e: any): ApiErrorResponse {
+  public handleException(_e: unknown): ApiErrorResponse {
+    const e = _e as AxiosError<any>;
+
     const result: ApiErrorResponse = {
       success: false,
-      statusCode: e?.response?.data?.status ?? e?.response?.status ?? e?.status ?? -1,
+      statusCode: e?.response?.data?.statusCode ?? e?.response?.data?.status ?? e?.response?.status ?? e?.status ?? -1,
       error: {
-        type: e?.response?.data?.error?.type ?? e?.error?.type ?? ApiError.UnknownError,
+        type: e?.response?.data?.error?.type ?? (_e as ApiErrorResponse)?.error?.type ?? ApiError.UnknownError,
         message: this.getErrorMessage(e),
       },
-      meta: e?.response?.data?.meta ?? e?.meta ?? {},
+      meta: e?.response?.data?.meta ?? (_e as ApiErrorResponse)?.meta ?? {},
     };
 
     console.log("handleException", { input: e, result });
@@ -46,21 +48,25 @@ export class ApiService {
   }
 
   // fuck me, what kind of state was I in to write this shit
-  public getErrorMessage(e: any | ApiError | AxiosError | ApiErrorResponse): string {
+  public getErrorMessage(e: unknown | ApiError | AxiosError | ApiErrorResponse): string {
     // only accept an object or a string
     if (!e || !["object", "string"].includes(typeof e)) return ApiErrorMessage[ApiError.UnknownError];
 
     if (typeof e === "object") {
       // api v1 error compatibility
-      if (typeof e?.response?.data?.error === "string") {
-        return e.response.data.error;
+      if (typeof (e as AxiosError<{ error?: string }>)?.response?.data?.error === "string") {
+        return (e as AxiosError<{ error: string }>).response!.data.error;
       }
 
       // find error message by it's type
-      e = apiError(e?.response?.data?.error?.type ?? e?.error?.type ?? e?.type);
+      e = apiError(
+        (e as AxiosError<ApiErrorResponse>)?.response?.data?.error?.type ??
+          (e as ApiErrorResponse)?.error?.type ??
+          (e as ApiErrorResponse["error"])?.type,
+      );
     }
 
-    if (e in ApiErrorMessage) {
+    if (typeof e === "string" && e in ApiErrorMessage) {
       return (ApiErrorMessage as any)[e];
     }
 
