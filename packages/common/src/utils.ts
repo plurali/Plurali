@@ -1,4 +1,4 @@
-import { Visibility } from '@plurali/api-client';
+import { Visibility } from "@plurali/api-client";
 
 export const getRouteParam = (val: unknown | string | string[]): string => String(Array.isArray(val) ? val[0] : val);
 
@@ -29,12 +29,12 @@ const boolToVisibility = (value: boolean): Visibility => {
 };
 
 export const parseVisibility = (entityOrVisibility: EntityOrVisibility) => {
-  if (typeof entityOrVisibility === 'boolean') {
+  if (typeof entityOrVisibility === "boolean") {
     return boolToVisibility(entityOrVisibility);
   }
 
-  if (typeof entityOrVisibility === 'object') {
-    if ('data' in entityOrVisibility) {
+  if (typeof entityOrVisibility === "object") {
+    if ("data" in entityOrVisibility) {
       return entityOrVisibility.data.visibility;
     }
 
