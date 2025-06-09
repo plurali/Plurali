@@ -1,5 +1,5 @@
-import { $api, ApiService } from '../ApiService';
-import { ApiResponse, AuthDtoInterface, AuthRequestInterface } from '../types';
+import { $api, ApiService } from "../ApiService";
+import { ApiResponse, AuthDtoInterface, AuthRequestInterface } from "../types";
 
 export class AuthService {
   constructor(private readonly api: ApiService) {}
@@ -7,8 +7,8 @@ export class AuthService {
   public async register(data: AuthRequestInterface): Promise<ApiResponse<AuthDtoInterface>> {
     try {
       const res = await this.api.client.request<ApiResponse<AuthDtoInterface>>({
-        url: '/v2/auth/register',
-        method: 'PUT',
+        url: "/v2/auth/register",
+        method: "PUT",
         data,
       });
 
@@ -26,8 +26,8 @@ export class AuthService {
   public async login(data: AuthRequestInterface): Promise<ApiResponse<AuthDtoInterface>> {
     try {
       const res = await this.api.client.request<ApiResponse<AuthDtoInterface>>({
-        url: '/v2/auth/login',
-        method: 'POST',
+        url: "/v2/auth/login",
+        method: "POST",
         data,
       });
 

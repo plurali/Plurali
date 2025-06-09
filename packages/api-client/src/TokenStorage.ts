@@ -2,7 +2,7 @@ export class TokenStorage {
   constructor(public readonly storageKey: string) {}
 
   get(): string | null {
-    return typeof window !== "undefined" ? localStorage.getItem(this.storageKey) ?? null : null;
+    return typeof window !== "undefined" ? (localStorage.getItem(this.storageKey) ?? null) : null;
   }
 
   set(value: string | null): void {
@@ -20,4 +20,4 @@ export class TokenStorage {
   }
 }
 
-export const $tokenStorage = new TokenStorage('_plurali_auth');
+export const $tokenStorage = new TokenStorage("_plurali_auth");

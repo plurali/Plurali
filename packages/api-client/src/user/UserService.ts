@@ -1,5 +1,11 @@
-import type { UserDtoInterface, UpdateUserRequestInterface, VerifyUserEmailRequestInterface, ApiResponse, OkInterface } from '../types'
-import { $api, ApiService } from '../ApiService';
+import { $api, ApiService } from "../ApiService";
+import type {
+  ApiResponse,
+  OkInterface,
+  UpdateUserRequestInterface,
+  UserDtoInterface,
+  VerifyUserEmailRequestInterface,
+} from "../types";
 
 export class UserService {
   constructor(private readonly api: ApiService) {}
@@ -8,8 +14,8 @@ export class UserService {
     try {
       return (
         await this.api.client.request<ApiResponse<UserDtoInterface>>({
-          url: '/v2/user',
-          method: 'GET',
+          url: "/v2/user",
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -21,8 +27,8 @@ export class UserService {
     try {
       return (
         await this.api.client.request<ApiResponse<UserDtoInterface>>({
-          url: '/v2/user',
-          method: 'PATCH',
+          url: "/v2/user",
+          method: "PATCH",
           data,
         })
       ).data;
@@ -35,8 +41,8 @@ export class UserService {
     try {
       return (
         await this.api.client.request<ApiResponse<OkInterface>>({
-          url: '/v2/user/resend-email',
-          method: 'POST',
+          url: "/v2/user/resend-email",
+          method: "POST",
         })
       ).data;
     } catch (error) {
@@ -48,8 +54,8 @@ export class UserService {
     try {
       return (
         await this.api.client.request<ApiResponse<UserDtoInterface>>({
-          url: '/v2/user/verify-email',
-          method: 'POST',
+          url: "/v2/user/verify-email",
+          method: "POST",
           data,
         })
       ).data;
