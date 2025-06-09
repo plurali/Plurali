@@ -1,2 +1,2 @@
 export * from "./tiny";
-export * from "./slate"
+export * from "./slate";
