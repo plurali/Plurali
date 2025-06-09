@@ -1,4 +1,4 @@
 // WIP
 export const htmlTagToSlateMap = {
-    "ul": "ul"
+  ul: "ul",
 };
