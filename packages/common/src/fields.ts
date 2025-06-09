@@ -51,9 +51,9 @@ export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean)
 };
 
 export function hasValue(
-  value: V1FieldDto | V1ValueFieldDto | V2FieldDto | V2ValueFieldDto,
-): value is V1ValueFieldDto | V2ValueFieldDto {
-  return value.hasOwnProperty("value");
+  field: V1FieldDto | V1ValueFieldDto | V2FieldDto | V2ValueFieldDto,
+): field is V1ValueFieldDto | V2ValueFieldDto {
+  return "value" in field;
 }
 
 export const formatField = (field: V1ValueFieldDto | V2ValueFieldDto): string | null => {
