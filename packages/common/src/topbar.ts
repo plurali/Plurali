@@ -1,14 +1,14 @@
-import topbar from 'topbar';
+import topbar from "topbar";
 
 const bar = topbar;
 
 bar.config({
   barColors: {
-    '0.3': '#c084fc',
-    '0.5': '#af74e8',
-    '0.75': '#9e64d4',
-    '0.95': '#8d54c0',
-    '1': '#7c45ad',
+    "0.3": "#c084fc",
+    "0.5": "#af74e8",
+    "0.75": "#9e64d4",
+    "0.95": "#8d54c0",
+    "1": "#7c45ad",
   },
 });
 
