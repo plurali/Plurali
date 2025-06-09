@@ -1,14 +1,18 @@
-import type { AxiosInstance, AxiosError } from 'axios';
-import axios from 'axios';
-import { TokenStorage, $tokenStorage } from './TokenStorage';
-import { apiUrl } from './env';
-import { ApiError, ApiErrorMessage, ApiErrorResponse } from './types';
-import { apiError } from './utils';
+import type { AxiosError, AxiosInstance } from "axios";
+import axios from "axios";
+
+import { apiUrl } from "./env";
+import { $tokenStorage, TokenStorage } from "./TokenStorage";
+import { ApiError, ApiErrorMessage, ApiErrorResponse } from "./types";
+import { apiError } from "./utils";
 
 export class ApiService {
   public readonly client: AxiosInstance;
 
-  constructor(private _baseUrl: string, public readonly token: TokenStorage) {
+  constructor(
+    private _baseUrl: string,
+    public readonly token: TokenStorage,
+  ) {
     this.client = axios.create({
       baseURL: _baseUrl,
     });
@@ -36,7 +40,7 @@ export class ApiService {
       meta: e?.response?.data?.meta ?? e?.meta ?? {},
     };
 
-    console.log("handleException", { input: e, result })
+    console.log("handleException", { input: e, result });
 
     return result;
   }
@@ -44,9 +48,9 @@ export class ApiService {
   // fuck me, what kind of state was I in to write this shit
   public getErrorMessage(e: any | ApiError | AxiosError | ApiErrorResponse): string {
     // only accept an object or a string
-    if (!e || !['object', 'string'].includes(typeof e)) return ApiErrorMessage[ApiError.UnknownError];
+    if (!e || !["object", "string"].includes(typeof e)) return ApiErrorMessage[ApiError.UnknownError];
 
-    if (typeof e === 'object') {
+    if (typeof e === "object") {
       // api v1 error compatibility
       if (typeof e?.response?.data?.error === "string") {
         return e.response.data.error;
@@ -63,7 +67,7 @@ export class ApiService {
     return e;
   }
 
-  public updateAuth(token?: string|null) {
+  public updateAuth(token?: string | null) {
     if (typeof token !== "undefined") {
       this.token.set(token);
     }

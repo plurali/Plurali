@@ -1,5 +1,5 @@
-import { $api, ApiService } from '../../ApiService';
-import { ApiResponse, MemberDtoInterface, PaginationRequestQuery, UpdateMemberRequestInterface } from '../../types';
+import { $api, ApiService } from "../../ApiService";
+import { ApiResponse, MemberDtoInterface, PaginationRequestQuery, UpdateMemberRequestInterface } from "../../types";
 
 export class MemberService {
   constructor(private readonly api: ApiService) {}
@@ -8,8 +8,8 @@ export class MemberService {
     try {
       return (
         await this.api.client.request<ApiResponse<MemberDtoInterface[]>>({
-          url: '/v2/member',
-          method: 'GET',
+          url: "/v2/member",
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -22,7 +22,7 @@ export class MemberService {
       return (
         await this.api.client.request<ApiResponse<MemberDtoInterface>>({
           url: `/v2/member/${id}`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -35,7 +35,7 @@ export class MemberService {
       return (
         await this.api.client.request<ApiResponse<MemberDtoInterface>>({
           url: `/v2/public/system/${systemId}/member/${memberId}`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -45,13 +45,13 @@ export class MemberService {
 
   public async getPublicMembers(
     systemId: string,
-    query?: PaginationRequestQuery
+    query?: PaginationRequestQuery,
   ): Promise<ApiResponse<MemberDtoInterface[]>> {
     try {
       return (
         await this.api.client.request<ApiResponse<MemberDtoInterface[]>>({
           url: `/v2/public/system/${systemId}/member`,
-          method: 'GET',
+          method: "GET",
           params: query,
         })
       ).data;
@@ -62,13 +62,13 @@ export class MemberService {
 
   public async updateMember(
     id: string,
-    data: Partial<UpdateMemberRequestInterface>
+    data: Partial<UpdateMemberRequestInterface>,
   ): Promise<ApiResponse<MemberDtoInterface>> {
     try {
       return (
         await this.api.client.request<ApiResponse<MemberDtoInterface>>({
           url: `/v2/member/${id}`,
-          method: 'PATCH',
+          method: "PATCH",
           data,
         })
       ).data;
@@ -88,7 +88,6 @@ export class MemberService {
       return this.api.handleException(error);
     }
   }
-  
 }
 
 export const $member = new MemberService($api);

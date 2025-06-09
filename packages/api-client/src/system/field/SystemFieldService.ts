@@ -1,6 +1,6 @@
-import type { ApiService } from '../../ApiService';
-import { $api } from '../../ApiService';
-import { ApiResponse, FieldDtoInterface, UpdateFieldRequestInterface } from '../../types';
+import type { ApiService } from "../../ApiService";
+import { $api } from "../../ApiService";
+import { ApiResponse, FieldDtoInterface, UpdateFieldRequestInterface } from "../../types";
 
 export class SystemFieldService {
   constructor(public readonly api: ApiService) {}
@@ -10,7 +10,7 @@ export class SystemFieldService {
       return (
         await this.api.client.request<ApiResponse<FieldDtoInterface[]>>({
           url: `/v2/system/field`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -20,13 +20,13 @@ export class SystemFieldService {
 
   public async updateField(
     id: string,
-    data: Partial<UpdateFieldRequestInterface>
+    data: Partial<UpdateFieldRequestInterface>,
   ): Promise<ApiResponse<FieldDtoInterface>> {
     try {
       return (
         await this.api.client.request<ApiResponse<FieldDtoInterface>>({
           url: `/v2/system/field/${id}`,
-          method: 'PATCH',
+          method: "PATCH",
           data,
         })
       ).data;

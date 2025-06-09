@@ -1,6 +1,6 @@
-import type { ApiService } from '../../../ApiService';
-import { $api } from '../../../ApiService';
-import { ApiResponse, ValueFieldDtoInterface } from '../../../types';
+import type { ApiService } from "../../../ApiService";
+import { $api } from "../../../ApiService";
+import { ApiResponse, ValueFieldDtoInterface } from "../../../types";
 
 export class MemberFieldService {
   constructor(public readonly api: ApiService) {}
@@ -10,7 +10,7 @@ export class MemberFieldService {
       return (
         await this.api.client.request<ApiResponse<ValueFieldDtoInterface[]>>({
           url: `/v2/member/${memberId}/field`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -23,7 +23,7 @@ export class MemberFieldService {
       return (
         await this.api.client.request<ApiResponse<ValueFieldDtoInterface[]>>({
           url: `/v2/public/system/${systemId}/member/${memberId}/field`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {

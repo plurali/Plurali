@@ -1,5 +1,5 @@
-import { ApiResponse, SystemDtoInterface, UpdateSystemRequestInterface } from '../types';
-import { $api, ApiService } from '../ApiService';
+import { $api, ApiService } from "../ApiService";
+import { ApiResponse, SystemDtoInterface, UpdateSystemRequestInterface } from "../types";
 
 export class SystemService {
   constructor(public readonly api: ApiService) {}
@@ -8,8 +8,8 @@ export class SystemService {
     try {
       return (
         await this.api.client.request<ApiResponse<SystemDtoInterface>>({
-          url: '/v2/system',
-          method: 'GET',
+          url: "/v2/system",
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -22,7 +22,7 @@ export class SystemService {
       return (
         await this.api.client.request<ApiResponse<SystemDtoInterface>>({
           url: `/v2/public/system/${systemId}`,
-          method: 'GET',
+          method: "GET",
         })
       ).data;
     } catch (error) {
@@ -35,7 +35,7 @@ export class SystemService {
       return (
         await this.api.client.request<ApiResponse<SystemDtoInterface>>({
           url: `/v2/system`,
-          method: 'PATCH',
+          method: "PATCH",
           data,
         })
       ).data;
@@ -46,12 +46,11 @@ export class SystemService {
 
   public async updateSystemBackgroundImage(file: Blob): Promise<ApiResponse<SystemDtoInterface>> {
     try {
-      return (await this.api.client.postForm<ApiResponse<SystemDtoInterface>>('/v2/system/background', { file })).data;
+      return (await this.api.client.postForm<ApiResponse<SystemDtoInterface>>("/v2/system/background", { file })).data;
     } catch (error) {
       return this.api.handleException(error);
     }
   }
-
 }
 
 export const $system = new SystemService($api);
