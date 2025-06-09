@@ -1,4 +1,4 @@
-import type { Sanitizer } from '.';
+import type { Sanitizer } from ".";
 
 export interface SanitizerConfig {
   allowElements?: string[];
