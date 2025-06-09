@@ -1,6 +1,6 @@
 import { EditorOptions } from "tinymce";
 
-export const tinyInitConfig: EditorOptions = {
+export const tinyInitConfig: Partial<EditorOptions> = {
   plugins: [
     "advlist",
     "autolink",
@@ -45,12 +45,10 @@ export const tinyInitConfig: EditorOptions = {
     { title: "Default", value: "" },
     { title: "Inline", value: "inline" },
   ],
-  ...({
-    autosave_ask_before_unload: false,
-    autosave_prefix: "_plurali_{path}{query}-{id}",
-    autosave_restore_when_empty: true,
-    autosave_interval: "3s",
-  } as any),
+  autosave_ask_before_unload: false,
+  autosave_prefix: "_plurali_{path}{query}-{id}",
+  autosave_restore_when_empty: true,
+  autosave_interval: "3s",
 };
 
 export type { Editor as TinyEditorType } from "tinymce";

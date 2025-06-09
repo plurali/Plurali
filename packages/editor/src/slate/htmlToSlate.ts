@@ -38,7 +38,7 @@ const getChildNodes = (htmlOrEl: NodeOrHtml): (ChildNode | ParserNode)[] => {
   return [...childNodes];
 };
 
-function isElement(htmlNode: any): htmlNode is EitherElement {
+function isElement(htmlNode: unknown): htmlNode is EitherElement {
   return isBrowser ? htmlNode instanceof Element : htmlNode instanceof ParserHTMLElement;
 }
 
