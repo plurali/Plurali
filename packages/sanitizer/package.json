@@ -22,8 +22,6 @@
     "dompurify": "^3.0.2"
   },
   "devDependencies": {
-    "@types/dompurify": "^3.0.2",
-    "vite": "^4.3.3",
-    "vite-plugin-dts": "^3.6.1"
+    "@types/dompurify": "^3.0.2"
   }
 }

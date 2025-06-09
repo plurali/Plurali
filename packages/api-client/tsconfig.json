@@ -1,29 +1,26 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "useDefineForClassFields": true,
-        "module": "ESNext",
-        "moduleResolution": "Node",
-        "strict": true,
-        "jsx": "preserve",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "esModuleInterop": true,
-        "lib": [
-            "ESNext",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "downlevelIteration": true,
-        "skipLibCheck": true,
-        "noEmit": true,
-        "paths": {
-            "@v2/*": ["../../src/application/v2/dto/*"]
-        }
-    },
-    "references": [
-        {
-            "path": "./tsconfig.node.json"
-        }
-    ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "paths": {
+      "@v2/*": [
+        "../../src/application/v2/dto/*"
+      ]
+    }
+  }
 }
