@@ -19,9 +19,7 @@
     "lint:fix": "pnpm lint --fix"
   },
   "devDependencies": {
-    "@types/markdown-it": "^12.2.3",
-    "vite": "^4.3.3",
-    "vite-plugin-dts": "^3.6.1"
+    "@types/markdown-it": "^12.2.3"
   },
   "dependencies": {
     "@plurali/api-client": "workspace:^",
