@@ -1,15 +1,15 @@
 <template>
   <router-link
-    v-if="page"
+    v-if="customPage"
     :to="routerTo"
     class="px-4 py-3 border border-l-4 rounded-2xl block transition cursor-pointer bg-white bg-opacity-25"
     :class="[
-      isDashboard ? (page.visibility === Visibility.Public ? 'border-l-green-500' : 'border-l-red-500') : '',
+      isDashboard ? (customPage.visibility === Visibility.Public ? 'border-l-green-500' : 'border-l-red-500') : '',
       loading && '!bg-gray-100 bg-opacity-10',
     ]"
     @click.ctrl.prevent="toggleVisibility"
   >
-    <p class="font-medium">{{ page.name }}</p>
+    <p class="font-medium">{{ customPage.name }}</p>
   </router-link>
 </template>
 <script lang="ts">
@@ -21,14 +21,8 @@ import { useRoute } from "vue-router";
 
 import { wrapRequest } from "../../../api";
 import { getRouteParam } from "../../../utils";
-import ColorCircle from "../color/ColorCircle.vue";
 
 export default defineComponent({
-  components: { ColorCircle },
-  model: {
-    prop: "field",
-    event: "change",
-  },
   props: {
     page: {
       type: Object as PropType<PageDtoInterface>,
@@ -40,7 +34,7 @@ export default defineComponent({
     },
   },
   setup: function ({ page: _page, modifiable }) {
-    const page = ref<PageDtoInterface>(_page);
+    const customPage = ref<PageDtoInterface>(_page);
 
     const loading = ref(false);
 
@@ -48,7 +42,7 @@ export default defineComponent({
 
     const isDashboard = computed(() => String(route.name).includes("dashboard"));
 
-    const isMember = computed(() => page.value.ownerType === OwnerType.Member);
+    const isMember = computed(() => customPage.value.ownerType === OwnerType.Member);
 
     const memberId = computed(() =>
       isMember.value ? getRouteParam(isDashboard.value ? route.params.id : route.params.memberId) : null,
@@ -56,12 +50,12 @@ export default defineComponent({
 
     const routerTo = computed(() => {
       let name: string;
-      let params: Record<string, unknown> = { pageId: isDashboard.value ? page.value.id : page.value.slug };
+      let params: Record<string, unknown> = { pageId: isDashboard.value ? customPage.value.id : customPage.value.slug };
 
       if (isMember.value) {
         name = isDashboard.value ? "dashboard:member:page:edit" : "public:member:page";
         // Use owner id in dashboard, slug otherwise
-        params.memberId = isDashboard.value ? page.value.ownerId : route.params.memberId;
+        params.memberId = isDashboard.value ? customPage.value.ownerId : route.params.memberId;
       } else {
         name = isDashboard.value ? "dashboard:system:page:edit" : "public:system:page";
         // Only public view requires system id
@@ -81,17 +75,19 @@ export default defineComponent({
       loading.value = true;
 
       const res = await wrapRequest(() => {
-        if (!page.value) return null;
+        if (!customPage.value) return null;
 
         return isMember.value
-          ? $memberPage.updateMemberPage(memberId.value ?? "", page.value.id, {
-              visibility: toggleVisibilityState(page.value.visibility),
+          ? $memberPage.updateMemberPage(memberId.value ?? "", customPage.value.id, {
+              visibility: toggleVisibilityState(customPage.value.visibility),
             })
-          : $systemPage.updateSystemPage(page.value.id, { visibility: toggleVisibilityState(page.value.visibility) });
+          : $systemPage.updateSystemPage(customPage.value.id, {
+              visibility: toggleVisibilityState(customPage.value.visibility),
+            });
       });
 
       if (res) {
-        page.value = res;
+        customPage.value = res;
       }
 
       loading.value = false;
@@ -99,7 +95,7 @@ export default defineComponent({
 
     return {
       toggleVisibility,
-      page,
+      customPage,
       loading,
       isMember,
       isDashboard,

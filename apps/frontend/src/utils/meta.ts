@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, onUnmounted, watch } from "vue";
+import { onMounted, onUnmounted, watch } from "vue";
 
 import { defaultMeta, Meta, meta } from "../store";
 

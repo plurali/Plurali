@@ -24,35 +24,14 @@ import { computed, defineComponent, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { wrapRequest } from "../../api";
-import { createMemberPage, createSystemPage } from "../../api/page";
-import Button from "../../components/Button.vue";
-import ButtonLink from "../../components/ButtonLink.vue";
 import Editor from "../../components/dashboard/Editor.vue";
-import Color from "../../components/global/color/ColorCircle.vue";
-import ColorCircle from "../../components/global/color/ColorCircle.vue";
-import Fetchable from "../../components/global/Fetchable.vue";
-import CustomFields from "../../components/global/fields/CustomFields.vue";
-import MemberSummary from "../../components/global/members/MemberSummary.vue";
 import UserContent from "../../components/global/UserContent.vue";
 import VisibilityTag from "../../components/global/visibility/VisibilityTag.vue";
-import Spinner from "../../components/Spinner.vue";
-import Subtitle from "../../components/Subtitle.vue";
-import Title from "../../components/Title.vue";
 import { useGoBack } from "../../composables/goBack";
 import { getRouteParam } from "../../utils";
 
 export default defineComponent({
   components: {
-    MemberSummary,
-    ColorCircle,
-    CustomFields,
-    Fetchable,
-    Spinner,
-    Title,
-    Subtitle,
-    ButtonLink,
-    Button,
-    Color,
     UserContent,
     Editor,
     VisibilityTag,

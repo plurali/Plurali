@@ -23,13 +23,13 @@
     <template #header>
       <div class="rounded-2xl bg-gray-100 p-1">
         <Button
-          v-for="type of types"
-          :key="type"
+          v-for="bgType of types"
+          :key="bgType"
           class="text-lg transition duration-500 ease-in-out"
-          :class="backgroundType === type && `bg-white shadow-md font-medium`"
-          @click="() => setType(type)"
+          :class="backgroundType === bgType && `bg-white shadow-md font-medium`"
+          @click="() => setType(bgType)"
         >
-          {{ type }}
+          {{ bgType }}
         </Button>
       </div>
     </template>
@@ -123,7 +123,7 @@ export default defineComponent({
         return flash();
       }
 
-      emit("update:entity", (res as any)[props.type]);
+      emit("update:entity", (res as SystemResponse | SystemMemberResponse)[props.type]);
     };
 
     const updateImage = async (image: Blob | null) => {
@@ -139,7 +139,7 @@ export default defineComponent({
         return flash();
       }
 
-      emit("update:entity", (res as any)[props.type]);
+      emit("update:entity", (res as SystemResponse | SystemMemberResponse)[props.type]);
     };
 
     const onSubmit = async () => {

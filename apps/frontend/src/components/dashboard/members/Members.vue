@@ -1,7 +1,7 @@
 <template>
   <Fetchable :result="members" retry-text="Load members" :retry="fetchMembers">
     <div v-if="members" class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-5">
-      <MemberSmallCard v-for="member of members" :member="member" :modifiable="true" />
+      <MemberSmallCard v-for="member of members" :key="member.id" :member="member" :modifiable="true" />
     </div>
   </Fetchable>
 
@@ -50,13 +50,12 @@ import { defineComponent, onMounted, ref } from "vue";
 
 import { formatError } from "../../../api";
 import { getMembers } from "../../../api/system";
-import Color from "../../../components/global/color/ColorCircle.vue";
 import Fetchable from "../../../components/global/Fetchable.vue";
 import MemberSmallCard from "../../../components/global/members/MemberSmallCard.vue";
 import { flash, FlashType } from "../../../store";
 
 export default defineComponent({
-  components: { MemberSmallCard, Color, Fetchable },
+  components: { MemberSmallCard, Fetchable },
   setup() {
     const members = ref<UserMemberDto[] | null | false>(false);
 

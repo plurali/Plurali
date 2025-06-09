@@ -42,12 +42,10 @@ import { string } from "../../../api/fields";
 import { updateMember } from "../../../api/system";
 import { flash, FlashType } from "../../../store";
 import Color from "../color/ColorCircle.vue";
-import Sanitized from "../Sanitized.vue";
 
 export default defineComponent({
   components: {
     Color,
-    Sanitized,
   },
   props: {
     member: {

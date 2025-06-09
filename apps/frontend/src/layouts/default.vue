@@ -70,7 +70,7 @@
           <RequiredPluralKey v-if="user && !user.pluralKey" />
           <NoEmailAssigned v-if="user && !user.email" />
           <EmailNotVerified v-if="user && user.email && !user.verified" />
-          <Flash v-for="flash of flashes" :color="flash.color">
+          <Flash v-for="flash of flashes" :key="`${flash.type}:${flash.message}`" :color="flash.color">
             <Sanitized :value="flash.message" />
           </Flash>
         </div>
@@ -129,7 +129,6 @@ import { computed, defineComponent, onBeforeUnmount, ref, watch } from "vue";
 import { isPubDev } from "../api";
 import Flash from "../components/Flash.vue";
 import Sanitized from "../components/global/Sanitized.vue";
-import Notification from "../components/Notification.vue";
 import NotificationRenderer from "../components/NotificationRenderer.vue";
 import EmailNotVerified from "../components/notifications/EmailNotVerified.vue";
 import NoEmailAssigned from "../components/notifications/NoEmailAssigned.vue";
@@ -141,7 +140,6 @@ export default defineComponent({
   components: {
     Flash,
     Sanitized,
-    Notification,
     RequiredPluralKey,
     EmailNotVerified,
     NotificationRenderer,
@@ -183,7 +181,7 @@ export default defineComponent({
       goBack,
       onLoad,
       imageLoaded,
-      arr: (...arrays: any[]) => arrays.find((val) => Array.isArray(val)),
+      arr: (...arrays: unknown[]) => arrays.find((val) => Array.isArray(val)),
       notifications,
       user,
       isPubDev,

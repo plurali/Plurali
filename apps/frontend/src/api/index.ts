@@ -1,6 +1,6 @@
 import type { Status, StatusMapType, SuccessData } from "@app/v1/dto/Status";
-import { $api, ApiResponse } from "@plurali/api-client";
-import axios, { AxiosResponse } from "axios";
+import { $api, ApiErrorResponse, ApiResponse } from "@plurali/api-client";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 import { clearFlashes, flash, FlashType } from "../store";
 import { $topbar } from "../utils/topbar";
@@ -53,10 +53,11 @@ if (auth) {
   setAuth(auth);
 }
 
-export const formatError = (e: any) => {
+export const formatError = (e: unknown) => {
   const unknownErrorMessage = "Unknown error has occurred. Please try again.";
 
-  const error = e?.response?.data?.error ?? e?.message ?? unknownErrorMessage;
+  const error =
+    (e as AxiosError<ApiErrorResponse>)?.response?.data?.error ?? (e as Error)?.message ?? unknownErrorMessage;
 
   if (typeof error === "object") {
     return error.message ?? error.type ?? unknownErrorMessage;

@@ -55,7 +55,7 @@ export const fieldConvertors: Record<MemberFieldType, (val: string, md: boolean)
 };
 
 export function hasValue(value: UserFieldDto | UserValueFieldDto): value is UserValueFieldDto {
-  return value.hasOwnProperty("value");
+  return "value" in value;
 }
 
 export const formatField = (field: UserValueFieldDto): string | null => {

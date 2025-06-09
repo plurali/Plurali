@@ -88,7 +88,6 @@
 import { PageDto } from "@app/v1/dto/page/PageDto";
 import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
 import { SystemDto } from "@app/v1/dto/user/system/SystemDto";
-import { DocumentIcon } from "@heroicons/vue/24/outline";
 import { TinyEditorType } from "@plurali/editor";
 import { computed, defineComponent, PropType, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -96,8 +95,6 @@ import { useRoute } from "vue-router";
 import { wrapRequest } from "../../../api";
 import { string } from "../../../api/fields";
 import { updateMember } from "../../../api/system";
-import Button from "../../Button.vue";
-import ButtonLink from "../../ButtonLink.vue";
 import Editor from "../../dashboard/Editor.vue";
 import Subtitle from "../../Subtitle.vue";
 import PageTitle from "../../Title.vue";
@@ -119,13 +116,10 @@ export default defineComponent({
     Fetchable,
     PageTitle,
     Subtitle,
-    ButtonLink,
-    Button,
     Color,
     Editor,
     BackgroundChooser,
     PageFields,
-    DocumentIcon,
     Sanitized,
     UserContent,
   },
@@ -141,6 +135,7 @@ export default defineComponent({
     refetch: {
       type: Function,
       required: false,
+      default: () => {},
     },
   },
   emits: ["update:modelValue"],

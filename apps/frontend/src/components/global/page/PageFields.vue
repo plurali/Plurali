@@ -20,16 +20,15 @@
     </div>
 
     <div v-if="pages.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-      <PageField v-for="page of pages" :modifiable="modifiable" :page="page" />
+      <PageField v-for="page of pages" :key="page.id" :modifiable="modifiable" :page="page" />
     </div>
     <p v-else>You have no pages yet.</p>
   </div>
 </template>
 <script lang="ts">
 import type { PageDto } from "@app/v1/dto/page/PageDto";
-import { DocumentIcon, PlusCircleIcon, PlusIcon } from "@heroicons/vue/24/outline";
-import { computed, defineComponent, PropType } from "vue";
-import { useRoute } from "vue-router";
+import { DocumentIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
+import { defineComponent, PropType } from "vue";
 
 import ButtonLink from "../../ButtonLink.vue";
 import PageField from "./PageField.vue";
@@ -38,7 +37,6 @@ export default defineComponent({
   components: {
     PageField,
     DocumentIcon,
-    PlusIcon,
     ButtonLink,
     PlusCircleIcon,
   },
@@ -53,6 +51,7 @@ export default defineComponent({
     },
     title: {
       type: String,
+      default: "",
     },
     ownerType: {
       type: String as PropType<"system" | "member">,

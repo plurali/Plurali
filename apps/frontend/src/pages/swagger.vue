@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
+// @ts-expect-error swagger dist bundle does not have TS typings
 import SwaggerUIBundle from "swagger-ui-dist/swagger-ui-es-bundle.js";
 import { defineComponent, onMounted } from "vue";
 

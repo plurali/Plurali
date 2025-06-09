@@ -7,7 +7,7 @@
 <script lang="ts">
 import type { UserMemberDto } from "@app/v1/dto/user/member/UserMemberDto";
 import { $memberPage, PageDtoInterface } from "@plurali/api-client";
-import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import { wrapRequest } from "../api";

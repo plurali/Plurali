@@ -10,7 +10,7 @@ export interface Assetable {
   lastTimeAssetChanged: Date;
 }
 
-export const cdnBaseUrl = (import.meta as any).env?.DEV
+export const cdnBaseUrl = import.meta.env?.DEV
   ? "http://127.0.0.1:8001/plurali"
   : `https://cdn.plurali.icu/${isPubDev ? "pubdev" : "v1"}`;
 

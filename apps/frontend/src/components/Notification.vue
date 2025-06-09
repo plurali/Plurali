@@ -20,6 +20,7 @@ import { FlashType } from "../store";
 import { isHex } from "../utils";
 
 const flashTypeToClass = {
+  [FlashType.Primary]: "bg-purple-700 text-gray-400",
   [FlashType.Danger]: "bg-red-700 text-danger-400",
   [FlashType.Warning]: "bg-yellow-600 text-warning-400",
   [FlashType.Success]: "bg-green-700 text-success-400",
@@ -33,6 +34,7 @@ export default defineComponent({
   props: {
     color: {
       type: String,
+      default: FlashType.Primary,
     },
   },
   setup({ color }) {

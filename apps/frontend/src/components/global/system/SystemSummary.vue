@@ -58,7 +58,6 @@
 </template>
 <script lang="ts">
 import type { SystemDto } from "@app/v1/dto/user/system/SystemDto";
-import { DocumentIcon } from "@heroicons/vue/24/outline";
 import { Editor as EditorType } from "tinymce";
 import { computed, defineComponent, PropType, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -66,14 +65,12 @@ import { useRoute } from "vue-router";
 import { wrapRequest } from "../../../api";
 import { string } from "../../../api/fields";
 import { updateSystem } from "../../../api/system";
-import ButtonLink from "../../ButtonLink.vue";
 import Editor from "../../dashboard/Editor.vue";
 import Subtitle from "../../Subtitle.vue";
 import PageTitle from "../../Title.vue";
 import BackgroundChooser from "../BackgroundChooser.vue";
 import Color from "../color/ColorCircle.vue";
 import ColorCircle from "../color/ColorCircle.vue";
-import Fetchable from "../Fetchable.vue";
 import CustomFields from "../fields/CustomFields.vue";
 import Sanitized from "../Sanitized.vue";
 import UserContent from "../UserContent.vue";
@@ -91,9 +88,6 @@ export default defineComponent({
     UserContent,
     Sanitized,
     BackgroundChooser,
-    Fetchable,
-    ButtonLink,
-    DocumentIcon,
   },
   props: {
     entity: {
