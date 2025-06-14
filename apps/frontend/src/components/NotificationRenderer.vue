@@ -27,7 +27,7 @@ const fetchNotifications = async () => {
   try {
     const apiNotifications = (await getNotifications()).data ?? { success: false };
 
-    if (apiNotifications.success && apiNotifications.data?.length >= 1) {
+    if (apiNotifications.success && apiNotifications.data) {
       notifications.value =
         apiNotifications.data.map((n) => ({
           color: n.color,
