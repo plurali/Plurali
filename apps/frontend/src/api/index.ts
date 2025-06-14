@@ -10,10 +10,10 @@ const prodApiUrl = "https://api.plurali.icu";
 const pubdevApiUrl = "https://pubdev.plurali.icu/api";
 
 const apiUrls = {
-  // "http://localhost:8000": (window.location.href.includes('.local') || window.location.href.startsWith("http://localhost:5173")),
+  [prodApiUrl]: ["https://plurali.icu", "https://www.plurali.icu"].some((url) => window.location.href.startsWith(url)),
   // [pubdevApiUrl]: window.location.href.startsWith("https://pubdev.plurali.icu"),
   // "https://dev.plurali.icu/api": window.location.href.startsWith("https://dev.plurali.icu"),
-  [prodApiUrl]: window.location.href.startsWith("https://plurali.icu"),
+  "http://localhost:8000": import.meta.env.DEV,
 };
 
 const getApiUrl = () => {
