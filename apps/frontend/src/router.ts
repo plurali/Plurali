@@ -1,6 +1,7 @@
+import { $api } from "@plurali/api-client";
+import { AxiosError } from "axios";
 import { createRouter, createWebHistory, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 
-import { formatError, StatusMap } from "./api";
 import { getUser } from "./api/user";
 import { flash, FlashType, nextRedirect, user } from "./store";
 
@@ -141,7 +142,7 @@ router.beforeEach(async (to) => {
 
   try {
     const data = (await getUser()).data;
-    if (!data.success) throw new Error();
+    if (!data.success) throw new Error(ApiError.NotAuthenticated);
 
     user.value = data.data.user;
     if (isAuth(to)) return "/dashboard";
@@ -155,15 +156,21 @@ router.beforeEach(async (to) => {
   } catch (error) {
     user.value = null;
 
-    const status = formatError(error);
+    const apiError = $api.handleException(error);
+    const isLoginError =
+      (error instanceof AxiosError && error.response?.status === 401) ||
+      (error instanceof Error && error.message === ApiError.NotAuthenticated);
 
-    if (isDashboard(to) && status !== StatusMap.NotAuthenticated) {
-      flash("You need to be logged in to access the dashboard!", FlashType.Warning, true, false);
+    if (isLoginError) {
+      if (isDashboard(to)) {
+        flash("You need to be logged in to access the dashboard!", FlashType.Warning, true, false);
+        return "/auth/login";
+      }
 
-      return "/auth/login";
+      return;
     }
 
-    flash(status, FlashType.Danger, true);
+    flash(apiError.error.message, FlashType.Danger, true);
   }
 });
 
