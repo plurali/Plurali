@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios, { AxiosInstance } from "axios";
 
+import { PluralFieldEntry } from "./types/rest/fields";
 import { PluralMemberEntry } from "./types/rest/members";
 import { PluralUserEntry } from "./types/rest/user";
 
@@ -48,6 +49,38 @@ export class PluralRestService {
       return (
         await this.httpClient.request<PluralMemberEntry>({
           url: `/member/${systemId}/${memberId}`,
+          method: "GET",
+          headers: {
+            Authorization,
+          },
+        })
+      ).data;
+    } catch {
+      return null;
+    }
+  }
+
+  async findFieldsForId(systemId: string, Authorization: string): Promise<PluralFieldEntry[]> {
+    try {
+      return (
+        await this.httpClient.request<PluralFieldEntry[]>({
+          url: `/customFields/${systemId}`,
+          method: "GET",
+          headers: {
+            Authorization,
+          },
+        })
+      ).data;
+    } catch {
+      return [];
+    }
+  }
+
+  async findFieldForId(systemId: string, Authorization: string): Promise<PluralFieldEntry | null> {
+    try {
+      return (
+        await this.httpClient.request<PluralFieldEntry>({
+          url: `/customField/${systemId}`,
           method: "GET",
           headers: {
             Authorization,
