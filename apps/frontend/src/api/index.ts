@@ -1,5 +1,5 @@
 import type { Status, StatusMapType, SuccessData } from "@app/v1/dto/Status";
-import { $api, ApiResponse } from "@plurali/api-client";
+import { $api, ApiErrorResponse, ApiResponse } from "@plurali/api-client";
 import axios, { AxiosResponse } from "axios";
 
 import { clearFlashes, flash, FlashType } from "../store";
@@ -53,6 +53,13 @@ export const formatError = (e: unknown) => {
   return $api.handleException(e).error.message;
 };
 
+class WrappedRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "WrappedRequestError";
+  }
+}
+
 export const wrapRequest = async <T extends object = SuccessData>(
   fn: () => Promise<AxiosResponse<Status<T>> | ApiResponse<T>> | null,
 ): Promise<T | false> => {
@@ -66,9 +73,16 @@ export const wrapRequest = async <T extends object = SuccessData>(
 
     // support @plurali/api-client as well as standard axios response
     const data = "success" in res ? res : res.data;
+    const isApiV2 = "meta" in res;
 
-    // hackaround for 200 errors (should not happen)
-    if (!data.success) throw new Error($api.handleException({ response: { data } }).error.message);
+    if (!data.success) {
+      if (isApiV2) {
+        throw new WrappedRequestError((data as ApiErrorResponse).error.message);
+      }
+
+      // hackaround for 200 errors (should not happen)
+      throw new WrappedRequestError($api.handleException({ response: { data } }).error.message);
+    }
 
     if ("warning" in data.data) {
       flash(String(data.data.warning), FlashType.Warning, false, true);
@@ -76,7 +90,9 @@ export const wrapRequest = async <T extends object = SuccessData>(
 
     return data.data;
   } catch (e) {
-    flash($api.handleException(e).error.message, FlashType.Danger, true);
+    const message = e instanceof WrappedRequestError ? e.message : $api.handleException(e).error.message;
+
+    flash(message, FlashType.Danger, true);
     return false;
   }
 };
