@@ -67,7 +67,7 @@
     <div class="container max-w-7xl mx-auto">
       <div class="py-16 md:py-24 px-4">
         <div class="inline-flex flex-col gap-0.5 w-full">
-          <RequiredPluralKey v-if="user && !user.pluralKey" />
+          <RequiredPluralKey v-if="user && !user.hasSimplyToken" />
           <NoEmailAssigned v-if="user && !user.email" />
           <EmailNotVerified v-if="user && user.email && !user.verified" />
           <Flash v-for="flash of flashes" :key="`${flash.type}:${flash.message}`" :color="flash.color">

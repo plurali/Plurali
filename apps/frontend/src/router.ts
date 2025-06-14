@@ -1,8 +1,7 @@
-import { $api } from "@plurali/api-client";
+import { $api, $user, ApiError } from "@plurali/api-client";
 import { AxiosError } from "axios";
 import { createRouter, createWebHistory, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 
-import { getUser } from "./api/user";
 import { flash, FlashType, nextRedirect, user } from "./store";
 
 const routes: RouteRecordRaw[] = [
@@ -141,16 +140,15 @@ router.beforeEach(async (to) => {
   }
 
   try {
-    const data = (await getUser()).data;
+    const data = await $user.getUser();
     if (!data.success) throw new Error(ApiError.NotAuthenticated);
 
-    user.value = data.data.user;
+    user.value = data.data;
     if (isAuth(to)) return "/dashboard";
 
-    const hasPluralKey = !!user.value.pluralKey;
     const isRouteAccessible = isAccessibleWithoutPluralKey(to);
 
-    if (isDashboard(to) && !hasPluralKey && !isRouteAccessible) {
+    if (isDashboard(to) && !user.value.hasSimplyToken && !isRouteAccessible) {
       return "/dashboard/user";
     }
   } catch (error) {
