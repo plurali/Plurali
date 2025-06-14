@@ -56,6 +56,7 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     origin: server.cors.origin,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"],
   });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
