@@ -67,7 +67,7 @@ model User {
   pages Page[]
 
   verifications UserVerification[]
-  notifications  Notification[]
+  notifications Notification[]
 
   @@map("pluraliapp_users")
 }
@@ -113,8 +113,9 @@ model System {
 model Field {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  pluralId       String @unique
+  pluralId       String  @unique
   pluralParentId String
+  isLegacyField  Boolean @default(false)
 
   name     String
   position Int             @default(0)
@@ -179,13 +180,13 @@ model Notification {
   user   User?   @relation(fields: [userId], references: [id])
   userId String? @db.ObjectId
 
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   // Notification expiration date
   expiresAt DateTime?
 
   // Stays after shown once (only applies to user notifications without expiration)
-  permanent Boolean   @default(false)
+  permanent Boolean @default(false)
 
   @@map("pluraliapp_notifications")
 }
