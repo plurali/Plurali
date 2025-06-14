@@ -2,6 +2,7 @@ import { BaseData, BaseEntry, VisibilityAttributes } from ".";
 
 export type PluralUserEntry = BaseEntry<UserContent>;
 
+/** @deprecated */
 export interface UserCustomField extends VisibilityAttributes {
   name: string;
   order: number;
@@ -13,6 +14,7 @@ export interface UserContent {
   lastUpdate: number;
   uid: string;
   username: string;
+  /** @deprecated */
   fields?: Record<string, UserCustomField>;
   color: string;
   desc: string;
