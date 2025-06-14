@@ -1,6 +1,6 @@
 import type { Status, StatusMapType, SuccessData } from "@app/v1/dto/Status";
-import { $api, ApiErrorResponse, ApiResponse } from "@plurali/api-client";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { $api, ApiResponse } from "@plurali/api-client";
+import axios, { AxiosResponse } from "axios";
 
 import { clearFlashes, flash, FlashType } from "../store";
 import { $topbar } from "../utils/topbar";
@@ -39,11 +39,6 @@ export const $axios = axios.create({
 });
 
 export const setAuth = (auth: string | null) => {
-  if (auth) {
-    localStorage.setItem("_plurali_auth", auth);
-  } else {
-    localStorage.removeItem("_plurali_auth");
-  }
   $api.updateAuth(auth);
   $axios.defaults.headers.common.Authorization = `Bearer ${auth}`;
 };
@@ -53,17 +48,9 @@ if (auth) {
   setAuth(auth);
 }
 
+/** @deprecated */
 export const formatError = (e: unknown) => {
-  const unknownErrorMessage = "Unknown error has occurred. Please try again.";
-
-  const error =
-    (e as AxiosError<ApiErrorResponse>)?.response?.data?.error ?? (e as Error)?.message ?? unknownErrorMessage;
-
-  if (typeof error === "object") {
-    return error.message ?? error.type ?? unknownErrorMessage;
-  }
-
-  return error;
+  return $api.handleException(e).error.message;
 };
 
 export const wrapRequest = async <T extends object = SuccessData>(
