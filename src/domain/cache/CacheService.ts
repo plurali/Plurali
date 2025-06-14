@@ -1,14 +1,15 @@
 import { createSlug } from "@domain/common";
 import { SystemWithUser } from "@domain/common/types";
 import { PluralRestService } from "@domain/plural/PluralRestService";
+import { PluralFieldEntry } from "@domain/plural/types/rest/fields";
 import { PluralMemberEntry } from "@domain/plural/types/rest/members";
-import { PluralUserEntry } from "@domain/plural/types/rest/user";
-import { parseFieldType, parseVisibility, PluralVisibility } from "@domain/plural/utils";
+import { PluralUserEntry, UserCustomField } from "@domain/plural/types/rest/user";
+import { isPublicVisibility, parseFieldType, parseVisibility, PluralVisibility } from "@domain/plural/utils";
 import { CacheRepository } from "@infra/cache/CacheRepository";
 import { CacheNamespace } from "@infra/cache/utils";
 import { PrismaTx } from "@infra/prisma/types";
 import { ConsoleLogger, Inject, Injectable } from "@nestjs/common";
-import { Member, System, User, Visibility } from "@prisma/client";
+import { Field, Member, Prisma, System, User, Visibility } from "@prisma/client";
 import { captureException } from "@sentry/node";
 import { PrismaService } from "nestjs-prisma";
 
@@ -86,32 +87,87 @@ export class CacheService {
     return member;
   }
 
-  async rebuildFields(system: System, plural: PluralUserEntry, tx: PrismaTx = this.prisma) {
+  // TECHDEBT: Simplify this once Simply Plural fully removes legacy fields
+  async rebuildFields(
+    system: System,
+    plural: PluralUserEntry,
+    pluralFields: PluralFieldEntry[],
+    tx: PrismaTx = this.prisma,
+  ) {
+    for (const legacyFieldId of Object.keys(plural.content.fields ?? {})) {
+      const dbLegacyField = await tx.field.findUnique({
+        where: {
+          pluralId: legacyFieldId,
+        },
+      });
+
+      if (!dbLegacyField) {
+        continue;
+      }
+
+      const newFieldId = pluralFields.find((f) => f.content.oid === legacyFieldId)?.id;
+
+      if (!newFieldId && dbLegacyField.isLegacyField) {
+        continue;
+      }
+
+      this.logger.log(`Found legacy field ${legacyFieldId} of ${newFieldId} for system ${plural.id}`);
+
+      await tx.field.update({
+        where: {
+          id: dbLegacyField.id,
+        },
+        data: {
+          ...(newFieldId ? { pluralId: newFieldId } : {}),
+          isLegacyField: !newFieldId,
+        },
+      });
+    }
+
+    // List of the legacy fields which have not yet been migrated
+    const legacyFieldsToKeep = Object.keys(plural.content.fields ?? {}).filter(
+      (originalId) => !pluralFields.some((newField) => newField.content.oid === originalId),
+    );
+
+    const allFieldIds = [
+      ...legacyFieldsToKeep.map((id) => ({ id, isLegacy: true })),
+      ...pluralFields.map((field) => ({ id: field.id, isLegacy: false })),
+    ];
+
     // Delete all fields that are not listed by SP anymore
     await tx.field.deleteMany({
       where: {
         pluralId: {
-          notIn: Object.keys(plural.content.fields ?? {}),
+          notIn: allFieldIds.map(({ id }) => id),
         },
         systemId: system.id,
       },
     });
 
-    if (!plural.content.fields) {
+    if (!allFieldIds.length) {
+      this.logger.log(`No fields to rebuild for system ${system.pluralId}`);
       return [];
     }
 
-    const fields = [];
+    const fields: Field[] = [];
 
-    for (const pluralId in plural.content.fields) {
-      const field = plural.content.fields[pluralId];
+    for (const { id: pluralId, isLegacy } of allFieldIds) {
+      const content = isLegacy
+        ? plural.content.fields?.[pluralId]
+        : pluralFields.find((f) => f.id === pluralId)?.content;
 
-      this.logger.log(`Rebuilding (s:${system.id}) ${system.pluralId}/f/${plural.id}`);
+      if (!content) {
+        this.logger.warn(`No content found for field ${pluralId}/legacy:${isLegacy} in system ${system.pluralId}`);
+        continue;
+      }
+
+      this.logger.log(`Rebuilding (s:${system.id}) ${system.pluralId}/f/${pluralId}/legacy:${isLegacy}`);
 
       const data = {
-        name: field.name,
-        type: parseFieldType(field),
-      };
+        name: content.name,
+        type: parseFieldType(content),
+        isLegacyField: isLegacy,
+      } satisfies Partial<Prisma.FieldCreateInput>;
 
       let dbField = await tx.field.findFirst({
         where: {
@@ -127,7 +183,12 @@ export class CacheService {
             pluralId,
             pluralParentId: plural.id,
             systemId: system.id,
-            visibility: parseVisibility(field) === PluralVisibility.Public ? Visibility.Public : Visibility.Private,
+            // New fields are private by default as the visibility is set by buckets
+            visibility: isLegacy
+              ? isPublicVisibility(content as UserCustomField)
+                ? Visibility.Public
+                : Visibility.Private
+              : Visibility.Private,
           },
         });
       } else {
@@ -235,15 +296,20 @@ export class CacheService {
       },
     });
 
+    const pluralFields = await this.plural.findFieldsForId(pluralUser.id, user.pluralAccessToken);
+
     if (useTransacction) {
       await this.prisma.$transaction(
         async (tx) => await this.rebuildMembers(Object.assign(user.system, { user }), tx),
         txConfig,
       );
-      await this.prisma.$transaction(async (tx) => await this.rebuildFields(user.system, pluralUser, tx), txConfig);
+      await this.prisma.$transaction(
+        async (tx) => await this.rebuildFields(user.system, pluralUser, pluralFields, tx),
+        txConfig,
+      );
     } else {
       await this.rebuildMembers(Object.assign(user.system, { user }));
-      await this.rebuildFields(user.system, pluralUser);
+      await this.rebuildFields(user.system, pluralUser, pluralFields);
     }
   }
 

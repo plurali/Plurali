@@ -36,6 +36,9 @@ export const parseAvatar = (
 export const parseVisibility = (data: VisibilityAttributes) =>
   data.private ? (data.preventTrusted ? PluralVisibility.Private : PluralVisibility.Trusted) : PluralVisibility.Public;
 
+export const isPublicVisibility = (data: VisibilityAttributes): boolean =>
+  parseVisibility(data) === PluralVisibility.Public;
+
 export const parseFieldType = (fieldInfo: { type: number }): MemberFieldType =>
   [
     MemberFieldType.String,
