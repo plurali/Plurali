@@ -17,7 +17,7 @@ export class UserDto implements UserDtoInterface {
   public verified: boolean;
 
   @ApiProperty()
-  public accessToken: string | null;
+  public hasSimplyToken: boolean;
 
   @ApiProperty()
   public systemIdOverride: string | null;
@@ -30,7 +30,7 @@ export class UserDto implements UserDtoInterface {
     username: string,
     email: string,
     verified: boolean,
-    accessToken: string | null,
+    hasSimplyToken: boolean,
     systemIdOverride: string | null,
     role: UserRole,
   ) {
@@ -38,7 +38,7 @@ export class UserDto implements UserDtoInterface {
     this.username = username;
     this.email = email;
     this.verified = verified;
-    this.accessToken = accessToken;
+    this.hasSimplyToken = hasSimplyToken;
     this.systemIdOverride = systemIdOverride;
     this.role = role;
   }
@@ -49,7 +49,7 @@ export class UserDto implements UserDtoInterface {
       user.username,
       user.email,
       user.emailVerified,
-      user.pluralAccessToken ?? null,
+      !!user.pluralAccessToken?.length,
       user.pluralOverride ?? null,
       user.role,
     );

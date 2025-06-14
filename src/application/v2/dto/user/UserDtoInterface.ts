@@ -5,7 +5,7 @@ export interface UserDtoInterface {
   username: string;
   email: string;
   verified: boolean;
-  accessToken: string | null;
+  hasSimplyToken: boolean;
   systemIdOverride: string | null;
   role: UserRole;
 }
