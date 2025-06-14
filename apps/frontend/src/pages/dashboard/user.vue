@@ -27,7 +27,7 @@
       />
     </div>
 
-    <div v-if="user!.admin" class="mb-3.5">
+    <div v-if="user?.role === UserRole.Admin" class="mb-3.5">
       <Label>Override Plural ID</Label>
       <input
         v-model="form.overridePluralId"
@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import { UserRole } from "@plurali/api-client";
 import { defineComponent, reactive, ref } from "vue";
 
 import { wrapRequest } from "../../api";
@@ -77,9 +78,9 @@ export default defineComponent({
   },
   setup() {
     const form = reactive({
-      pluralKey: user.value?.pluralKey ?? "",
+      pluralKey: "",
       email: user.value?.email ?? "",
-      overridePluralId: user.value?.overridePluralId ?? "",
+      overridePluralId: user.value?.systemIdOverride ?? "",
     });
 
     const formErrors = reactive({
@@ -119,6 +120,7 @@ export default defineComponent({
       validate,
       submit,
       user,
+      UserRole,
     };
   },
 });
