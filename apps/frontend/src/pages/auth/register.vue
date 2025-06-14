@@ -65,11 +65,11 @@
 </template>
 
 <script lang="ts">
+import { $auth } from "@plurali/api-client";
 import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { setAuth, wrapRequest } from "../../api";
-import { register } from "../../api/auth";
 import Button from "../../components/Button.vue";
 import InputError from "../../components/InputError.vue";
 import Label from "../../components/Label.vue";
@@ -120,11 +120,11 @@ export default defineComponent({
       if (loading.value) return;
       loading.value = true;
 
-      const ok = await wrapRequest(() => register(form));
+      const ok = await wrapRequest(() => $auth.register(form));
       loading.value = false;
 
       if (ok) {
-        setAuth(ok.auth);
+        setAuth(ok.token);
         await router.push("/dashboard");
       }
     };
