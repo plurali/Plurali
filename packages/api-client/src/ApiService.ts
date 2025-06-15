@@ -79,9 +79,7 @@ export class ApiService {
     }
 
     const auth = this.token.get();
-    if (auth) {
-      this.client.defaults.headers.common.Authorization = `Bearer ${auth}`;
-    }
+    this.client.defaults.headers.common.Authorization = auth ? `Bearer ${auth}` : undefined;
   }
 }
 
