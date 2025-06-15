@@ -8,7 +8,7 @@
     <div class="mb-3.5">
       <Label>Email</Label>
       <input
-        v-model="form.email"
+        v-model.trim="form.email"
         :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="Email address"
@@ -19,7 +19,7 @@
     <div class="mb-3.5">
       <Label>Simply Plural API key</Label>
       <input
-        v-model="form.pluralKey"
+        v-model.trim="form.accessToken"
         :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="Simply Plural API key"
@@ -30,7 +30,7 @@
     <div v-if="user?.role === UserRole.Admin" class="mb-3.5">
       <Label>Override Plural ID</Label>
       <input
-        v-model="form.overridePluralId"
+        v-model.trim="form.systemIdOverride"
         :disabled="loading"
         class="w-full p-2.5 border rounded-xl border-gray-400"
         placeholder="Override Plural ID"
@@ -46,19 +46,14 @@
       <p>Update user settings</p>
       <Spinner v-if="loading" class="!text-violet-700" />
     </Button>
-
-    <p class="text-sm text-gray-700 mb-3.5">
-      *The "Update user settings" button also works as "clear cache" for now, same as re-authenticating.
-    </p>
   </form>
 </template>
 
 <script lang="ts">
-import { UserRole } from "@plurali/api-client";
+import { $user, UpdateUserRequestInterface, UserRole } from "@plurali/api-client";
 import { defineComponent, reactive, ref } from "vue";
 
 import { wrapRequest } from "../../api";
-import { updateUser } from "../../api/user";
 import Button from "../../components/Button.vue";
 import Label from "../../components/Label.vue";
 import Spinner from "../../components/Spinner.vue";
@@ -77,14 +72,14 @@ export default defineComponent({
     Label,
   },
   setup() {
-    const form = reactive({
-      pluralKey: "",
+    const form = reactive<UpdateUserRequestInterface>({
+      accessToken: "",
       email: user.value?.email ?? "",
-      overridePluralId: user.value?.systemIdOverride ?? "",
+      systemIdOverride: user.value?.systemIdOverride ?? "",
     });
 
     const formErrors = reactive({
-      pluralKey: null as string | null,
+      accessToken: null as string | null,
       email: null as string | null,
     });
 
@@ -95,17 +90,17 @@ export default defineComponent({
     const validate = () => {
       formErrors.email = !form.email || !emailRegex.test(form.email) ? "A valid email must be entered." : null;
 
-      formErrors.pluralKey =
-        !form.pluralKey || form.pluralKey.trim().length < 32 ? "Key must be at least 32 characters long." : null;
+      formErrors.accessToken =
+        !form.accessToken || form.accessToken.length < 32 ? "Key must be at least 32 characters long." : null;
 
-      return !formErrors.pluralKey;
+      return !formErrors.accessToken;
     };
 
     const submit = async () => {
       if (loading.value) return;
       loading.value = true;
 
-      const ok = await wrapRequest(() => updateUser(form));
+      const ok = await wrapRequest(() => $user.updateUser(form));
       if (ok) {
         flash("Changes saved!", FlashType.Success, true);
       }
