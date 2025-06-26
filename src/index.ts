@@ -83,7 +83,7 @@ async function bootstrap() {
   if (process.argv.includes("--rebuild") || process.argv.includes("--rebuild-only")) {
     const cacheService = app.get(CacheService);
 
-    await cacheService.rebuild();
+    await cacheService.rebuild(process.argv.includes("--rebuild-use-transaction"));
   }
 
   // const observerProcess: ChildProcess | null = plural.observer.fork
