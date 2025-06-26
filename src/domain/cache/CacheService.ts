@@ -313,7 +313,7 @@ export class CacheService {
     }
   }
 
-  async rebuild(): Promise<void> {
+  async rebuild(useTransaction = false): Promise<void> {
     this.logger.log("Starting a cache rebuild job");
     const users = await this.prisma.user.findMany({
       include: {
@@ -328,7 +328,7 @@ export class CacheService {
     });
 
     for (const user of users) {
-      await this.rebuildFor(user, true);
+      await this.rebuildFor(user, useTransaction);
     }
     this.logger.log("Cache rebuild job complete");
   }
