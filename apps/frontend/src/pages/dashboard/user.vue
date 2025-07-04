@@ -27,7 +27,7 @@
       />
     </div>
 
-    <div v-if="user?.role === UserRole.Admin" class="mb-3.5">
+    <div v-if="isAdmin" class="mb-3.5">
       <Label>Override Plural ID</Label>
       <input
         v-model.trim="form.systemIdOverride"
@@ -46,12 +46,14 @@
       <p>Update user settings</p>
       <Spinner v-if="loading" class="!text-violet-700" />
     </Button>
+
+    <Button v-if="isAdmin" type="button" @click="rebuild">Rebuild</Button>
   </form>
 </template>
 
 <script lang="ts">
 import { $user, UpdateUserRequestInterface, UserRole } from "@plurali/api-client";
-import { defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, reactive, ref } from "vue";
 
 import { wrapRequest } from "../../api";
 import Button from "../../components/Button.vue";
@@ -108,14 +110,27 @@ export default defineComponent({
       loading.value = false;
     };
 
+    const rebuild = async () => {
+      if (loading.value) return;
+      loading.value = true;
+
+      const ok = await wrapRequest(() => $user.rebuild());
+      if (ok) {
+        flash("Done!", FlashType.Success, true);
+      }
+
+      loading.value = false;
+    };
+
     return {
       form,
       formErrors,
       loading,
       validate,
       submit,
+      rebuild,
       user,
-      UserRole,
+      isAdmin: computed(() => user.value?.role === UserRole.Admin),
     };
   },
 });
