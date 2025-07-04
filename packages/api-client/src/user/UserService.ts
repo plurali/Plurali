@@ -63,6 +63,19 @@ export class UserService {
       return this.api.handleException(error);
     }
   }
+
+  public async rebuild(userId?: string): Promise<ApiResponse<OkInterface>> {
+    try {
+      return (
+        await this.api.client.request<ApiResponse<OkInterface>>({
+          url: "/v2/user/rebuild" + (userId ? `/${userId}` : ""),
+          method: "POST",
+        })
+      ).data;
+    } catch (error) {
+      return this.api.handleException(error);
+    }
+  }
 }
 
 export const $user = new UserService($api);

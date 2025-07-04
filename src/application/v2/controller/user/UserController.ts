@@ -10,6 +10,7 @@ import { EmailAlreadyUsedException } from "@app/v2/exception/EmailAlreadyUsedExc
 import { EmailAlreadyVerifiedException } from "@app/v2/exception/EmailAlreadyVerifiedException";
 import { EmailVerificationRatelimitedException } from "@app/v2/exception/EmailVerificationRatelimitedException";
 import { InvalidVerificationException } from "@app/v2/exception/InvalidVerificationException";
+import { ResourceNotFoundException } from "@app/v2/exception/ResourceNotFoundException";
 import { SystemAlreadyAssociatedException } from "@app/v2/exception/SystemAlreadyAssociatedException";
 import { UnauthorizedException } from "@app/v2/exception/UnauthorizedException";
 import { error, ok } from "@app/v2/misc/swagger";
@@ -21,7 +22,7 @@ import { SystemRepository } from "@domain/system/SystemRepository";
 import { UserRepository } from "@domain/user/UserRepository";
 import { UserService } from "@domain/user/UserService";
 import { UserVerificationRepository } from "@domain/user/verification/UserVerificationRepository";
-import { Body, Controller, Get, HttpCode, Inject, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Inject, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiExtraModels, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { Prisma, User, UserRole, UserVerificationType } from "@prisma/client";
 
@@ -176,6 +177,48 @@ export class UserController extends BaseController {
       },
     });
 
+    return this.ok();
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("/rebuild")
+  @ApiResponse(ok(200, Ok))
+  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(error(403, ApiError.Unauthorized))
+  async rebuild(@CurrentUser() user: User): Promise<ApiDataResponse<Ok>> {
+    if (user.role !== UserRole.Admin) {
+      throw new UnauthorizedException();
+    }
+
+    await this.cache.rebuildFor(user);
+    return this.ok();
+  }
+
+  @UseGuards(AuthGuard)
+  @Post("/rebuild/:userId")
+  @ApiResponse(ok(200, Ok))
+  @ApiResponse(error(401, ApiError.NotAuthenticated))
+  @ApiResponse(error(403, ApiError.Unauthorized))
+  @ApiResponse(error(404, ApiError.ResourceNotFound))
+  async rebuildByUserId(
+    @CurrentUser() currentUser: User,
+    @Param("userId") userId: string,
+  ): Promise<ApiDataResponse<Ok>> {
+    if (currentUser.role !== UserRole.Admin) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.users.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new ResourceNotFoundException();
+    }
+
+    await this.cache.rebuildFor(user);
     return this.ok();
   }
 }
