@@ -27,10 +27,7 @@ const getApiUrl = () => {
   return prodApiUrl;
 };
 
-const baseURL = getApiUrl();
-
-// Set the same base URL for @plurali/api-client
-$api.baseUrl = baseURL;
+export const baseURL = getApiUrl();
 
 export const isPubDev = baseURL === pubdevApiUrl;
 
