@@ -6,7 +6,7 @@ Last update on July 01, 2026 by [Mia Runštuková (mia@liliana.digital)](mailto:
 
 maintained by **Mia Runštuková**, Vondroušova 1183/27, 16300 Prague, Czech Republic, IČO: 21476454; under the **liliana.digital** label ("we", "maintainer"),
 
-with data formerly provided via open protcols by now-defunct third-party service **Simply Plural**, ran by **Apparyllis U.G.**, In de Siep, 26, 47638 Straelen, Germany, EUID: DER1304.HRB20967 ("SP", "data provider")
+with data formerly provided via open protocols by now-defunct third-party service **Simply Plural**, ran by **Apparyllis U.G.**, In de Siep, 26, 47638 Straelen, Germany, EUID: DER1304.HRB20967 ("SP", "data provider")
 
 # Data Transparency - addressing user data & it's usage
 
