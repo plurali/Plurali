@@ -1,7 +1,16 @@
+Last update on July 01, 2026 by [Mia Runštuková (mia@liliana.digital)](mailto:mia@liliana.digital) ([@lilianalillyy](https://github.com/lilianalillyy))
+
+<hr>
+
+**Plurali** (hereinafter referred to as "the service", available at https://plurali.icu), 
+
+maintained by **Mia Runštuková**, Vondroušova 1183/27, 16300 Prague, Czech Republic, IČO: 21476454; under the **liliana.digital** label ("we", "maintainer"),
+
+with data formerly provided via open protcols by now-defunct third-party service **Simply Plural**, ran by **Apparyllis U.G.**, In de Siep, 26, 47638 Straelen, Germany, EUID: DER1304.HRB20967 ("SP", "data provider")
 
 # Addressing user data a.k.a Data Transparency
 
-Plurali ("the service", available at https://plurali.icu) is for most of it's information using data from Simply Plural ("SP"). However, in order to add custom functionality or even some basic states (eg. visibility), some data is collected by the service. This data is and won't be used for any other purpose than the actual functionality of the service. Here's a thorough explanation of what the service collects, why and for how long.
+Plurali is for most of it's information using data from SP. However, in order to add custom functionality or even some basic states (eg. visibility), some data is collected by the service. This data is and won't be used for any other purpose than the actual functionality of the service. Here's a thorough explanation of what the service collects, why and for how long.
 
 ## Legend
 
@@ -45,10 +54,8 @@ Every time you login to the dashboard or save account settings. If an entity (=s
 
 Calling the SP API each time a system and/or it's member is requested (not just in the dashboard, but on public pages as well) is very inefficient for both us and SP, requiring a lot of network bandwith (at bigger scale), not to mention slow response time of the service. In order to mitigate that, the service caches (=temporarily saves) the data SP's API returns (system and it's members, including custom fields with values for each member). The cached data is saved for 5 minutes (unless specified otherwiese) and then deleted. It only gets cached again if there is any interaction with your account - entering the dashboard or visiting the public view.
 
-## Requesting deletion of data
+## Requesting a data export or deletion
 
-As per the EU regulations, a user is entitled for complete deletion of their account (and all of it's associated data), if you wish to delete your account, you can request it via email at valisova@lilianaa.dev.
+As per the EU regulations, a user is entitled for complete deletion of their account (and all of it's associated data). 
 
-<hr>
-
-Last updated at April 9, 2023 by [Mia Pilchová (pilchova@lilianaa.dev)](mailto:pilchova@lilianaa.dev) ([@lilianalillyy](https://github.com/lilianalillyy))
+if you wish to delete your account and/or have your data exported, you can request it via email at hello@liliana.digital.
