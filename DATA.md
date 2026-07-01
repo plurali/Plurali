@@ -8,7 +8,7 @@ maintained by **Mia Runštuková**, Vondroušova 1183/27, 16300 Prague, Czech Re
 
 with data formerly provided via open protcols by now-defunct third-party service **Simply Plural**, ran by **Apparyllis U.G.**, In de Siep, 26, 47638 Straelen, Germany, EUID: DER1304.HRB20967 ("SP", "data provider")
 
-# Addressing user data a.k.a Data Transparency
+# Data Transparency - addressing user data & it's usage
 
 Plurali is for most of it's information using data from SP. However, in order to add custom functionality or even some basic states (eg. visibility), some data is collected by the service. This data is and won't be used for any other purpose than the actual functionality of the service. Here's a thorough explanation of what the service collects, why and for how long.
 
