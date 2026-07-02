@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@plurali/pluraliapp": "workspace:^",
-    "axios": "^1.6.0"
+    "axios": "^1.18.1"
   },
   "devDependencies": {
     "typescript": "^5.3.3"
