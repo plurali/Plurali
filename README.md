@@ -3,35 +3,49 @@
 - Production: https://plurali.icu
 - [Data Transparency](DATA.md)
 
-## Contributors
+## We're between fronts ∞
 
-Plurali is developed as a non-profit application in it's maintainers' free time - therefore we ask for patience for new features to be implemented or bugs to be fixed. We appreciate every issue report. PRs are welcomed, as long as they are structured and discussed with maintainer(s) beforehand (eg. in an issue, on Discord or via other communication channels).
+For years, Simply Plural quietly kept this place running. Now it’s closing its doors, and the Plurali you knew steps back with a fond farewell, going dark alongside it.
 
-Currently, Plurali is overseen and maintained by it's creator, Liliana (@lilianalillyy). If you're interested in joining the maintainer team, write an email to `pilchova@lilianaa.dev`.
+I believe I speak for most systems when I say: thank you. For every front entry, every reminder, and every member given a name; and to the people behind it, who carried this with care, for years, because it mattered. It did, and it still does.
 
-We would also love to recognize some of it's users who frequently contribute to Plurali's development, eg. testing new features, reporting bugs or coming up with ideas for new features or improving the existing ones: 
-- **SeraphimValley** - Reporting of bugs brainstorming fixes + ideas for improving/implementing new/exsting features   
+### Nothing you’ve built is disappearing 💜
+
+Completely new Plurali is coming, and it holds it all in one place: the fronting tracker and everything you had in Simply Plural, and with even better Plurali profiles on top of it. 
+
+A little more room for everyone.
+
+> 🚧 **The new Plurali is in closed-source development** until it's public beta release.
+
+### Contribute to the development 🫂
+
+Plurali is maintained as a non-profit application. Originally developed by its creator, Mia (a.k.a. Liliana - @lilianalillyy), Plurali is now brewed in the liliana.digital labs.
+
+We're always looking for people who are willing to contribute to the development of Plurali - and you don't need to be a tech wizard to do so. We appreciate help with testing, design, people who give us feedback, any suggestions for new features. If you're interested, shoot a mail to `hello@liliana.digital` - we can figure something out!
+
+### Your data is safe 🧷
+
+Plurali still holds a little - the public profile pages and your custom descriptions. 
+
+For details on what we store and why, see our [data transparency note](DATA.md). Former users can request a copy or removal of their data any time at `hello@liliana.digital`.
 
 ## Reporting issues
 
 We welcome issue reports, however to make sure we can efficiently fix the issue you're experiencing we need details about how to get to the issue at hand.
 
 - Please provide steps to reproduce, for example: `in dashboard click to user settings -> click on update settings -> page crashes`
-- If this is a per-user bug, provide us with the Simply Plural ID or your User ID. If you don't want this information shared publicly, create the issue without it and contact `liliana1110` on Discord or email `pilchova@lilianaa.dev`.
+- If this is a per-user bug, provide us with your User ID. If you don't want this information shared publicly, create the issue without it and contact us at `hello@liliana.digital`
+
+We would also love to recognize some of Plurali's users who frequently contribute to its development:
+- **SeraphimValley** - Reporting of bugs, brainstorming fixes, and ideas for improving/implementing new features
 
 ## Self-hosting
 
-Self-hosting Plurali, at least at the moment, is not officially supported. It is planned, however not a priority at the moment.
-
-There are hacks to be done in the codebase in order to get Plurali to work, for example currently things like the API base URL, CDN URL, CSP, etc.. are hardcoded. One would have to rewrite those manually in order to get their own instance working. Additionally, Plurali's codebase - in it's current state - does not follow semver or any other versioning convention. This means that major changes and restructuring may occur from commit to commit, as there are many things planned and in development, such as the full rewrite of the frontend to React. Issues may be encountered modified Plurali instances when rebasing to newer revisions from the repository.
-
-**TL;DR**: In Plurali's current state, unless you 100% know what you're doing I don't recommend self-hosting. The codebase is not accustomed to it, dirty hacks are required and issues may arise. 
-**You won't be provided with support in self-hosted instances unless you can reproduce the issue on the official instance - https://plurali.icu**.
+Self-hosting Plurali is not officially supported at this time. There probably is no sane reason to do so, as Simply Plural has shut down. 
 
 ## Codebase structure
 
-The codebase is structured in a monorepo. Common packages, like the API client or utilities are in the `packages` directory. Full applications, eg the frontend (and it's `v2` version) are in the `apps` directory. The backend itself is the root project.
-
+The codebase is structured in a monorepo. Common packages, like the API client or utilities are in the `packages` directory. Full applications, eg the frontend (and its `v2` version) are in the `apps` directory. The backend itself is at the root of this project.
 
 | Package                           |               Description                |
 | :-------------------------------- | :--------------------------------------: |
@@ -45,9 +59,6 @@ The codebase is structured in a monorepo. Common packages, like the API client o
 | [sanitizer](packages/sanitizer)   |       Sanitizer of HTML content**        |
 | [common](packages/common)         |             Common utilities             |
 
-*The plan is to migrate away from TinyMCE and create a better rich text editor, however for the sake of ensuring the current
-content created by Plurali users is migrated correctly, the bin/collect-html-tags.ts util parses all current content and creates a list of all currently used
-HTML tags that TinyMCE created. This util is not meant to invade user's privacy and it will never purposefully expose any personal data. 
-As per Plurali's commitment for transparency, it's source code is disclosed.
+*The plan was to migrate away from TinyMCE and create a better rich text editor. For the sake of ensuring the current content created by Plurali users would've been migrated correctly, the bin/collect-html-tags.ts util parsed all current content and created a list of all currently used HTML tags that TinyMCE created. This util was not developed in any way to invade user's privacy and it does not expose any personal data - the only output is a list of tags (p, h1, h2, h3, img, ...), there's no text or rendering of the content. As per Plurali's commitment for transparency, its source code is disclosed.
 
 **Based on the Sanitizer polyfill by Mozilla: https://github.com/mozilla/sanitizer-polyfill
