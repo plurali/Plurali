@@ -24,7 +24,7 @@
     "@prisma/client": "^5.2.0",
     "@types/inquirer": "^8.2.6",
     "bson": "^5.4.0",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.2.0",
     "dotenv": "^16.3.1",
     "inquirer": "^8.2.6",
     "prisma": "^5.2.0",

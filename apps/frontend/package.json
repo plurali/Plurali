@@ -41,13 +41,13 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
-    "@types/cheerio": "^0.22.31",
+    "@types/cheerio": "^1.0.0",
     "@types/dropzone": "^5.7.4",
     "@types/markdown-it": "^12.2.3",
     "@types/node-fetch": "^2.6.3",
     "@vitejs/plugin-vue": "^4.1.0",
     "autoprefixer": "^10.4.14",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.2.0",
     "crypto": "^1.0.1",
     "node-fetch": "^3.3.1",
     "postcss": "^8.4.31",
